@@ -1,2 +1,2 @@
 # DHISmessenger
-DHIS 2 Messenger App for Android
+Android Messenger App for DHIS 2
