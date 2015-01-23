@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/person"
+        android:title="Contacts"
+        android:icon="@drawable/ic_action_person"
+        android:showAsAction="always|withText"/>
+    <item
+        android:id="@+id/conference"
+        android:title="Conferences"
+        android:icon="@drawable/ic_action_group"
+        android:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/overflow"
+        android:title="more"
+        android:icon="@drawable/ic_action_settings"
+        android:showAsAction="always">
+
+    <menu>
+
+        <item android:id="@+id/more"
+            android:title="Edit status"
+            android:showAsAction="always|withText"/>
+
+        <item android:id="@+id/newConference"
+            android:title="Create Conference"
+            android:showAsAction="always|withText"/>
+
+        <item android:id="@+id/settings"
+            android:title="Connection settings"
+            android:showAsAction="always|withText"/>
+    </menu>
+    </item>
+
+</menu><!-- From: file:/Users/iNick/AndroidstudioProjects/DHISMessenger1/app/src/main/res/menu/roster_menu.xml -->

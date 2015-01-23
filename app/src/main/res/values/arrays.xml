@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status_array">
+        <item>Available</item>
+        <item>Away</item>
+        <item>Free to chat</item>
+        <item>Do not disturb</item>
+        <item>Unavailable</item>
+    </string-array>
+</resources>

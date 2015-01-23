@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp">
+
+        <RelativeLayout
+            android:id="@+id/chatSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:padding="3dp">
+
+            <TextView
+                android:id="@+id/chatTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="Live Chat Settings" />
+
+            <TextView
+                android:id="@+id/turnOffText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/chatTitle"
+                android:text="Turn off/on live chat"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/turnOffText"
+                android:text="Live chat consume a lot off battery and data"
+                android:textSize="8dp" />
+
+            <ToggleButton
+                android:id="@+id/toggleChat"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/chatTitle"
+                android:textOff="Off"
+                android:textOn="On" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toggleChat">
+
+
+                <!--TextView
+                    android:id="@+id/hostText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tempSettings"
+                    android:text="Host:" />
+
+                <EditText
+                    android:id="@+id/hostField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hostText"
+                    android:hint="Host in form of ip or domain"
+                    android:imeOptions="actionNext" />
+
+                <TextView
+                    android:id="@+id/portText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hostField"
+                    android:text="Port:" />
+
+                <EditText
+                    android:id="@+id/portField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/portText"
+                    android:hint="Port is usually 5222"
+                    android:imeOptions="actionNext"
+                    android:inputType="number" /-->
+
+                <TextView
+                    android:id="@+id/serverText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Server:" />
+
+                <EditText
+                    android:id="@+id/serverField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/serverText"
+                    android:singleLine="true"
+                    android:hint="dhis-server.com (no http://)"
+                    android:imeOptions="actionDone" />
+
+                <TextView
+                    android:id="@+id/usernameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/serverField"
+                    android:text="Username:" />
+
+                <EditText
+                    android:id="@+id/usernameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/usernameText"
+                    android:hint="Username"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone" />
+
+                <TextView
+                    android:id="@+id/passwordText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/usernameField"
+
+                    android:text="Password:" />
+
+                <EditText
+                    android:id="@+id/passwordField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/passwordText"
+                    android:hint="Password"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+<!-- From: file:/Users/iNick/AndroidstudioProjects/DHISMessenger1/app/src/main/res/layout/fragment_settings.xml -->

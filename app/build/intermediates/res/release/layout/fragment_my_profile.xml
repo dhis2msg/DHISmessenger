@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CFCAC2">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="18sp">
+
+        <RelativeLayout
+            android:id="@+id/firstNameWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/firstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/firstname" />
+
+            <EditText
+                android:id="@+id/getFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firstName"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/surnameWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/firstNameWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/surname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/surname" />
+
+            <EditText
+                android:id="@+id/getSurname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:layout_below="@+id/surname"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/educationWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/surnameWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/education"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/education" />
+
+            <EditText
+                android:id="@+id/getEducation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:layout_below="@+id/education"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/employerWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/educationWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/employer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/employer" />
+
+            <EditText
+                android:id="@+id/getEmployer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/employer"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/jobWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/employerWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/jobTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/jobTitle" />
+
+            <EditText
+                android:id="@+id/getJobTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/jobTitle"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/emailWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/jobWrapper"
+            android:layout_marginBottom="2dp"
+
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email" />
+
+            <EditText
+                android:id="@+id/getEmail"
+                android:imeOptions="actionDone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/email"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/phoneWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/emailWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/phonenumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/phonenumber" />
+
+            <EditText
+                android:id="@+id/getPhoneNumber"
+                android:layout_width="match_parent"
+                android:imeOptions="actionDone"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/phonenumber"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:inputType="phone"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/birthDayWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/phoneWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/birthday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/birthday" />
+
+            <EditText
+                android:id="@+id/getBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:layout_below="@+id/birthday"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:inputType="date"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/nationalityWrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/birthDayWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/nationality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nationality" />
+
+            <EditText
+                android:id="@+id/getNationality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nationality"
+                android:background="@drawable/textbox"
+                android:imeOptions="actionDone"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/interestWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nationalityWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/interests"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/interests" />
+
+            <EditText
+                android:id="@+id/getInterests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:layout_below="@+id/interests"
+                android:background="@drawable/textbox"
+                android:singleLine="true"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/languagesWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/interestWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/languages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/languages" />
+
+            <EditText
+                android:id="@+id/getLanguages"
+                android:imeOptions="actionDone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/languages"
+                android:background="@drawable/textbox"
+                android:singleLine="true"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>
+<!-- From: file:/Users/iNick/AndroidstudioProjects/DHISMessenger1/app/src/main/res/layout/fragment_my_profile.xml -->

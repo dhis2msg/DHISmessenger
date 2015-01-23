@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:minHeight="70dp"
+    android:gravity="center_vertical"
+    android:padding="5dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_action_email_black"
+        android:layout_centerVertical="true"
+        android:id="@+id/read"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="17sp"
+        android:layout_toRightOf="@id/read"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="16sp"
+        android:layout_below="@id/nickname"
+        android:layout_toRightOf="@id/read" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:id="@+id/wrapper"
+        android:gravity="right"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/online"
+            android:contentDescription="@string/online"
+            android:minHeight="20dp"
+            android:minWidth="20dp" />
+
+        <TextView
+            android:id="@+id/lastpresence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

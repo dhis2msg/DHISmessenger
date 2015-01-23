@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/restView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CFCAC2"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/contentLoader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_centerVertical="true"/>
+    <ListView
+        android:id="@+id/chatList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:baselineAligned="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="4sp"
+        android:listSelector="@android:color/transparent"
+        android:paddingBottom="85dp"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:background="#1d5288"
+        android:baselineAligned="true">
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="#1d5288"
+            android:paddingTop="10dp"
+            android:text="@string/send"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+
+
+        <EditText
+            android:id="@+id/answerMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/btnSend"
+            android:height="58dp"
+            android:background="@drawable/edittext_rounded"
+            android:gravity="top|left"
+            android:hint="@string/message"
+            android:inputType="textMultiLine"
+            android:padding="2dp" />
+
+        <ProgressBar
+            android:id="@+id/loader"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="60dp"
+            android:layout_height="58dp"
+            android:layout_toRightOf="@id/answerMessage"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</RelativeLayout>
+<!-- From: file:/Users/iNick/AndroidstudioProjects/DHISMessenger1/app/src/main/res/layout/activity_rest_conversation.xml -->

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1d5288"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="15dp">
+
+    <!--AutoCompleteTextView
+        android:id="@+id/serverInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_rounded"
+        android:dropDownVerticalOffset="5dp"
+        android:dropDownWidth="wrap_content"
+        android:completionThreshold="1"
+        android:ems="10"
+        android:hint="@string/server"
+        android:imeOptions="actionNext"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:padding="3dp"
+        android:digits="_,.,qwertzuiopasdfghjklyxcvbnm,QWERTYUIOPASDFGHJKLZXCVBNM"
+        android:textColor="#000000">
+        <requestFocus />
+    </AutoCompleteTextView-->
+    <org.dhis2.messaging.Utils.AutoCompleteCharSearch
+        android:id="@+id/serverInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_rounded"
+        android:dropDownVerticalOffset="5dp"
+        android:dropDownWidth="wrap_content"
+        android:completionThreshold="1"
+        android:ems="10"
+        android:hint="@string/server"
+        android:imeOptions="actionNext"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:padding="3dp"
+        android:textSize="23sp"
+        android:textColor="#000000">
+        <requestFocus />
+    </org.dhis2.messaging.Utils.AutoCompleteCharSearch>
+
+    <EditText
+        android:id="@+id/usernameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/serverInput"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edittext_rounded"
+        android:ems="10"
+        android:hint="@string/username"
+        android:imeOptions="actionNext"
+        android:padding="3dp"
+        android:textSize="23sp"
+        android:singleLine="true"
+        android:textColor="#000000"></EditText>
+
+    <EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usernameInput"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edittext_rounded"
+        android:ems="10"
+        android:hint="@string/password"
+        android:imeOptions="actionDone"
+        android:textSize="23sp"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:padding="3dp"
+        android:textColor="#000000"></EditText>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/passwordInput"
+        android:layout_marginTop="5dp">
+
+        <ToggleButton
+            android:id="@+id/switchOnOff"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_button"
+            android:textColor="#FFFFFF"
+            android:textOff="Off"
+            android:textOn="On"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/stay"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/switchOnOff"
+            android:paddingLeft="5dp"
+            android:text="@string/autoSignin"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/signinButton"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/blue_button"
+            android:enabled="false"
+            android:text="@string/signin"
+            android:textColor="#FFFFFF" />
+    </RelativeLayout>
+</RelativeLayout><!-- From: file:/Users/iNick/AndroidstudioProjects/DHISMessenger1/app/src/main/res/layout/activity_login.xml -->
