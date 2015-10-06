@@ -8,58 +8,81 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
+    <ListView
+        android:id="@+id/chatList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:baselineAligned="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="4sp"
+        android:layout_above="@+id/someLayout"
+        android:transcriptMode="alwaysScroll" />
+
     <ProgressBar
         android:id="@+id/contentLoader"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:layout_centerVertical="true"/>
-    <ListView
-        android:id="@+id/chatList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:baselineAligned="true"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="4sp"
-        android:listSelector="@android:color/transparent"
-        android:paddingBottom="85dp"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"/>
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="5dp"
         android:background="#1d5288"
+        android:id="@+id/someLayout"
         android:baselineAligned="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.4dp"
+            android:id="@+id/line"
+            android:background="#1d5288"/>
+
 
         <Button
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_below="@id/line"
             android:background="#1d5288"
-            android:paddingTop="10dp"
             android:text="@string/send"
+            android:textStyle="bold"
+            android:layout_alignTop="@+id/answerMessage"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
+
+<!--RelativeLayout
+    android:layout_width="wrap_content"
+    android:id="@+id/someLayoutTwo"
+    android:background="#FFFFFF"
+    android:layout_below="@+id/line"
+    android:layout_toLeftOf="@id/btnSend"
+    android:padding="4dp"
+    android:layout_height="wrap_content"-->
 
 
         <EditText
             android:id="@+id/answerMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/line"
             android:layout_toLeftOf="@id/btnSend"
-            android:height="58dp"
             android:background="@drawable/edittext_rounded"
             android:gravity="top|left"
             android:hint="@string/message"
+            android:maxHeight="70dp"
+            android:minHeight="40dp"
             android:inputType="textMultiLine"
-            android:padding="2dp" />
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="7dp"
+            android:paddingBottom="2dp"
+ />
+<!--/RelativeLayout-->
 
         <ProgressBar
             android:id="@+id/loader"
@@ -67,6 +90,10 @@
             android:layout_width="60dp"
             android:layout_height="58dp"
             android:layout_toRightOf="@id/answerMessage"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
+
+
+
+    <!--         android:layout_above="@+id/someLayout"-->
 </RelativeLayout>

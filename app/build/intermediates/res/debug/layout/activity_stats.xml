@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CFCAC2">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="18sp">
+
+        <RelativeLayout
+            android:id="@+id/firstNameWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/firstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DHIS Messages count:" />
+
+            <TextView
+                android:id="@+id/dhisMessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firstName"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/surnameWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/firstNameWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/surname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chat messages count:" />
+
+            <TextView
+                android:id="@+id/IMmessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/surname"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/educationWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/surnameWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/education"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Conference messages count:" />
+
+            <TextView
+                android:id="@+id/conferenceCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/education"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/employerWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/educationWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/employer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Online on chat Count:" />
+
+            <TextView
+                android:id="@+id/onlineCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/employer"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/jobWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/employerWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/jobTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notifications count:" />
+
+            <TextView
+                android:id="@+id/notificationCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/jobTitle"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <!--RelativeLayout
+            android:id="@+id/somerelative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/jobWrapper"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/sometexter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data received:" />
+
+            <TextView
+                android:id="@+id/totalDatause"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sometexter"
+                android:singleLine="true"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/sr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/somerelative"
+            android:layout_marginBottom="2dp"
+            android:background="#FFFFFF"
+            android:minHeight="60dp"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/gdsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data sent:" />
+
+            <TextView
+                android:id="@+id/totalSent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gdsg"
+                android:singleLine="true"
+                android:background="@drawable/textbox"
+                android:padding="5dp"
+                android:textStyle="bold" />
+        </RelativeLayout-->
+    </RelativeLayout>
+</ScrollView>
+<!-- From: file:/Users/iNick/AndroidstudioProjects/DHISMessenger/app/src/main/res/layout/activity_stats.xml -->

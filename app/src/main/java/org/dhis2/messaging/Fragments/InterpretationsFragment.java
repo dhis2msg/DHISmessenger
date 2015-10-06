@@ -7,10 +7,11 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import org.dhis2.messaging.Utils.Adapters.InterpretationAdapter;
-import org.dhis2.messaging.Utils.AsyncTasks.Interfaces.InterpretationCallback;
-import org.dhis2.messaging.Utils.AsyncTasks.InterpretationHandler;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.InterpretationCallback;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTGetInterpretation;
 import org.dhis2.messaging.Models.InterpretationModel;
 import org.dhis2.messaging.R;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTGetPicture;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -25,13 +26,12 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     private ProgressBar loader;
     private ImageView moreInterpretations;
     private View foot;
-    private int currentPage, totalPages;
-    private List<InterpretationModel> list = new ArrayList<InterpretationModel>();
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
+    //Memory store
+    private int currentPage, totalPages;
+    private List<InterpretationModel> list;
+    private RESTGetInterpretation getInterpretations;
+    private RESTGetPicture getPicture;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         foot = inflater.inflate(R.layout.listview_footer, null);
         moreInterpretations = (ImageView) foot.findViewById(R.id.moreMessages);
         currentPage = totalPages = 1;
+        list = new ArrayList<InterpretationModel>();
 
         moreInterpretations.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,10 +67,15 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         setMoreInterpretationsBtn();
 
         if (currentPage == 1) {
-            if (list.get(0) != null)
-                new InterpretationHandler(this).addPicture(getActivity(), list.get(0));
-        } else if (list.get((currentPage - 1) * 5) != null)
-            new InterpretationHandler(this).addPicture(getActivity(), list.get((currentPage - 1) * 5));
+            if (list.get(0) != null) {
+                getPicture = new RESTGetPicture(this, getActivity(), list.get(0));
+                getPicture.execute();
+            }
+
+        } else if (list.get((currentPage - 1) * 5) != null) {
+            getPicture = new RESTGetPicture(this, getActivity(), list.get((currentPage - 1) * 5));
+            getPicture.execute();
+        }
     }
 
     @Override
@@ -95,8 +101,20 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         }
         if (position < (list.size() - 1)) {
             InterpretationModel nextModel = list.get(position + 1);
-            new InterpretationHandler(this).addPicture(getActivity(), nextModel);
+            getPicture = new RESTGetPicture(this, getActivity(), nextModel);
+            getPicture.execute();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        removeHandlers();
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     public void setAdapter() {
@@ -121,12 +139,10 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
 
     public void getInterpretations(int page) {
         setLoader(true);
-        new InterpretationHandler(this).getInterpretations(getActivity(), page);
+        getInterpretations = new RESTGetInterpretation(this, getActivity(), page);
+        getInterpretations.execute();
     }
 
-    /*
-    Updates content in listView and keep scroll position
-     */
     public void updateListView(InterpretationModel model, int position) {
         int index = listView.getFirstVisiblePosition();
         View view = listView.getChildAt(0);
@@ -145,5 +161,18 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         if ((currentPage + 1) < totalPages)
             return true;
         return false;
+    }
+
+    private void removeHandlers() {
+        if (getInterpretations != null) {
+            if (!getInterpretations.isCancelled())
+                getInterpretations.cancel(true);
+            getInterpretations = null;
+        }
+        if (getPicture != null) {
+            if (!getPicture.isCancelled())
+                getPicture.cancel(true);
+            getPicture = null;
+        }
     }
 }//End of class Conversation fragment

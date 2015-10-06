@@ -1,42 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-
-    android:layout_height="match_parent">
-
-    <!--TextView
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nickname"/>
-    <EditText
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/nickname"
-        android:minWidth="200dp"/-->
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status"/>
+        android:text="Status" />
+
     <Spinner
-        android:layout_gravity="center"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="200dp"
-        android:id="@+id/status"/>
+        android:layout_gravity="center"
+        android:minWidth="200dp" />
 
     <EditText
-        android:layout_gravity="center"
+        android:id="@+id/statusMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="Custom status message.."
         android:minWidth="200dp"
-        android:singleLine="true"
-        android:id="@+id/statusMessage"
-        android:hint="Custom status message.."/>
-
+        android:singleLine="true" />
 </LinearLayout>

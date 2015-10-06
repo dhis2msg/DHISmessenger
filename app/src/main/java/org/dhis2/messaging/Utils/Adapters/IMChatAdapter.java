@@ -5,7 +5,7 @@ import java.util.List;
 import android.text.Html;
 
 import org.dhis2.messaging.Models.IMMessageModel;
-import org.dhis2.messaging.Utils.XMPP.XMPPSessionStorage;
+import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 import org.dhis2.messaging.R;
 
 import android.content.Context;
@@ -19,19 +19,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.dhis2.messaging.Utils.XMPP.XMPPClient;
-
-public class IMChatAdapter extends ArrayAdapter<IMMessageModel>{
+public class IMChatAdapter extends ArrayAdapter<IMMessageModel> {
     private Context context;
     private boolean showDate;
 
-    public IMChatAdapter(Context context, int textViewResourceId, List<IMMessageModel> chatMessages){
+    public IMChatAdapter(Context context, int textViewResourceId, List<IMMessageModel> chatMessages) {
         super(context, textViewResourceId, chatMessages);
         this.context = context;
         showDate = false;
     }
 
-    public void setShowDate(boolean value){
+    public void setShowDate(boolean value) {
         showDate = value;
         notifyDataSetChanged();
     }
@@ -56,39 +54,43 @@ public class IMChatAdapter extends ArrayAdapter<IMMessageModel>{
             holder.left = left;
             holder.right = right;
             row.setTag(holder);
-        }
-        else
+        } else
             holder = (ChatHolder) row.getTag();
 
         IMMessageModel model = getItem(position);
 
         //IF MESSAGE IS SENT FROM LOGGED IN USER
-        String nickname = XMPPClient.getInstance().getMucNickname();
-        if(model.JID == null || model.JID.equals(nickname))
-        {
-            holder.message.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            holder.wrapper.setGravity(Gravity.RIGHT);
-            holder.left.setVisibility(View.GONE);
-            holder.right.setVisibility(View.VISIBLE);
-            holder.message.setText(model.text);
-        }
-        else
-        {
-            holder.message.setBackgroundColor(Color.parseColor("#e0eaff"));//#6699FF"));
-            holder.wrapper.setGravity(Gravity.LEFT);
-            holder.right.setVisibility(View.GONE);
-            holder.left.setVisibility(View.VISIBLE);
-            String out = "<b>" + XMPPSessionStorage.getInstance().getUsername(model.JID) + ": </b> " + model.text;
-            holder.message.setText(Html.fromHtml(out));
+        if (model != null) {
+            if (model.JID == null) {
+                holder.message.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                holder.wrapper.setGravity(Gravity.RIGHT);
+                holder.left.setVisibility(View.GONE);
+                holder.right.setVisibility(View.VISIBLE);
+                holder.message.setText(model.text);
+            } else if (model.JID.equals(XMPPSessionStorage.getInstance().getNickname())) {
+                holder.message.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                holder.wrapper.setGravity(Gravity.RIGHT);
+                holder.left.setVisibility(View.GONE);
+                holder.right.setVisibility(View.VISIBLE);
+                holder.message.setText(model.text);
+            } else {
+                holder.message.setBackgroundColor(Color.parseColor("#e0eaff"));//#6699FF"));
+                holder.wrapper.setGravity(Gravity.LEFT);
+                holder.right.setVisibility(View.GONE);
+                holder.left.setVisibility(View.VISIBLE);
+                String out = "<b>" + XMPPSessionStorage.getInstance().getUsername(model.JID) + ": </b> " + model.text;
+                holder.message.setText(Html.fromHtml(out));
+            }
         }
 
         holder.date.setText(model.date);
-        if(showDate)
+        if (showDate)
             holder.date.setVisibility(View.VISIBLE);
         else
             holder.date.setVisibility(View.GONE);
         return row;
     }
+
     private static class ChatHolder {
         public TextView message, date;
         public RelativeLayout wrapper;

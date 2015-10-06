@@ -5,21 +5,31 @@
     android:background="#CFCAC2"
     android:orientation="vertical">
 
+    <ProgressBar
+        android:id="@+id/loader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/groups_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:visibility="gone"
-        android:dividerHeight="2sp"/>
+        android:dividerHeight="2sp"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/onlineUsers_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:layout_below="@+id/groups_list"
-        android:dividerHeight="2sp"/>
+        android:layout_margin="5dp"
+        android:dividerHeight="2sp" />
+
 
     <TextView
         android:id="@+id/infoMessage"
@@ -31,5 +41,13 @@
         android:textColor="#1d5288"
         android:textSize="20dp"
         android:visibility="gone" />
-    <!--  android:divider="@android:color/transparent"-->
+
+    <ImageView
+        android:id="@+id/refresh"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/offline" />
+
 </RelativeLayout>

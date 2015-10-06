@@ -17,7 +17,7 @@ import java.util.List;
 public class ProfileAdapter extends ArrayAdapter<String> {
     private Context context;
 
-    public ProfileAdapter(Context context, int textViewResourceId, List<String> messages){
+    public ProfileAdapter(Context context, int textViewResourceId, List<String> messages) {
         super(context, textViewResourceId, messages);
         this.context = context;
     }
@@ -34,32 +34,18 @@ public class ProfileAdapter extends ArrayAdapter<String> {
             holder.subject = subject;
             holder.data = data;
             row.setTag(holder);
-        }
-        else
+        } else
             holder = (InboxHolder) row.getTag();
 
-
-        try {
-            String[] items = getItem(position).split(":");
-            if (items == null || items.length < 2 || items[1].isEmpty() || items[1].equals("null")) {
-                remove(getItem(position));
-                notifyDataSetChanged();
-            } else {
-                holder.subject.setText(items[0]);
-                if (items[1].equals("gender_male"))
-                    items[1] = "Male";
-                if (items[1].equals("gender_female"))
-                    items[1] = "Female";
-
-                holder.data.setText(items[1]);
-            }
-        }catch(IndexOutOfBoundsException e){}
-
+        String[] items = getItem(position).split(":");
+        holder.subject.setText(items[0]);
+        holder.data.setText(items[1]);
 
         return row;
     }
+
     private static class InboxHolder {
-        public TextView subject,data;
+        public TextView subject, data;
     }
 }
 

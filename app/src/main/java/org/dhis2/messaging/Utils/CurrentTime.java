@@ -7,7 +7,7 @@ import java.util.Calendar;
  * Created by iNick on 06.11.14.
  */
 public class CurrentTime {
-    public String getCurrentTime(){
+    public String getCurrentTime() {
         Calendar cal = Calendar.getInstance();
         cal.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");

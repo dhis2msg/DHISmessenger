@@ -3,7 +3,6 @@ package org.dhis2.messaging.Utils;
 import java.util.concurrent.TimeUnit;
 
 public class ConvertSeconds {
-
     public String convertToDHM(long sec) {
         int days = (int) TimeUnit.SECONDS.toDays(sec);
         long hours = TimeUnit.SECONDS.toHours(sec) - TimeUnit.DAYS.toHours(days);

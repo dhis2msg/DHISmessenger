@@ -1,30 +1,35 @@
 package org.dhis2.messaging.Fragments;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.dhis2.messaging.ConferenceChatActivity;
-import org.dhis2.messaging.IMChatActivity;
+import org.dhis2.messaging.Activities.ConferenceChatActivity;
+import org.dhis2.messaging.Activities.IMChatActivity;
 import org.dhis2.messaging.Models.ConferenceModel;
-import org.dhis2.messaging.Utils.XMPP.RosterModel;
-import org.dhis2.messaging.Utils.XMPP.XMPPDataChanged;
-import org.dhis2.messaging.Utils.XMPP.XMPPSessionStorage;
+import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.Models.RosterModel;
+import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
+import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
+import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 import org.dhis2.messaging.Utils.Adapters.ConferenceAdapter;
 import org.dhis2.messaging.Utils.Adapters.RosterAdapter;
 import org.dhis2.messaging.R;
-import org.dhis2.messaging.Utils.XMPP.XMPPClient;
+import org.dhis2.messaging.XMPP.XMPPClient;
 
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.jivesoftware.smack.packet.Presence;
@@ -39,11 +44,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class RosterFragment extends Fragment implements XMPPDataChanged {
     private ListView userListView, groupsListView;
     private TextView message;
+    private ProgressBar pb;
+    private ImageView refresh;
+
+    //Memory store
+    private AsyncTask loginTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,48 +62,121 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
         userListView = (ListView) view.findViewById(R.id.onlineUsers_list);
         groupsListView = (ListView) view.findViewById(R.id.groups_list);
         message = (TextView) view.findViewById(R.id.infoMessage);
+        pb = (ProgressBar) view.findViewById(R.id.loader);
+        refresh = (ImageView) view.findViewById(R.id.refresh);
+        ;
+
+        setConferenceAdapter();
+        setListAdapter(null);
 
         if (!XMPPClient.getInstance().checkConnection()) {
-            Toast.makeText(getActivity(), "Not connected.. Try turning on 'Live Chat' in Settings", Toast.LENGTH_LONG).show();
+            pb.setVisibility(View.GONE);
             message.setVisibility(View.VISIBLE);
-        }
-        else {
-            userListView.setOnItemClickListener(new OnItemClickListener() {
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    RosterModel model = (RosterModel) userListView.getAdapter().getItem(position);
-                    Intent intent = new Intent(getActivity(), IMChatActivity.class);
-                    intent.putExtra("receiver", model.getJID());
-                    intent.putExtra("nickname", model.getUsername());
-                    getActivity().startActivity(intent);
-                    XMPPSessionStorage.getInstance().updateReadConversation(model.getJID(), true);
+            refresh.setImageDrawable(getResources().getDrawable(R.drawable.offline));
+        } else
+            refresh.setImageDrawable(getResources().getDrawable(R.drawable.onnline));
+
+        userListView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                RosterModel model = (RosterModel) userListView.getAdapter().getItem(position);
+                Intent intent = new Intent(getActivity(), IMChatActivity.class);
+                intent.putExtra("receiver", model.getJID());
+                intent.putExtra("nickname", model.getUsername());
+                getActivity().startActivity(intent);
+                XMPPSessionStorage.getInstance().updateReadConversationNoCallback(model.getJID(), true);
+            }
+        });
+
+        groupsListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ConferenceModel conference = (ConferenceModel) groupsListView.getAdapter().getItem(i);
+                Intent intent = new Intent(getActivity(), ConferenceChatActivity.class);
+                intent.putExtra("id", conference.getId());
+                getActivity().startActivity(intent);
+            }
+        });
+
+        refresh.setOnClickListener(new ImageView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!XMPPClient.getInstance().checkConnection()) {
+
+                    loginXMPP(SharedPrefs.getXMPPHost(getActivity()), "5222",
+                            SharedPrefs.getXMPPUsername(getActivity()), SharedPrefs.getXMPPPassword(getActivity()));
+                    message.setVisibility(View.GONE);
+
+                } else if (!RESTClient.isDeviceConnectedToInternett(getActivity())) {
+
+                    message.setVisibility(View.VISIBLE);
+                    refresh.setImageDrawable(getResources().getDrawable(R.drawable.offline));
+                    new ToastMaster(getActivity(), "No internet connection", false);
+                } else {
+                    final Context context = getActivity();
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+                                XMPPClient.getInstance().destroy(context);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    thread.start();
                 }
-            });
-
-            groupsListView.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    ConferenceModel conference = (ConferenceModel) groupsListView.getAdapter().getItem(i);
-                    Intent intent = new Intent(getActivity(), ConferenceChatActivity.class);
-                    intent.putExtra("id", conference.getId());
-                    getActivity().startActivity(intent);
-
-                }
-            });
-        }
-
+            }
+        });
         return view;
     }
 
-    private void setListAdapter(List<RosterModel> list) {
-        Collections.sort(list);
-        RosterAdapter adapter = new RosterAdapter(getActivity(), R.layout.item_roster, list);
-        userListView.setAdapter(adapter);
+    @Override
+    public void notifyChanged() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (XMPPClient.getInstance().checkConnection()) {
+                    refresh.setImageDrawable(getResources().getDrawable(R.drawable.onnline));
+                    pb.setVisibility(View.GONE);
+                    setRoster();
+                    setConferenceAdapter();
+                } else {
+                    refresh.setImageDrawable(getResources().getDrawable(R.drawable.offline));
+                }
+            }
+        });
     }
 
-    private void setConferenceAdapter() {
-        List<ConferenceModel> multiUserChatRooms = XMPPSessionStorage.getInstance().getXMPPConferenceData();
-        ConferenceAdapter groupAdapter = new ConferenceAdapter(getActivity(), R.layout.item_roster_conference, multiUserChatRooms);
-        groupsListView.setAdapter(groupAdapter);
+    @Override
+    public void onResume() {
+        super.onResume();
+        XMPPSessionStorage.getInstance().changeListener(this);
+        if (XMPPClient.getInstance().checkConnection()) {
+            pb.setVisibility(View.GONE);
+            XMPPClient.getInstance().getRosterList();
+            setRoster();
+            setConferenceAdapter();
+        } else {
+            message.setVisibility(View.VISIBLE);
+            refresh.setImageDrawable(getResources().getDrawable(R.drawable.offline));
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onResume();
+        XMPPSessionStorage.getInstance().changeListener(null);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (loginTask != null) {
+            if (!loginTask.isCancelled())
+                loginTask.cancel(true);
+            loginTask = null;
+        }
     }
 
     @Override
@@ -112,98 +194,59 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
                 return true;
             }
             case R.id.conference: {
-                if(XMPPClient.getInstance().checkConnection()) {
-                    userListView.setVisibility(View.GONE);
-                    groupsListView.setVisibility(View.VISIBLE);
-                    XMPPClient.getInstance().getAllMUCs();
+                userListView.setVisibility(View.GONE);
+                groupsListView.setVisibility(View.VISIBLE);
+                if (groupsListView == null)
+                    pb.setVisibility(View.VISIBLE);
+
+                if (XMPPClient.getInstance().checkConnection()) {
+                    Runnable r = new Runnable() {
+                        public void run() {
+                            XMPPClient.getInstance().getAllMUCs();
+                        }
+                    };
+                    new Thread(r).start();
                 }
-                else
-                    Toast.makeText(getActivity(),"Need to be connected to XMPP server", Toast.LENGTH_LONG).show();
+
                 return true;
             }
             case R.id.more: {
-                if(XMPPClient.getInstance().checkConnection()) {
+                if (XMPPClient.getInstance().checkConnection()) {
                     showStutusSettings();
-                }else
-                    Toast.makeText(getActivity(),"Need to be connected to XMPP server", Toast.LENGTH_LONG).show();
+                } else
+                    new ToastMaster(getActivity(), "Not connected to chat server", false);
 
                 return true;
             }
             case R.id.newConference:
-                if(XMPPClient.getInstance().checkConnection()) {
+                if (XMPPClient.getInstance().checkConnection()) {
                     showNewConference();
-                }
-                else
-                    Toast.makeText(getActivity(),"Need to be connected to XMPP server", Toast.LENGTH_LONG).show();
+                } else
+                    new ToastMaster(getActivity(), "Not connected to chat server", false);
 
                 return true;
-            case R.id.settings: {
-                showSettings();
-                return true;
-            }
         }
         return true;
     }
 
-    public void setRoster(){
-        setListAdapter(XMPPSessionStorage.getInstance().getXMPPData());
+    private void setListAdapter(List<RosterModel> list) {
+        if (list == null)
+            list = new ArrayList<RosterModel>();
+        Collections.sort(list);
+        RosterAdapter adapter = new RosterAdapter(getActivity(), R.layout.item_roster, list);
+        userListView.setAdapter(adapter);
     }
 
-    private void showSettings(){
+    private void setConferenceAdapter() {
+        List<ConferenceModel> multiUserChatRooms = XMPPSessionStorage.getInstance().getXMPPConferenceData();
+        if (multiUserChatRooms == null)
+            multiUserChatRooms = new ArrayList<ConferenceModel>();
+        ConferenceAdapter groupAdapter = new ConferenceAdapter(getActivity(), R.layout.item_roster_conference, multiUserChatRooms);
+        groupsListView.setAdapter(groupAdapter);
+    }
 
-        LayoutInflater inflater = getLayoutInflater(getArguments());
-        View view = inflater.inflate(R.layout.fragment_settings, null);
-        final ToggleButton chatToggle = (ToggleButton) view.findViewById(R.id.toggleChat);
-        final EditText server = (EditText) view.findViewById(R.id.serverField);
-        final EditText username = (EditText) view.findViewById(R.id.usernameField);
-        final EditText password = (EditText) view.findViewById(R.id.passwordField);
-
-        if (SharedPrefs.getXMPPHost(getActivity()) != null) {
-            server.setText(SharedPrefs.getXMPPServer(getActivity()));
-            username.setText(SharedPrefs.getXMPPUsername(getActivity()));
-            password.setText(SharedPrefs.getXMPPPassword(getActivity()));
-        }
-
-        if (XMPPClient.getInstance().checkConnection()) {
-            chatToggle.setChecked(true);
-        }
-
-        chatToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (!server.getText().toString().isEmpty() && !username.getText().toString().isEmpty() && !password.getText().toString().isEmpty() ) {
-                        loginXMPP(server.getText().toString(), "5222",
-                             username.getText().toString(), password.getText().toString());
-                        message.setVisibility(View.GONE);
-                    } else
-                        chatToggle.setChecked(false);
-                } else {
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-
-                                XMPPClient.getInstance().destroy();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    thread.start();
-                }
-            }
-        });
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Edit chat settings");
-        builder.setView(view);
-        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    public void setRoster() {
+        setListAdapter(XMPPSessionStorage.getInstance().getXMPPData());
     }
 
     private void showStutusSettings() {
@@ -254,8 +297,12 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
                     type = Presence.Type.unavailable;
                     mode = Presence.Mode.dnd;
                 }
-                XMPPClient.getInstance().setPresenceModeAndStatus(type, mode, statusMsg);
-                SharedPrefs.setXMPPUserData(getActivity(),presence,statusMsg);
+                if (statusMessage.equals(""))
+                    XMPPClient.getInstance().setPresenceModeAndStatus(type, mode, presence);
+                else
+                    XMPPClient.getInstance().setPresenceModeAndStatus(type, mode, statusMsg);
+
+                SharedPrefs.setXMPPUserData(getActivity(), presence, statusMsg);
                 dialog.cancel();
             }
         });
@@ -281,24 +328,27 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
         builder.setTitle("Create new conference");
         builder.setView(view);
 
-
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    if(!name.getText().toString().isEmpty() || !subject.getText().toString().isEmpty() || !description.getText().toString().isEmpty()) {
-                        boolean ok = XMPPClient.getInstance().createConference(name.getText().toString(),
-                                                                    subject.getText().toString(),
-                                                                    description.getText().toString());
-                        if(ok) {
+            public void onClick(DialogInterface dialog, int which) {
+                if (!name.getText().toString().isEmpty() || !subject.getText().toString().isEmpty() || !description.getText().toString().isEmpty()) {
+                    if (!XMPPSessionStorage.getInstance().conferenceExist(name.getText().toString())) {
+
+                        int response = XMPPClient.getInstance()
+                                .createConference(name.getText().toString(),
+                                        subject.getText().toString(),
+                                        description.getText().toString());
+
+                        if (XMPPClient.noErrors(response)) {
                             dialog.cancel();
                             XMPPClient.getInstance().getAllMUCs();
-                        }
-                        else
-                            Toast.makeText(getActivity(),"Could not create conference, try again..", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                        Toast.makeText(getActivity(),"Include all fields", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        } else
+                            Toast.makeText(getActivity(), XMPPClient.getResponseMessage(response), Toast.LENGTH_LONG).show();
+                    } else
+                        Toast.makeText(getActivity(), "Conference name all ready exist - change the name", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), "Include all fields", Toast.LENGTH_SHORT).show();
+            }
+        });
         builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -308,51 +358,27 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
         alertDialog.show();
     }
 
-    private void loginXMPP(final String HOST,final String PORT, final String USERNAME, final String PASSWORD) {
-        new AsyncTask<String, String, Boolean>() {
+    private void loginXMPP(final String HOST, final String PORT, final String USERNAME, final String PASSWORD) {
+        pb.setVisibility(View.VISIBLE);
+        loginTask = new AsyncTask<String, String, Integer>() {
             @Override
-            protected Boolean doInBackground(String... args) {
-                return XMPPClient.getInstance().setConnection(getActivity(),HOST,PORT,USERNAME,PASSWORD);
+            protected Integer doInBackground(String... args) {
+                return XMPPClient.getInstance().setConnection(getActivity(), HOST, PORT, USERNAME, PASSWORD);
 
             }
+
             @Override
-            protected void onPostExecute(Boolean worked) {
-                if(worked)
-                    Toast.makeText(getActivity(), "Successfully logged in", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getActivity(), "Could not sign in..", Toast.LENGTH_LONG).show();
+            protected void onPostExecute(Integer code) {
+                pb.setVisibility(View.GONE);
+
+                if (!XMPPClient.noErrors(code)) {
+
+                    new ToastMaster(getActivity(), "Could not sign in", false);
+                    message.setVisibility(View.VISIBLE);
+                    refresh.setImageDrawable(getResources().getDrawable(R.drawable.offline));
+                }
             }
         }.execute();
     }
 
-    @Override
-    public void notifyChanged() {
-        if(XMPPClient.getInstance().checkConnection()) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setRoster();
-                    setConferenceAdapter();
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        XMPPSessionStorage.getInstance().changeListener(this);
-        if(XMPPClient.getInstance().checkConnection()) {
-            setRoster();
-            setConferenceAdapter();
-        }
-        else
-            Toast.makeText(getActivity(), "Not connected.. Try turning on 'Live Chat' in Settings", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onPause() {
-        super.onResume();
-        XMPPSessionStorage.getInstance().changeListener(null);
-    }
 }

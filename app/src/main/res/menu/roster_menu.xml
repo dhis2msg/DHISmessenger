@@ -28,9 +28,9 @@
             android:title="Create Conference"
             android:showAsAction="always|withText"/>
 
-        <item android:id="@+id/settings"
+        <!--item android:id="@+id/settings"
             android:title="Connection settings"
-            android:showAsAction="always|withText"/>
+            android:showAsAction="always|withText"/-->
     </menu>
     </item>
 

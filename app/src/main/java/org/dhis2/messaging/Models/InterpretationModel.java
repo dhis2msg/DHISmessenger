@@ -32,7 +32,6 @@ public class InterpretationModel {
         this.pictureUrl = pictureUrl;
         this.picture = picture;
         this.comments = comments;
-
     }
 
     public String convertDate(String d) {

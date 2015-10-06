@@ -43,18 +43,20 @@
         android:textSize="14sp" />
 
     <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/container">
-    <ImageView
-        android:id="@+id/typeImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/interpretationPicture"
-        android:paddingBottom="2dp"
-        android:paddingTop="5dp" />
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/typeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/interpretationPicture"
+            android:paddingBottom="2dp"
+            android:paddingTop="5dp" />
+
         <ProgressBar
             android:id="@+id/loader"
             style="?android:attr/progressBarStyleLarge"
@@ -72,67 +74,71 @@
         android:layout_below="@id/container"
         android:background="#FFFFFF"
         android:paddingBottom="5dp">
-<!--android:background="@drawable/blue_button"-->
+        <!--android:background="@drawable/blue_button"-->
 
         <RelativeLayout
+            android:id="@+id/expand_layout"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:paddingLeft="5dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="15dp"
 
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:id="@+id/expand_layout"
             android:background="#dddddd"
-            android:layout_marginLeft="10dp">
+            android:paddingLeft="5dp">
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_centerVertical="true"
-                android:textStyle="bold"
-                android:padding="5dp"
-                android:layout_marginRight="30dp"
                 android:layout_alignParentRight="true"
-                android:text="Edit"/>
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30dp"
+                android:padding="5dp"
+                android:text="Edit"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
             <Button
                 android:id="@+id/expand"
-                android:clickable="false"
                 android:layout_width="45dp"
                 android:layout_height="35dp"
                 android:background="#dddddd"
+                android:clickable="false"
                 android:drawableTop="@drawable/ic_action_expand"
-                android:paddingTop="3dp"/>
+                android:paddingTop="3dp" />
         </RelativeLayout>
+
         <RelativeLayout
+            android:id="@+id/comment_layout"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
             android:background="#dddddd"
-            android:paddingRight="10dp"
-            android:id="@+id/comment_layout"
-            android:layout_marginLeft="10dp">
+            android:paddingRight="10dp">
+
             <Button
-                android:clickable="false"
                 android:id="@+id/comment"
                 android:layout_width="45dp"
                 android:layout_height="35dp"
-                android:background="#dddddd"
                 android:layout_centerVertical="true"
-                android:drawableTop="@drawable/ic_action_chat"/>
+                android:background="#dddddd"
+                android:clickable="false"
+                android:drawableTop="@drawable/ic_action_chat" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
                 android:layout_centerVertical="true"
-                android:textStyle="bold"
-                android:padding="5dp"
                 android:layout_toRightOf="@+id/comment"
-                android:text="Comment"/>
+                android:padding="5dp"
+                android:text="Comment"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </RelativeLayout>
     </RelativeLayout>
 

@@ -7,15 +7,26 @@ import java.util.List;
  * Created by iNick on 15.11.14.
  */
 public class ConferenceModel {
+    private String id;
+    private String name;
+    private String topic;
+    private String description;
+    private int occupants;
+    private List<String> participants;
+    private boolean admin;
+    private List<IMMessageModel> messages;
 
-    String id;
-    String name;
-    String topic;
-    String description;
-    int occupants;
-    List<String> participants;
-    boolean admin;
-    List<IMMessageModel> messages;
+    public ConferenceModel(String id, String name, String topic, String description, int occupants, List<String> participants, boolean admin, List<IMMessageModel> messages) {
+        this.id = id;
+        this.name = name;
+        this.topic = topic;
+        this.description = description;
+        this.occupants = occupants;
+        this.participants = participants;
+
+        this.admin = admin;
+        this.messages = messages;
+    }
 
     public void setParticipants(List<String> participants) {
         this.participants = participants;
@@ -26,18 +37,6 @@ public class ConferenceModel {
         return participants;
     }
 
-    public ConferenceModel(String id, String name, String topic,String description, int occupants,List<String> participants, boolean admin, List<IMMessageModel> messages) {
-        this.id = id;
-        this.name =name;
-        this.topic = topic;
-        this.description = description;
-        this.occupants = occupants;
-        this.participants = participants;
-
-        this.admin = admin;
-        this.messages = messages;
-    }
-
     public String getName() {
         return name;
     }
@@ -45,6 +44,12 @@ public class ConferenceModel {
     public void setMessages(List<IMMessageModel> messages) {
 
         this.messages = messages;
+    }
+
+    public void addMessages(List<IMMessageModel> messages) {
+
+        for (IMMessageModel m : messages)
+            this.messages.add(m);
     }
 
     public void setName(String name) {
@@ -98,14 +103,16 @@ public class ConferenceModel {
     }
 
     public void addMessage(IMMessageModel message) {
-        if(this.messages == null)
+        if (this.messages == null)
             this.messages = new ArrayList<IMMessageModel>();
         this.messages.add(message);
     }
-    public void minusOccupant(){
-        occupants = occupants -1;
+
+    public void minusOccupant() {
+        occupants = occupants - 1;
     }
-    public void plussOccupant(){
+
+    public void plussOccupant() {
         occupants = occupants + 1;
     }
 }

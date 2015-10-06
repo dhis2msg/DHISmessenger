@@ -12,8 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/chat_List"
         android:layout_width="match_parent"
@@ -39,9 +40,10 @@
             android:layout_height="58dp"
             android:layout_alignParentRight="true"
             android:background="#1d5288"
-           android:text="@string/send"
+            android:text="@string/send"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
+
         <ProgressBar
             android:id="@+id/loader"
             style="?android:attr/progressBarStyleLarge"
@@ -49,7 +51,7 @@
             android:layout_height="58dp"
             android:layout_alignParentRight="true"
             android:background="#1d5288"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/sendText"
@@ -60,8 +62,8 @@
             android:background="@drawable/edittext_rounded"
             android:gravity="top|left"
             android:hint="@string/message"
-            android:inputType="textMultiLine"
             android:imeOptions="actionNone|flagNoExtractUi"
+            android:inputType="textMultiLine"
             android:padding="2dp" />
     </RelativeLayout>
 </RelativeLayout>

@@ -1,14 +1,17 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="DhisTheme" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/Widget.ActionBar</item>
-
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:spinnerItemStyle">@style/TextViewSpinnerItem</item>
+        <item name="android:popupMenuStyle">@style/DhisTheme.PopupMenu</item>
     </style>
 
-    <style name="DhisTheme.DhisActionBar"></style>
+    <style name="DhisTheme.DhisActionBar">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 
     <style name="DhisTheme.DhisActionBar.Overlay">
-        <item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Transparent</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
@@ -16,12 +19,21 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
-    <style name="Widget.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">#1d5288</item>
     </style>
 
-    <style name="Widget.ActionBar.Transparent">
+    <style name="ActionBar.Transparent">
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="DhisTheme.PopupMenu" parent="android:Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_dhisactionbar</item>
+    </style>
+
+
+<style name="TextViewSpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
+    <item name="android:background">@drawable/menu_dropdown_panel_dhisactionbar</item>
+    <item name="android:popupBackground">@drawable/menu_dropdown_panel_dhisactionbar</item>
+</style>
 </resources>

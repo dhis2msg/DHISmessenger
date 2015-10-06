@@ -1,67 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#CFCAC2"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#CFCAC2">
 
-    <LinearLayout
-        android:id="@+id/newVIew"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp">
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="#FFFFFF"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:id="@+id/relen"
+            android:padding="5dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textStyle="bold"
-                android:text="Organisation Units" />
+                android:text="Org. Units"
+                android:id="@+id/en"
+                android:textStyle="bold" />
 
-            <org.dhis2.messaging.Utils.MulitAutoCompleteRecipients
+            <org.dhis2.messaging.Utils.UserInterface.MulitAutoCompleteRecipients
                 android:id="@+id/orgunits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/textbox"
+                android:background="#FFFFFF"
                 android:completionThreshold="1"
                 android:dropDownVerticalOffset="5dp"
                 android:dropDownWidth="wrap_content"
                 android:ems="20"
-                android:hint="Type in organisation unit.."
+                android:hint="Type in organisation units.."
                 android:imeOptions="actionNext"
                 android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
                 android:padding="2dp"
-                android:textSize="20sp" />
-        </LinearLayout>
+                android:textSize="16sp"
+                android:layout_below="@id/en"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.4dp"
+                android:layout_below="@id/orgunits"
+                android:background="#1d5288"/>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="#FFFFFF"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:id="@+id/relto"
+            android:layout_below="@id/relen"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textStyle="bold"
-                android:text="@string/recipients" />
+                android:text="@string/recipients"
+                android:id="@+id/to"
+                android:textStyle="bold" />
 
-            <org.dhis2.messaging.Utils.MulitAutoCompleteRecipients
+            <org.dhis2.messaging.Utils.UserInterface.MulitAutoCompleteRecipients
                 android:id="@+id/recipients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/textbox"
+                android:background="#FFFFFF"
                 android:completionThreshold="1"
                 android:dropDownVerticalOffset="5dp"
                 android:dropDownWidth="wrap_content"
@@ -70,62 +72,80 @@
                 android:imeOptions="actionNext"
                 android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
                 android:padding="2dp"
-                android:textSize="20sp" />
-        </LinearLayout>
+                android:layout_below="@+id/to"
+                android:textSize="16sp" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.4dp"
+                android:layout_below="@id/recipients"
+                android:background="#1d5288"/>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="#FFFFFF"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:id="@+id/reltre"
+            android:layout_below="@id/relto"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textStyle="bold"
-                android:text="@string/subject" />
+                android:text="@string/subject"
+                android:id="@+id/tre"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/subject"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/textbox"
+                android:background="#FFFFFF"
                 android:hint="@string/hintSubject"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailSubject"
                 android:padding="2dp"
+                android:textSize="16sp"
+                android:layout_below="@+id/tre"
                 android:singleLine="true" />
-        </LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.4dp"
+                android:layout_below="@id/subject"
+                android:background="#1d5288"/>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="#FFFFFF"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:layout_below="@id/reltre"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textStyle="bold"
-                android:text="@string/msg" />
+                android:text="@string/msg"
+                android:id="@+id/fire"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/textbox"
+                android:background="#FFFFFF"
                 android:gravity="top|left"
+                android:layout_below="@+id/fire"
                 android:hint="@string/hintMessage"
                 android:imeOptions="actionDone"
                 android:inputType="textMultiLine"
-                android:minHeight="100dp"
+                android:textSize="16sp"
                 android:padding="2dp" />
-        </LinearLayout>
-    </LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.4dp"
+                android:layout_below="@id/content"
+                android:background="#1d5288"/>
+        </RelativeLayout>
+</RelativeLayout>
 </ScrollView>

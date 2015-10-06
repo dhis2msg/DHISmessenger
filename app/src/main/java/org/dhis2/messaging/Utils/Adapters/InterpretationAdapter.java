@@ -7,12 +7,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import org.dhis2.messaging.Activities.InterpretationCommentActivity;
+import org.dhis2.messaging.Activities.ProfileActivity;
 import org.dhis2.messaging.Models.InterpretationModel;
 import org.dhis2.messaging.*;
-import org.dhis2.messaging.Utils.REST.APIPaths;
-import org.dhis2.messaging.Utils.REST.RESTClient;
-import org.dhis2.messaging.Utils.REST.Response;
+import org.dhis2.messaging.REST.APIPath;
+import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.REST.Response;
 import org.dhis2.messaging.Utils.SharedPrefs;
+import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +28,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -78,7 +80,6 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
         holder.image.setImageBitmap(item.picture);
 
 
-
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,17 +128,18 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
                                         new AsyncTask<Integer, String, Integer>() {
                                             @Override
                                             protected Integer doInBackground(Integer... args) {
-                                                return RESTClient.delete(SharedPrefs.getServerURL(context) + APIPaths.FIRST_PAGE_INTERPRETATIONS + "/" + item.id, SharedPrefs.getCredentials(context));
+                                                Response response = (RESTClient.delete(SharedPrefs.getServerURL(context) + APIPath.FIRST_PAGE_INTERPRETATIONS + "/" + item.id, SharedPrefs.getCredentials(context), "application/json"));
+                                                return response.getCode();
                                             }
 
                                             @Override
                                             protected void onPostExecute(Integer code) {
                                                 if (RESTClient.noErrors(code)) {
-                                                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                                                    new ToastMaster(context, "Deleted", false);
                                                     remove(item);
                                                     notifyDataSetChanged();
                                                 } else
-                                                    Toast.makeText(context, "Could not delete interpretation!", Toast.LENGTH_SHORT).show();
+                                                    new ToastMaster(context, "Could not delete interpretation!", false);
                                             }
                                         }.execute();
                                         return true;
@@ -160,20 +162,20 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
                                                                 object.put("text", input.getText().toString());
                                                             } catch (JSONException e) {
                                                             }
-                                                            Response response = RESTClient.put(SharedPrefs.getServerURL(context) + APIPaths.FIRST_PAGE_INTERPRETATIONS + "/" + item.id, SharedPrefs.getCredentials(context), input.getText().toString(), "text/plain");
+                                                            Response response = RESTClient.put(SharedPrefs.getServerURL(context) + APIPath.FIRST_PAGE_INTERPRETATIONS + "/" + item.id, SharedPrefs.getCredentials(context), input.getText().toString(), "text/plain");
                                                             return response.getCode();
                                                         }
 
                                                         @Override
                                                         protected void onPostExecute(Integer code) {
                                                             if (RESTClient.noErrors(code)) {
-                                                                Toast.makeText(context, "Edited", Toast.LENGTH_SHORT).show();
+                                                                new ToastMaster(context, "Edited", false);
                                                                 item.text = input.getText().toString();
                                                                 remove(item);
                                                                 insert(item, position);
                                                                 notifyDataSetChanged();
                                                             } else
-                                                                Toast.makeText(context, "Could not edit subject!", Toast.LENGTH_SHORT).show();
+                                                                new ToastMaster(context, "Could not edit subject!", false);
                                                         }
                                                     }.execute();
                                                 }
@@ -194,8 +196,6 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
                 }
             });
         }
-
-
         return row;
     }
 

@@ -6,319 +6,355 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="18sp">
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/loader"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible" />
 
         <RelativeLayout
-            android:id="@+id/firstNameWrapper"
+            android:id="@+id/someLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/firstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/firstname" />
 
-            <EditText
-                android:id="@+id/getFirstName"
+            <RelativeLayout
+                android:id="@+id/firstNameWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/firstName"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/surnameWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/firstNameWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <TextView
+                    android:id="@+id/firstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/firstname" />
 
-            <TextView
-                android:id="@+id/surname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/surname" />
+                <EditText
+                    android:id="@+id/getFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/firstName"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/getSurname"
+            <RelativeLayout
+                android:id="@+id/surnameWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:layout_below="@+id/surname"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/firstNameWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/educationWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/surnameWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <TextView
+                    android:id="@+id/surname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/surname" />
 
-            <TextView
-                android:id="@+id/education"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/education" />
+                <EditText
+                    android:id="@+id/getSurname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/surname"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/getEducation"
+            <RelativeLayout
+                android:id="@+id/educationWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:layout_below="@+id/education"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/surnameWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/employerWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/educationWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <TextView
+                    android:id="@+id/education"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/education" />
 
-            <TextView
-                android:id="@+id/employer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/employer" />
+                <EditText
+                    android:id="@+id/getEducation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/education"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/getEmployer"
+            <RelativeLayout
+                android:id="@+id/employerWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/employer"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/educationWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/jobWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/employerWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <TextView
+                    android:id="@+id/employer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/employer" />
 
-            <TextView
-                android:id="@+id/jobTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/jobTitle" />
+                <EditText
+                    android:id="@+id/getEmployer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/employer"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/getJobTitle"
+            <RelativeLayout
+                android:id="@+id/jobWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/jobTitle"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/employerWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/emailWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/jobWrapper"
-            android:layout_marginBottom="2dp"
+                <TextView
+                    android:id="@+id/jobTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/jobTitle" />
 
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <EditText
+                    android:id="@+id/getJobTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/jobTitle"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/email" />
-
-            <EditText
-                android:id="@+id/getEmail"
-                android:imeOptions="actionDone"
+            <RelativeLayout
+                android:id="@+id/emailWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/email"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:inputType="textEmailAddress"
-                android:singleLine="true"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/jobWrapper"
+                android:layout_marginBottom="2dp"
 
-        <RelativeLayout
-            android:id="@+id/phoneWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/emailWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-            <TextView
-                android:id="@+id/phonenumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/phonenumber" />
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email" />
 
-            <EditText
-                android:id="@+id/getPhoneNumber"
-                android:layout_width="match_parent"
-                android:imeOptions="actionDone"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/phonenumber"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:inputType="phone"
-                android:singleLine="true"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                <EditText
+                    android:id="@+id/getEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/email"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:inputType="textEmailAddress"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/birthDayWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/phoneWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/birthday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/birthday" />
-
-            <EditText
-                android:id="@+id/getBirthday"
+            <RelativeLayout
+                android:id="@+id/phoneWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:layout_below="@+id/birthday"
-                android:background="@drawable/textbox"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:inputType="date"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/emailWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/nationalityWrapper"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/birthDayWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <TextView
+                    android:id="@+id/phonenumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phonenumber" />
 
-            <TextView
-                android:id="@+id/nationality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nationality" />
+                <EditText
+                    android:id="@+id/getPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/phonenumber"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/getNationality"
+            <RelativeLayout
+                android:id="@+id/birthDayWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/nationality"
-                android:background="@drawable/textbox"
-                android:imeOptions="actionDone"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/phoneWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/interestWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nationalityWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <TextView
+                    android:id="@+id/birthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/birthday" />
 
-            <TextView
-                android:id="@+id/interests"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/editBirthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/birthday"
+                    android:text="Click to edit birthday"
+                    android:textColor="#1d5288" />
+
+                <DatePicker
+                    android:id="@+id/getBirthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:calendarViewShown="false"
+                    android:clickable="true"
+                    android:visibility="gone" />
+
+                <!--EditText
+                    android:id="@+id/getBirthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:layout_below="@+id/birthday"
+                    android:background="@drawable/textbox"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:inputType="date"
+                    android:textStyle="bold" /-->
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/nationalityWrapper"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/interests" />
+                android:layout_below="@+id/birthDayWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-            <EditText
-                android:id="@+id/getInterests"
+                <TextView
+                    android:id="@+id/nationality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nationality" />
+
+                <EditText
+                    android:id="@+id/getNationality"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nationality"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/interestWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:layout_below="@+id/interests"
-                android:background="@drawable/textbox"
-                android:singleLine="true"
-                android:padding="5dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:layout_below="@+id/nationalityWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
 
-        <RelativeLayout
-            android:id="@+id/languagesWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/interestWrapper"
-            android:layout_marginBottom="2dp"
-            android:background="#FFFFFF"
-            android:minHeight="60dp"
-            android:padding="5dp">
+                <TextView
+                    android:id="@+id/interests"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interests" />
 
-            <TextView
-                android:id="@+id/languages"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/languages" />
+                <EditText
+                    android:id="@+id/getInterests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/interests"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <EditText
-                android:id="@+id/getLanguages"
-                android:imeOptions="actionDone"
+            <RelativeLayout
+                android:id="@+id/languagesWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/languages"
-                android:background="@drawable/textbox"
-                android:singleLine="true"
-                android:padding="5dp"
-                android:textStyle="bold" />
+                android:layout_below="@+id/interestWrapper"
+                android:layout_marginBottom="2dp"
+                android:background="#FFFFFF"
+                android:minHeight="60dp"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/languages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/languages" />
+
+                <EditText
+                    android:id="@+id/getLanguages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/languages"
+                    android:background="@drawable/textbox"
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textStyle="bold" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 </ScrollView>

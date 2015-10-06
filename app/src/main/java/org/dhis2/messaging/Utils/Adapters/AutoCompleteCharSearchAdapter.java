@@ -13,11 +13,9 @@ import java.util.List;
  * Created by iNick on 26.11.14.
  */
 public class AutoCompleteCharSearchAdapter extends SimpleAdapter implements Filterable {
-
     private ArrayList<HashMap<String, String>> data, visibleData;
 
-    public AutoCompleteCharSearchAdapter(Context context, List data, int resource,
-                                String[] from, int[] to) {
+    public AutoCompleteCharSearchAdapter(Context context, List data, int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
         visibleData = (ArrayList<HashMap<String, String>>) data;
         this.data = (ArrayList<HashMap<String, String>>) visibleData.clone();
@@ -25,17 +23,15 @@ public class AutoCompleteCharSearchAdapter extends SimpleAdapter implements Filt
 
     @Override
     public Filter getFilter() {
-        Filter nameFilter = new Filter(){
+        Filter nameFilter = new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                if(constraint != null)
-                {
+                if (constraint != null) {
                     ArrayList<HashMap<String, String>> tmpData = data;
                     ArrayList<HashMap<String, String>> tmpVisibleData = visibleData;
                     tmpVisibleData.clear();
-                    for(int i = 0; i < tmpData.size(); i++)
-                    {
-                        if(tmpData.get(i).toString().toLowerCase().contains(constraint.toString().toLowerCase())){
+                    for (int i = 0; i < tmpData.size(); i++) {
+                        if (tmpData.get(i).toString().toLowerCase().contains(constraint.toString().toLowerCase())) {
                             tmpVisibleData.add(tmpData.get(i));
                         }
                     }
@@ -44,21 +40,21 @@ public class AutoCompleteCharSearchAdapter extends SimpleAdapter implements Filt
                     filterResults.values = tmpVisibleData;
                     filterResults.count = tmpVisibleData.size();
                     return filterResults;
-                }
-                else
-                {
+                } else {
                     return new FilterResults();
                 }
             }
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                if(results != null && results.count > 0)
-                {
-                    notifyDataSetChanged();
+                if (results != null && results.count > 0) {
+                    try {
+                        notifyDataSetChanged();
+                    } catch (IndexOutOfBoundsException e) {
+                    }
                 }
-            }};
-
+            }
+        };
         return nameFilter;
     }
 }
