@@ -25,6 +25,8 @@ http://jakewharton.github.io/butterknife/
 
 Im sorry for the very badly formatted code and struckture. I did not asume that anyone would continue working on this app. Anyone continuing on this app should start formatting the code.
 
+- Btw, messages from the DEMO DHIS2 api is not working at the moment, likely because there has been some changes in the api.
+
 ```
 Google Play:
 https://play.google.com/store/apps/details?id=org.dhis2.messaging
