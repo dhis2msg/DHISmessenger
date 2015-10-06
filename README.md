@@ -5,7 +5,7 @@ I suggest that the next developer look at these solutions:
 
 ```
 1. The library (asmack.jar) im using is depricated and not available as a maven dependency any more.
-This should be used instead, but needs to update/change the XMPP connection code.
+You should use the libirary below instead, but needs to update/change the XMPP connection code.
 https://github.com/igniterealtime/Smack/wiki/Smack-4.1-Readme-and-Upgrade-Guide
 ```
 
