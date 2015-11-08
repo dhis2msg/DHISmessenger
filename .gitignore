@@ -1,0 +1,14 @@
+# Android Studio
+.idea/
+*.iml
+app-debug.apk
+app-release.apk
+build/
+
+# Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+local.properties
+
