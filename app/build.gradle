@@ -45,18 +45,18 @@ allprojects {
 
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.0.2'
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId 'org.dhis2.messaging'
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 23
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            zipAlign true
+//            zipAlign true
         }
         debug {
             debuggable true
