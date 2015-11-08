@@ -1,4 +1,0 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
-    <solid android:color="#ffffff" />
-    <stroke android:width="3dip" android:color="#6699FF"/>
-</shape><!-- From: file:/Users/iNick/AndroidstudioProjects/DHISMessenger/app/src/main/res/drawable/border.xml -->
