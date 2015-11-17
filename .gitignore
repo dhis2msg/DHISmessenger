@@ -5,7 +5,8 @@
 app-debug.apk
 app-release.apk
 build/
-src/main/gen/
+# this doesn't seem to work for some reason...
+#src/main/gen/
 
 # Gradle
 .gradle/
