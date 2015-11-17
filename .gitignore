@@ -1,9 +1,11 @@
 # Android Studio
 .idea/
 *.iml
+*.log
 app-debug.apk
 app-release.apk
 build/
+src/main/gen/*
 
 # Gradle
 .gradle/
