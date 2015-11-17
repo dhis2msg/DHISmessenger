@@ -1,19 +1,8 @@
 package org.dhis2.messaging.Fragments;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.dhis2.messaging.Models.ProfileModel;
-import org.dhis2.messaging.Utils.*;
-import org.dhis2.messaging.R;
-import org.dhis2.messaging.REST.APIPath;
-import org.dhis2.messaging.REST.RESTClient;
-import org.dhis2.messaging.REST.Response;
-import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-
-import android.support.v4.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +14,17 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.dhis2.messaging.Models.ProfileModel;
+import org.dhis2.messaging.R;
+import org.dhis2.messaging.REST.APIPath;
+import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.REST.Response;
+import org.dhis2.messaging.Utils.SharedPrefs;
+import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 
 public class MyProfileFragment extends Fragment {
     private EditText phone, firstname, surname, email, jobTitle,

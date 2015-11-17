@@ -3,8 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/send"
-        android:title="@string/send"
         android:icon="@drawable/ic_action_send_now"
         android:showAsAction="always"
-        />
+        android:title="@string/send" />
 </menu>

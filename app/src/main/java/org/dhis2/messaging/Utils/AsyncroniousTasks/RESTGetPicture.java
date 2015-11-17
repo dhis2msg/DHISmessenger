@@ -5,8 +5,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import org.dhis2.messaging.Models.InterpretationModel;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.InterpretationCallback;
 import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.InterpretationCallback;
 import org.dhis2.messaging.Utils.SharedPrefs;
 
 /**

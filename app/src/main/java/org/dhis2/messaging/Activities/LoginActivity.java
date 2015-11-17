@@ -1,26 +1,28 @@
 package org.dhis2.messaging.Activities;
 
-import android.os.AsyncTask;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.webkit.URLUtil;
-import android.widget.*;
-
-import org.dhis2.messaging.R;
-import org.dhis2.messaging.Utils.Adapters.AutoCompleteCharSearchAdapter;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTLogin;
-import org.dhis2.messaging.REST.RESTClient;
-import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.webkit.URLUtil;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import org.dhis2.messaging.R;
+import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.Utils.Adapters.AutoCompleteCharSearchAdapter;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTLogin;
+import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +33,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends Activity {
+    //Remember last login
+    public static final String PREFS_NAME = "CredidentalsFile";
+    private static final String PREF_SERVER = "server";
+    private static final String PREF_USERNAME = "username";
     @Bind(R.id.usernameInput)
     EditText username;
     @Bind(R.id.passwordInput)
@@ -41,12 +47,6 @@ public class LoginActivity extends Activity {
     ImageView about;
     @Bind(R.id.serverInput)
     AutoCompleteTextView server;
-
-    //Remember last login
-    public static final String PREFS_NAME = "CredidentalsFile";
-    private static final String PREF_SERVER = "server";
-    private static final String PREF_USERNAME = "username";
-
     //Memory store
     private AsyncTask loginHandler;
 

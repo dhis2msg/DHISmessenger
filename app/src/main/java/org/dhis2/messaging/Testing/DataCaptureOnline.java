@@ -19,6 +19,14 @@ public class DataCaptureOnline {
         onlineSince = format.format(Calendar.getInstance().getTime());
     }
 
+    public static int safeLongToInt(long l) {
+        if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
+            throw new IllegalArgumentException
+                    (l + " cannot be cast to int without changing its value.");
+        }
+        return (int) l / 1000; //For seconds
+    }
+
     public int stopDateAndGetRatio() {
         String timeOffline = format.format(Calendar.getInstance().getTime());
         long ratio = 0;
@@ -34,13 +42,5 @@ public class DataCaptureOnline {
 
         }
         return 0;
-    }
-
-    public static int safeLongToInt(long l) {
-        if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException
-                    (l + " cannot be cast to int without changing its value.");
-        }
-        return (int) l / 1000; //For seconds
     }
 }

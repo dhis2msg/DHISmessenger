@@ -1,14 +1,8 @@
 package org.dhis2.messaging.Utils.Adapters;
 
-import java.util.List;
-
-import android.text.Html;
-
-import org.dhis2.messaging.R;
-import org.dhis2.messaging.Models.ChatModel;
-
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +12,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.dhis2.messaging.Models.ChatModel;
+import org.dhis2.messaging.R;
 import org.dhis2.messaging.Utils.SharedPrefs;
+
+import java.util.List;
 
 public class ChatAdapter extends ArrayAdapter<ChatModel> {
     private Context context;

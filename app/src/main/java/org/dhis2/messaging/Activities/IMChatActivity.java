@@ -1,10 +1,5 @@
 package org.dhis2.messaging.Activities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,21 +10,30 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 
 import org.dhis2.messaging.Models.IMMessageModel;
+import org.dhis2.messaging.Models.RosterModel;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.Testing.SaveDataSqlLite;
-import org.dhis2.messaging.Models.RosterModel;
-import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
-import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 import org.dhis2.messaging.Utils.Adapters.IMChatAdapter;
 import org.dhis2.messaging.Utils.CurrentTime;
 import org.dhis2.messaging.Utils.UserInterface.SwipeListener;
+import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
+import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
 import org.dhis2.messaging.XMPP.XMPPClient;
+import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.packet.Message;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

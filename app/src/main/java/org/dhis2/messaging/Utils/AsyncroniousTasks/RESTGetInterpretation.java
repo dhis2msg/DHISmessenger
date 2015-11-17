@@ -4,19 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.dhis2.messaging.Models.NameAndIDModel;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.InterpretationCallback;
 import org.dhis2.messaging.Models.ChatModel;
 import org.dhis2.messaging.Models.InterpretationModel;
+import org.dhis2.messaging.Models.NameAndIDModel;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.REST.Response;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.InterpretationCallback;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 import org.json.JSONArray;
@@ -32,10 +31,10 @@ import java.util.List;
  */
 public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
     private static InterpretationCallback listener;
-    private List<InterpretationModel> tempList;
     String server, auth;
     Context context;
     int pages;
+    private List<InterpretationModel> tempList;
 
     public RESTGetInterpretation(InterpretationCallback listener, Context context, int pages) {
         tempList = new ArrayList<InterpretationModel>();

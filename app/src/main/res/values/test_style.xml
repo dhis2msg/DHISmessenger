@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<?xml version="1.0" encoding="utf-8"?><!-- File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -28,11 +27,14 @@
         <item name="android:actionBarStyle">@style/ActionBar.Solid.Dhisactionbar</item>
         <!--item name="android:actionModeBackground">@drawable/cab_background_top_dhisactionbar</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_dhisactionbar</item-->
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Dhisactionbar</item>
+        <item name="android:actionModeCloseButtonStyle">
+            @style/ActionButton.CloseMode.Dhisactionbar
+        </item>
 
         <item name="android:textStyle">@style/TitleTextStyle</item>
 
     </style>
+
     <style name="TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">#FFFFFF</item>
     </style>

@@ -8,10 +8,10 @@
     android:padding="6dp">
 
     <ImageView
+        android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/img" />
+        android:layout_gravity="center_vertical" />
 
     <TextView
         android:id="@+id/toastText"

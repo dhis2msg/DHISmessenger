@@ -13,27 +13,26 @@
         android:layout_centerVertical="true"
         android:visibility="gone" />
 
-<ImageView
-    android:layout_width="100dp"
-    android:layout_height="100dp"
-    android:layout_centerHorizontal="true"
-    android:layout_alignParentBottom="true"
-    android:visibility="gone"
-    android:id="@+id/rwlogo"
-    android:src="@drawable/rwandalogo"/>
+    <ImageView
+        android:id="@+id/rwlogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/rwandalogo"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3sp"
-        android:choiceMode="singleChoice"
-        android:listSelector="@android:color/transparent"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0sp" />
-
+        android:dividerHeight="0sp"
+        android:listSelector="@android:color/transparent" />
 
 
 </RelativeLayout>

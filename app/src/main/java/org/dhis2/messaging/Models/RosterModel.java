@@ -45,24 +45,40 @@ public class RosterModel implements Comparable<RosterModel> {
         return JID;
     }
 
+    public void setJID(String JID) {
+        this.JID = JID;
+    }
+
     public String getNickname() {
         return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getStatusMessage() {
         return statusMessage;
     }
 
-    public void setMode(Presence.Mode mode) {
-        this.mode = mode;
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
     }
 
     public boolean isOnline() {
         return online;
     }
 
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
     public Presence.Mode getMode() {
         return mode;
+    }
+
+    public void setMode(Presence.Mode mode) {
+        this.mode = mode;
     }
 
     public String getLastActivity() {
@@ -73,9 +89,12 @@ public class RosterModel implements Comparable<RosterModel> {
         this.lastActivity = lastActivity;
     }
 
-
     public boolean isReadConversation() {
         return readConversation;
+    }
+
+    public void setReadConversation(boolean readConversation) {
+        this.readConversation = readConversation;
     }
 
     public List<IMMessageModel> getConversations() {
@@ -89,26 +108,6 @@ public class RosterModel implements Comparable<RosterModel> {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public void setJID(String JID) {
-        this.JID = JID;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
-    }
-
-    public void setReadConversation(boolean readConversation) {
-        this.readConversation = readConversation;
     }
 
     public void addConversation(IMMessageModel model) {

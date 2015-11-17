@@ -3,35 +3,37 @@
 
     <item
         android:id="@+id/person"
-        android:title="Contacts"
         android:icon="@drawable/ic_action_person"
-        android:showAsAction="always|withText"/>
+        android:showAsAction="always|withText"
+        android:title="Contacts" />
     <item
         android:id="@+id/conference"
-        android:title="Conferences"
         android:icon="@drawable/ic_action_group"
-        android:showAsAction="always|withText"/>
+        android:showAsAction="always|withText"
+        android:title="Conferences" />
 
     <item
         android:id="@+id/overflow"
-        android:title="more"
         android:icon="@drawable/ic_action_settings"
-        android:showAsAction="always">
+        android:showAsAction="always"
+        android:title="more">
 
-    <menu>
+        <menu>
 
-        <item android:id="@+id/more"
-            android:title="Edit status"
-            android:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/more"
+                android:showAsAction="always|withText"
+                android:title="Edit status" />
 
-        <item android:id="@+id/newConference"
-            android:title="Create Conference"
-            android:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/newConference"
+                android:showAsAction="always|withText"
+                android:title="Create Conference" />
 
-        <!--item android:id="@+id/settings"
-            android:title="Connection settings"
-            android:showAsAction="always|withText"/-->
-    </menu>
+            <!--item android:id="@+id/settings"
+                android:title="Connection settings"
+                android:showAsAction="always|withText"/-->
+        </menu>
     </item>
 
 </menu>

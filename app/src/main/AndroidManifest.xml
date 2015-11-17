@@ -3,7 +3,7 @@
     package="org.dhis2.messaging"
     android:versionCode="14"
     android:versionName="1.6">
- 
+
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="23" />
@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <!-- Creates a custom permission so only this app can receive its messages. -->
@@ -36,8 +36,8 @@
         <activity
             android:name=".Activities.IntroActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,10 +46,10 @@
         </activity>
         <activity
             android:name=".Activities.LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
+            android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:label="@string/app_name">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.Login" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -57,9 +57,9 @@
         </activity>
         <activity
             android:name=".Activities.HomeActivity"
-            android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="org.dhis2.messaging.Home" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -123,6 +123,7 @@
                 <category android:name="com.example.gcm" />
             </intent-filter>
         </receiver>
+
         <service android:name=".Utils.Google.CloudMesaaging.GcmIntentService" />
         <service android:name=".XMPP.Listeners.IMPacketListener" />
 

@@ -28,78 +28,73 @@ public class ConferenceModel {
         this.messages = messages;
     }
 
-    public void setParticipants(List<String> participants) {
-        this.participants = participants;
+    public List<String> getParticipants() {
+        return participants;
     }
 
-    public List<String> getParticipants() {
-
-        return participants;
+    public void setParticipants(List<String> participants) {
+        this.participants = participants;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setMessages(List<IMMessageModel> messages) {
-
-        this.messages = messages;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void addMessages(List<IMMessageModel> messages) {
-
         for (IMMessageModel m : messages)
             this.messages.add(m);
     }
 
-    public void setName(String name) {
-
-        this.name = name;
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setOccupants(int occupants) {
-        this.occupants = occupants;
-    }
-
-    public String getDescription() {
-
-        return description;
-    }
-
     public int getOccupants() {
         return occupants;
+    }
+
+    public void setOccupants(int occupants) {
+        this.occupants = occupants;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getTopic() {
-        return topic;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public List<IMMessageModel> getMessages() {
-        return messages;
-    }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTopic() {
+        return topic;
     }
 
     public void setTopic(String topic) {
         this.topic = topic;
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public List<IMMessageModel> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<IMMessageModel> messages) {
+        this.messages = messages;
     }
 
     public void addMessage(IMMessageModel message) {

@@ -1,25 +1,9 @@
 package org.dhis2.messaging.Utils.Adapters;
 
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
-import org.dhis2.messaging.Activities.InterpretationCommentActivity;
-import org.dhis2.messaging.Activities.ProfileActivity;
-import org.dhis2.messaging.Models.InterpretationModel;
-import org.dhis2.messaging.*;
-import org.dhis2.messaging.REST.APIPath;
-import org.dhis2.messaging.REST.RESTClient;
-import org.dhis2.messaging.REST.Response;
-import org.dhis2.messaging.Utils.SharedPrefs;
-import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,7 +18,21 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import org.dhis2.messaging.Activities.InterpretationCommentActivity;
+import org.dhis2.messaging.Activities.ProfileActivity;
+import org.dhis2.messaging.Models.InterpretationModel;
+import org.dhis2.messaging.R;
+import org.dhis2.messaging.REST.APIPath;
+import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.REST.Response;
+import org.dhis2.messaging.Utils.SharedPrefs;
+import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
     private Context context;

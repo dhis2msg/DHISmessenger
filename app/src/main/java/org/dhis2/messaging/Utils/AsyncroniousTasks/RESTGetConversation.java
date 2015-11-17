@@ -3,12 +3,12 @@ package org.dhis2.messaging.Utils.AsyncroniousTasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import org.dhis2.messaging.Models.NameAndIDModel;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.RESTConversationCallback;
 import org.dhis2.messaging.Models.ChatModel;
+import org.dhis2.messaging.Models.NameAndIDModel;
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.REST.Response;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.RESTConversationCallback;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 import org.json.JSONArray;

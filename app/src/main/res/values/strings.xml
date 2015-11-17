@@ -38,7 +38,7 @@
     <string name="notConnected">Not connected</string>
     <string name="info">Info</string>
     <string name="members">Conversation members</string>
-    
+
 
     <string-array name="view_array">
         <item>Messages</item>
@@ -46,9 +46,9 @@
         <item>Interpretations</item>
         <item>Profile</item>
         <item>Stats</item>
-        <item>Sign out</item> 
+        <item>Sign out</item>
     </string-array>
-    
+
     <string-array name="server_array">
         <item>https://apps.dhis2.org/demo</item>
         <item>http://hmis2.health.go.ug</item>
@@ -66,13 +66,11 @@
     </string-array>
 
 
-    
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="action_new">New Message</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
-
 
 
 </resources>

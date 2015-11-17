@@ -2,26 +2,23 @@ package org.dhis2.messaging.Activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.dhis2.messaging.R;
-import org.dhis2.messaging.Utils.Adapters.ProfileAdapter;
 import org.dhis2.messaging.Models.ProfileModel;
+import org.dhis2.messaging.R;
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.REST.Response;
+import org.dhis2.messaging.Utils.Adapters.ProfileAdapter;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;

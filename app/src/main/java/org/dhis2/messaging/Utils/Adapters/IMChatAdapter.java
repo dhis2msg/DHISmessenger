@@ -1,15 +1,8 @@
 package org.dhis2.messaging.Utils.Adapters;
 
-import java.util.List;
-
-import android.text.Html;
-
-import org.dhis2.messaging.Models.IMMessageModel;
-import org.dhis2.messaging.XMPP.XMPPSessionStorage;
-import org.dhis2.messaging.R;
-
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.dhis2.messaging.Models.IMMessageModel;
+import org.dhis2.messaging.R;
+import org.dhis2.messaging.XMPP.XMPPSessionStorage;
+
+import java.util.List;
 
 public class IMChatAdapter extends ArrayAdapter<IMMessageModel> {
     private Context context;

@@ -3,10 +3,12 @@ package org.dhis2.messaging.REST;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -25,13 +27,13 @@ import javax.net.ssl.X509TrustManager;
 import javax.security.cert.X509Certificate;
 
 public class RESTClient {
+    public final static int JSON_EXCEPTION = 14;
+    public final static int MALFORMED_URL_EXCEPTION = 15;
     private final static int IO_EXCEPTION = 10;
     private final static int SOCKET_TIMEOUT_EXCEPTION = 11;
     private final static int OTHER_EXCEPTION = 12;
     private final static int SSL_HANDSHAKE_EXCEPTION = 13;
     private final static int SERVICE_UNAVAILABLE_EXCEPTION = 503;
-    public final static int JSON_EXCEPTION = 14;
-    public final static int MALFORMED_URL_EXCEPTION = 15;
 
     private RESTClient() {
         //disableSslVerification();
@@ -239,7 +241,7 @@ public class RESTClient {
             connection.connect();
             code = connection.getResponseCode();
             body = readInputStream(connection.getInputStream());
-        }  catch (SocketTimeoutException e) {
+        } catch (SocketTimeoutException e) {
             code = SOCKET_TIMEOUT_EXCEPTION;
         } catch (MalformedURLException e) {
             code = HttpURLConnection.HTTP_NOT_FOUND;
@@ -260,7 +262,7 @@ public class RESTClient {
                 connection.disconnect();
             }
         }
-        return new Response(code,body);
+        return new Response(code, body);
     }
 
     public static Bitmap getPicture(String api, String userCredentials) {

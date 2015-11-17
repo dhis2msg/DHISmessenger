@@ -1,6 +1,5 @@
 package org.dhis2.messaging.Testing;
 
-import android.app.ActivityManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

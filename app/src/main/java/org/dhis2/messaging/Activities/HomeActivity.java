@@ -1,9 +1,5 @@
 package org.dhis2.messaging.Activities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -21,17 +17,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import org.dhis2.messaging.Fragments.InboxFragment;
+import org.dhis2.messaging.Fragments.InterpretationsFragment;
+import org.dhis2.messaging.Fragments.MyProfileFragment;
+import org.dhis2.messaging.Fragments.RosterFragment;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.Testing.Stats;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.UnreadMessagesCallback;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTUnreadMessages;
 import org.dhis2.messaging.Utils.Google.CloudMesaaging.RegisterDevice;
+import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
-import org.dhis2.messaging.XMPP.XMPPSessionStorage;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.UnreadMessagesCallback;
-import org.dhis2.messaging.Fragments.*;
 import org.dhis2.messaging.XMPP.XMPPClient;
-import org.dhis2.messaging.Utils.SharedPrefs;
+import org.dhis2.messaging.XMPP.XMPPSessionStorage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -171,7 +174,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         XMPPClient.getInstance().destroy(this);
     }
 
-    private void initializeDrawer(Bundle savedInstanceState){
+    private void initializeDrawer(Bundle savedInstanceState) {
         charSequenceTitle = getTitle();
         menuTitles = getResources().getStringArray(R.array.view_array);
         menuIcons = new int[]{R.drawable.ic_action_email, R.drawable.ic_action_chat, R.drawable.ic_action_picture,

@@ -1,19 +1,13 @@
 package org.dhis2.messaging.Utils.Google.CloudMesaaging;
 
 import android.app.Activity;
-
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.widget.Toast;
 
-import org.dhis2.messaging.Activities.HomeActivity;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.UnreadMessagesCallback;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTUnreadMessages;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 
@@ -34,15 +28,15 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
             Bundle extras = intent.getExtras();
 
             if (!extras.isEmpty()) {
-                if ( !extras.getString("sender").equals(SharedPrefs.getUserName(context)) ) {
+                if (!extras.getString("sender").equals(SharedPrefs.getUserName(context))) {
 
                     if (componentInfo.getClassName().equals("org.dhis2.messaging.Activities.RESTChatActivity")) {
                         Intent i = new Intent("org.dhis2.messaging.Activities.RESTChatActivity");
                         context.sendBroadcast(i);
                     } else {
-                            new ToastMaster(context, "New " + extras.getString("type") + " \nFrom " + extras.getString("sender"), true);
+                        new ToastMaster(context, "New " + extras.getString("type") + " \nFrom " + extras.getString("sender"), true);
 
-                        if(componentInfo.getClassName().equals("org.dhis2.messaging.Activities.HomeActivity")) {
+                        if (componentInfo.getClassName().equals("org.dhis2.messaging.Activities.HomeActivity")) {
                             Intent i = new Intent("org.dhis2.messaging.Activities.HomeActivity");
                             context.sendBroadcast(i);
                         }

@@ -1,49 +1,47 @@
 package org.dhis2.messaging.Fragments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.dhis2.messaging.Activities.ConferenceChatActivity;
 import org.dhis2.messaging.Activities.IMChatActivity;
 import org.dhis2.messaging.Models.ConferenceModel;
-import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.Models.RosterModel;
-import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
-import org.dhis2.messaging.XMPP.XMPPSessionStorage;
+import org.dhis2.messaging.R;
+import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.Utils.Adapters.ConferenceAdapter;
 import org.dhis2.messaging.Utils.Adapters.RosterAdapter;
-import org.dhis2.messaging.R;
-import org.dhis2.messaging.XMPP.XMPPClient;
-
 import org.dhis2.messaging.Utils.SharedPrefs;
+import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
+import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
+import org.dhis2.messaging.XMPP.XMPPClient;
+import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 import org.jivesoftware.smack.packet.Presence;
 
-import android.support.v4.app.Fragment;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class RosterFragment extends Fragment implements XMPPDataChanged {
     private ListView userListView, groupsListView;

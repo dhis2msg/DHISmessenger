@@ -3,9 +3,8 @@
 
     <item
         android:id="@+id/more"
-        android:title="more"
         android:icon="@drawable/ic_action_person"
         android:showAsAction="always"
-        />
+        android:title="more" />
 
 </menu>

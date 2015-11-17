@@ -32,8 +32,8 @@
     </style>
 
 
-<style name="TextViewSpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
-    <item name="android:background">@drawable/menu_dropdown_panel_dhisactionbar</item>
-    <item name="android:popupBackground">@drawable/menu_dropdown_panel_dhisactionbar</item>
-</style>
+    <style name="TextViewSpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:background">@drawable/menu_dropdown_panel_dhisactionbar</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_dhisactionbar</item>
+    </style>
 </resources>

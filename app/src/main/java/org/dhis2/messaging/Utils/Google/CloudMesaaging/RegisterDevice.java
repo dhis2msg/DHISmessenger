@@ -2,7 +2,6 @@ package org.dhis2.messaging.Utils.Google.CloudMesaaging;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;

@@ -7,29 +7,31 @@
             android:icon="@drawable/ic_action_overflow"-->
     <item
         android:id="@+id/dropdown_menu"
+        android:icon="@drawable/ic_action_overflow"
         android:showAsAction="always"
-        android:title="options"
-        android:icon="@drawable/ic_action_overflow">
+        android:title="options">
         <menu>
             <item
                 android:id="@+id/refresh"
-                android:title="Refresh"
-
                 android:icon="@drawable/ic_action_refresh"
-                android:showAsAction="always|withText"/>
 
-            <item android:id="@+id/sort"
-                android:title="Sort by read"
+                android:showAsAction="always|withText"
+                android:title="Refresh" />
 
+            <item
+                android:id="@+id/sort"
                 android:icon="@drawable/ic_action_shuffle"
-                android:showAsAction="always|withText"/>
 
-            <item android:id="@+id/new_message"
-                android:title="@string/action_new"
+                android:showAsAction="always|withText"
+                android:title="Sort by read" />
 
+            <item
+                android:id="@+id/new_message"
                 android:icon="@drawable/ic_action_new"
-                android:showAsAction="always|withText" />
-    </menu>
+
+                android:showAsAction="always|withText"
+                android:title="@string/action_new" />
+        </menu>
     </item>
     <!--
     <item

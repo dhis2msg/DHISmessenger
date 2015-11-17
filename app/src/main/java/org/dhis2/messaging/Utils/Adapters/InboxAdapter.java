@@ -1,10 +1,5 @@
 package org.dhis2.messaging.Utils.Adapters;
 
-import java.util.List;
-
-import org.dhis2.messaging.*;
-import org.dhis2.messaging.Models.InboxModel;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,6 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.dhis2.messaging.Models.InboxModel;
+import org.dhis2.messaging.R;
+
+import java.util.List;
 
 public class InboxAdapter extends ArrayAdapter<InboxModel> {
     private Context context;

@@ -1,32 +1,38 @@
 package org.dhis2.messaging.Fragments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.os.Vibrator;
-import android.view.*;
-import android.widget.*;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.dhis2.messaging.Activities.HomeActivity;
 import org.dhis2.messaging.Activities.NewMessageActivity;
 import org.dhis2.messaging.Activities.RESTChatActivity;
-import org.dhis2.messaging.Utils.Adapters.InboxAdapter;
 import org.dhis2.messaging.Models.InboxModel;
 import org.dhis2.messaging.R;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.widget.AdapterView.OnItemClickListener;
-
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.REST.Response;
+import org.dhis2.messaging.Utils.Adapters.InboxAdapter;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTDeleteMessage;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTMarkRead;
 import org.dhis2.messaging.Utils.SharedPrefs;
@@ -35,17 +41,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class InboxFragment extends Fragment {
     private final String MESSAGES_PR_PAGE = "25";
-
+    //Memory store
+    AsyncTask asyncTask;
     private ListView listView;
     private ProgressBar loader;
     private View foot;
-
-    //Memory store
-    AsyncTask asyncTask;
     private List<InboxModel> list;
     private int currentPage, totalPages;
+    private BroadcastReceiver inboxReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refresh(1);
+                }
+            });
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,7 +126,7 @@ public class InboxFragment extends Fragment {
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new RESTDeleteMessage(getActivity(), (HomeActivity) getActivity(), SharedPrefs.getUserId(getActivity()) ).execute(im.getId());
+                        new RESTDeleteMessage(getActivity(), (HomeActivity) getActivity(), SharedPrefs.getUserId(getActivity())).execute(im.getId());
                         popup.dismiss();
                     }
                 });
@@ -197,7 +216,7 @@ public class InboxFragment extends Fragment {
     }
 
     public void setAdapter() {
-        if (list != null && getActivity() != null ) {
+        if (list != null && getActivity() != null) {
             InboxAdapter adapter = new InboxAdapter(getActivity(), R.layout.item_rest_inbox, list);
             listView.setAdapter(adapter);
         }
@@ -244,7 +263,7 @@ public class InboxFragment extends Fragment {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                if (listView.getAdapter() == null){
+                if (listView.getAdapter() == null) {
                     setLoader(true);
                 }
             }
@@ -303,16 +322,4 @@ public class InboxFragment extends Fragment {
             }
         }.execute();
     }
-
-    private BroadcastReceiver inboxReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                        refresh(1);
-                }
-            });
-        }
-    };
 }//End of class Conversation fragment

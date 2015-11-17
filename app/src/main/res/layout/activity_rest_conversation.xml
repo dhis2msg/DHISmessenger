@@ -12,11 +12,11 @@
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/someLayout"
         android:layout_alignParentTop="true"
         android:baselineAligned="true"
         android:divider="@android:color/transparent"
         android:dividerHeight="4sp"
-        android:layout_above="@+id/someLayout"
         android:transcriptMode="alwaysScroll" />
 
     <ProgressBar
@@ -30,17 +30,18 @@
 
 
     <RelativeLayout
+        android:id="@+id/someLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#1d5288"
-        android:id="@+id/someLayout"
         android:baselineAligned="true">
+
         <ImageView
+            android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="0.4dp"
-            android:id="@+id/line"
-            android:background="#1d5288"/>
+            android:background="#1d5288" />
 
 
         <Button
@@ -48,22 +49,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/answerMessage"
             android:layout_below="@id/line"
             android:background="#1d5288"
             android:text="@string/send"
-            android:textStyle="bold"
-            android:layout_alignTop="@+id/answerMessage"
             android:textColor="#FFFFFF"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-<!--RelativeLayout
-    android:layout_width="wrap_content"
-    android:id="@+id/someLayoutTwo"
-    android:background="#FFFFFF"
-    android:layout_below="@+id/line"
-    android:layout_toLeftOf="@id/btnSend"
-    android:padding="4dp"
-    android:layout_height="wrap_content"-->
+        <!--RelativeLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/someLayoutTwo"
+            android:background="#FFFFFF"
+            android:layout_below="@+id/line"
+            android:layout_toLeftOf="@id/btnSend"
+            android:padding="4dp"
+            android:layout_height="wrap_content"-->
 
 
         <EditText
@@ -71,18 +72,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/line"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="7dp"
             android:layout_toLeftOf="@id/btnSend"
             android:background="@drawable/edittext_rounded"
             android:gravity="top|left"
             android:hint="@string/message"
+            android:inputType="textMultiLine"
             android:maxHeight="70dp"
             android:minHeight="40dp"
-            android:inputType="textMultiLine"
-            android:layout_marginTop="7dp"
-            android:layout_marginLeft="7dp"
-            android:paddingBottom="2dp"
- />
-<!--/RelativeLayout-->
+            android:paddingBottom="2dp" />
+        <!--/RelativeLayout-->
 
         <ProgressBar
             android:id="@+id/loader"
@@ -92,7 +92,6 @@
             android:layout_toRightOf="@id/answerMessage"
             android:visibility="gone" />
     </RelativeLayout>
-
 
 
     <!--         android:layout_above="@+id/someLayout"-->

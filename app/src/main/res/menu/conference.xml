@@ -3,24 +3,24 @@
 
     <item
         android:id="@+id/more"
-        android:title="more"
         android:icon="@drawable/ic_action_group"
         android:showAsAction="always"
-        />
+        android:title="more" />
     <item
         android:id="@+id/admin"
-        android:title="more"
         android:icon="@drawable/ic_action_settings"
         android:showAsAction="always"
-        >
+        android:title="more">
         <menu>
-        <item android:id="@+id/info"
-            android:title="Info"
-            android:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/info"
+                android:showAsAction="always|withText"
+                android:title="Info" />
 
-        <item android:id="@+id/delete"
-            android:title="Delete conference"
-            android:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/delete"
+                android:showAsAction="always|withText"
+                android:title="Delete conference" />
 
         </menu>
     </item>

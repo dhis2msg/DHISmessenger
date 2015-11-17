@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/someLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/someLayout"
-    android:padding="10dp"
     android:layout_gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF" />
 
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/name"
+        android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content">
-    <Button
-        android:id="@+id/markRead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="110dp"
-        android:textColor="#FFFFFF"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:text="Mark Read"
+        android:orientation="horizontal">
 
-        android:singleLine="true" />
-    <Button
-        android:id="@+id/delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FF0000"
-        android:minWidth="110dp"
-        android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:text="Delete"
-android:layout_toRightOf="@id/markRead"
-        android:singleLine="true" />
+        <Button
+            android:id="@+id/markRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:minWidth="110dp"
+            android:singleLine="true"
+            android:text="Mark Read"
+
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/markRead"
+            android:minWidth="110dp"
+            android:singleLine="true"
+            android:text="Delete"
+            android:textColor="#FF0000" />
     </RelativeLayout>
 </RelativeLayout>

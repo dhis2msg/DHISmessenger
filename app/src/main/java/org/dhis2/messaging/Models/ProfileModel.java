@@ -40,108 +40,108 @@ public class ProfileModel {
         return this.id;
     }
 
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public String getSurname() {
-        return this.surname;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    public String getJobTitle() {
-        return this.jobTitle;
-    }
-
-    public String getEmployer() {
-        return this.employer;
-    }
-
-    public String getEducation() {
-        return this.education;
-    }
-
-    public String getGender() {
-        return this.gender;
-    }
-
-    public String getInterests() {
-        return this.interests;
-    }
-
-    public String getNationality() {
-        return this.nationality;
-    }
-
-    public String getLanguages() {
-        return this.languages;
-    }
-
-    public String getBirthday() {
-        return this.birthday;
-    }
-
-    public String getGCMIds() {
-        return this.gcmid;
-    }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    public String getSurname() {
+        return this.surname;
+    }
+
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getJobTitle() {
+        return this.jobTitle;
     }
 
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
     }
 
+    public String getEmployer() {
+        return this.employer;
+    }
+
     public void setEmployer(String employer) {
         this.employer = employer;
+    }
+
+    public String getEducation() {
+        return this.education;
     }
 
     public void setEducation(String education) {
         this.education = education;
     }
 
+    public String getGender() {
+        return this.gender;
+    }
+
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getInterests() {
+        return this.interests;
     }
 
     public void setInterests(String interests) {
         this.interests = interests;
     }
 
+    public String getNationality() {
+        return this.nationality;
+    }
+
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public String getLanguages() {
+        return this.languages;
     }
 
     public void setLanguages(String languages) {
         this.languages = languages;
     }
 
+    public String getBirthday() {
+        return this.birthday;
+    }
+
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public String getGCMIds() {
+        return this.gcmid;
     }
 
     public void setGcmid(String gcmid) {

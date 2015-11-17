@@ -22,14 +22,14 @@ import android.widget.TextView;
 import org.dhis2.messaging.Models.IMMessageModel;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.Testing.SaveDataSqlLite;
+import org.dhis2.messaging.Utils.Adapters.IMChatAdapter;
 import org.dhis2.messaging.Utils.SharedPrefs;
+import org.dhis2.messaging.Utils.UserInterface.SwipeListener;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
 import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
-import org.dhis2.messaging.XMPP.XMPPSessionStorage;
-import org.dhis2.messaging.Utils.Adapters.IMChatAdapter;
 import org.dhis2.messaging.XMPP.XMPPClient;
-import org.dhis2.messaging.Utils.UserInterface.SwipeListener;
+import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 
 import java.util.ArrayList;
 import java.util.List;

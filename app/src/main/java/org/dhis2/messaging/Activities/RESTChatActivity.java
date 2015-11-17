@@ -1,37 +1,42 @@
 package org.dhis2.messaging.Activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Vibrator;
-import android.view.*;
-import android.widget.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
-import org.dhis2.messaging.Models.InboxModel;
+import org.dhis2.messaging.Models.ChatModel;
 import org.dhis2.messaging.Models.NameAndIDModel;
 import org.dhis2.messaging.R;
+import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.Testing.SaveDataSqlLite;
+import org.dhis2.messaging.Utils.Adapters.ChatAdapter;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.RESTConversationCallback;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTGetConversation;
-import org.dhis2.messaging.Models.ChatModel;
-import org.dhis2.messaging.Utils.Adapters.*;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTSendMessage;
-import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
 import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
 import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,6 +61,19 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     //Memory store
     private String id;
     private List<NameAndIDModel> members;
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getMessages(false);
+                    Vibrator v = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(500);
+                }
+            });
+        }
+    };
 
     @SuppressWarnings("unused")
     @OnClick(R.id.btnSend)
@@ -249,18 +267,4 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
         getConversation = new RESTGetConversation(this, this, read, id);
         getConversation.execute();
     }
-
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getMessages(false);
-                    Vibrator v = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
-                    v.vibrate(500);
-                }
-            });
-        }
-    };
 }

@@ -15,15 +15,12 @@ import java.util.List;
  */
 public class XMPPSessionStorage {
     public static XMPPSessionStorage xmppSession = null;
-
-    private List<RosterModel> data = null;
-    private List<ConferenceModel> conferenceData = null;
-
     public XMPPDataChanged callback = null;
     public IMUpdateUnreadMessages homeListener = null;
-
     public String nickname = null;
     public String JID = null;
+    private List<RosterModel> data = null;
+    private List<ConferenceModel> conferenceData = null;
 
     public synchronized static XMPPSessionStorage getInstance() {
         if (xmppSession == null) {
@@ -49,6 +46,13 @@ public class XMPPSessionStorage {
 
     public String getNickname() {
         return nickname;
+    }
+
+    /*
+     *  SET METHODS
+     */
+    public void setNickname(String name) {
+        this.nickname = name;
     }
 
     public ConferenceModel getConference(String id) {
@@ -232,13 +236,6 @@ public class XMPPSessionStorage {
         if (homeListener != null) {
             homeListener.updateIMMessages(getUnreadMessages());
         }
-    }
-
-    /*
-     *  SET METHODS
-     */
-    public void setNickname(String name) {
-        this.nickname = name;
     }
 
     public void setConferences(String id, List<IMMessageModel> messages) {

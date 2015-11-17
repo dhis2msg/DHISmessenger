@@ -18,7 +18,15 @@ import org.dhis2.messaging.XMPP.Listeners.IMPacketListener;
 import org.dhis2.messaging.XMPP.Listeners.IMRosterListener;
 import org.dhis2.messaging.XMPP.Listeners.MUCPacketListener;
 import org.dhis2.messaging.XMPP.Listeners.MUCParticipantListener;
-import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.AccountManager;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.SmackAndroid;
+import org.jivesoftware.smack.SmackConfiguration;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
@@ -42,9 +50,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class XMPPClient {
-    private final int TIMEOUT = 3000;
-    private final int CONFERENCE_HISTORY_MESSAGES = 35;
-
     //Customized code system
     private final static int CONNECTED_TO_SERVER = 0;
     private final static int USER_LOGGED_IN = 1;
@@ -61,16 +66,16 @@ public class XMPPClient {
     private final static int SOCKET_TIMEOUT_EXCEPTION = 10;
     private final static int OTHER_EXCEPTION = 14;
     private final static int UNABLE_TO_JOIN_CONFERENCE = 12;
-
+    private static XMPPClient instance = null;
+    private final int TIMEOUT = 3000;
+    private final int CONFERENCE_HISTORY_MESSAGES = 35;
     //Listeners
     private IMRosterListener rosterListener = null;
     private IMPacketListener packetListener = null;
     private MUCPacketListener mucPacketListener = null;
     private MUCParticipantListener mucParticipantListener = null;
-
     //Instances
     private XMPPConnection connection = null;
-    private static XMPPClient instance = null;
     private MultiUserChat muc = null;
     private DataCaptureOnline data;
 
@@ -82,6 +87,50 @@ public class XMPPClient {
             instance = new XMPPClient();
         }
         return instance;
+    }
+
+    public static boolean noErrors(int code) {
+        return code == CONNECTED_TO_SERVER || code == USER_LOGGED_IN ||
+                code == SUCCESS || code == MESSAGE_SENT ||
+                code == CONFERENCE_CREATED;
+    }
+
+    public static String getResponseMessage(int code) {
+        switch (code) {
+            case CONNECTED_TO_SERVER:
+                return "Connected to server";
+            case USER_LOGGED_IN:
+                return "Successfully logged in";
+            case SUCCESS:
+                return "";
+            case MESSAGE_SENT:
+                return "Message sent!";
+            case CONFERENCE_CREATED:
+                return "Successfully created conference";
+            case XMPP_EXCEPTION:
+                return "XMPP Error";
+            case SASL_EXCEPTION:
+                return "Simple Authentication and Security Layer Error";
+            case SMACK_NOT_CONNECTED_EXCEPTION:
+                return "Not connected to chat server..";
+            case SMACK_NO_RESPONSE_EXCEPTION:
+                return "No response from chat server..";
+            case SMACK_NOT_LOGGED_IN_EXCEPTION:
+                return "Not logged in on chat server..";
+            case SMACK_EXCEPTION:
+                return "Something wrong with chat server..";
+            case IO_EXCEPTION:
+                return "Try refresh!";
+            case SOCKET_TIMEOUT_EXCEPTION:
+                return "Connection timeout - try again..";
+            case UNABLE_TO_JOIN_CONFERENCE:
+                return "Unable to join conference";
+            case OTHER_EXCEPTION:
+                return "Something went wrong..";
+
+            default:
+                return "";
+        }
     }
 
     public XMPPConnection getConnection() {
@@ -567,50 +616,6 @@ public class XMPPClient {
                 XMPPSessionStorage.getInstance().callback();
             }
         }.execute();
-    }
-
-    public static boolean noErrors(int code) {
-        return code == CONNECTED_TO_SERVER || code == USER_LOGGED_IN ||
-                code == SUCCESS || code == MESSAGE_SENT ||
-                code == CONFERENCE_CREATED;
-    }
-
-    public static String getResponseMessage(int code) {
-        switch (code) {
-            case CONNECTED_TO_SERVER:
-                return "Connected to server";
-            case USER_LOGGED_IN:
-                return "Successfully logged in";
-            case SUCCESS:
-                return "";
-            case MESSAGE_SENT:
-                return "Message sent!";
-            case CONFERENCE_CREATED:
-                return "Successfully created conference";
-            case XMPP_EXCEPTION:
-                return "XMPP Error";
-            case SASL_EXCEPTION:
-                return "Simple Authentication and Security Layer Error";
-            case SMACK_NOT_CONNECTED_EXCEPTION:
-                return "Not connected to chat server..";
-            case SMACK_NO_RESPONSE_EXCEPTION:
-                return "No response from chat server..";
-            case SMACK_NOT_LOGGED_IN_EXCEPTION:
-                return "Not logged in on chat server..";
-            case SMACK_EXCEPTION:
-                return "Something wrong with chat server..";
-            case IO_EXCEPTION:
-                return "Try refresh!";
-            case SOCKET_TIMEOUT_EXCEPTION:
-                return "Connection timeout - try again..";
-            case UNABLE_TO_JOIN_CONFERENCE:
-                return "Unable to join conference";
-            case OTHER_EXCEPTION:
-                return "Something went wrong..";
-
-            default:
-                return "";
-        }
     }
 
     /*public void addInvitationListener(){

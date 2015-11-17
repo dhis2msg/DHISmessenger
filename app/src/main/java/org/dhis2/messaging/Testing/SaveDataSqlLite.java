@@ -4,32 +4,30 @@ package org.dhis2.messaging.Testing;
  * Created by iNick on 14.02.15.
  */
 
-import android.util.Log;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.content.ContentValues;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class SaveDataSqlLite {
-    Context context;
-    static final String TAG = "DatabaseHelper";
-    static final String DB_TITEL = "data.db";
-    static final String DATA_TABLE = "data";
-    static final String ID = "id";//BaseColumns._ID;
     public static final String IM_MESSAGE_SENDT_COOUNT = "countim";
     public static final String IM_DISCUSSION_MESSAGE_SENDT_COOUNT = "countdiscussion";
     public static final String DHIS_MESSAGE_SENDT_COUNT = "countdhis";
     public static final String NOTIFICATION_COUNT = "countnotification";
     public static final String ONLINE_COUNT = "countonline";
-
+    static final String TAG = "DatabaseHelper";
+    static final String DB_TITEL = "data.db";
+    static final String DATA_TABLE = "data";
+    static final String ID = "id";//BaseColumns._ID;
     static final String NOTIFICATION_TABLE = "notification";
     static final String NOTIFICATION_ID = "notificationid";
     static final String NOTIFICATION_RECEIVED = "notificationreceived";
     static final String NOTIFICATION_READ = "notificationread";
-
     static final int DB_VERSION = 8;
+    Context context;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
 

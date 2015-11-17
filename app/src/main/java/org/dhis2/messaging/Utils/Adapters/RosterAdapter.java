@@ -1,10 +1,5 @@
 package org.dhis2.messaging.Utils.Adapters;
 
-import java.util.List;
-
-import org.dhis2.messaging.Models.RosterModel;
-import org.dhis2.messaging.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.dhis2.messaging.Models.RosterModel;
+import org.dhis2.messaging.R;
+
+import java.util.List;
 
 public class RosterAdapter extends ArrayAdapter<RosterModel> {
     private Context context;

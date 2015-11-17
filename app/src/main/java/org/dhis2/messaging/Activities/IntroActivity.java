@@ -9,8 +9,8 @@ import android.webkit.URLUtil;
 import android.widget.TextView;
 
 import org.dhis2.messaging.R;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTLogin;
 import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTLogin;
 
 /**
  * Created by iNick on 26.09.14.
