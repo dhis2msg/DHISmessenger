@@ -149,7 +149,7 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
     @Override
     public void onResume() {
         super.onResume();
-        XMPPSessionStorage.getInstance().changeListener(this);
+        XMPPSessionStorage.getInstance().setCallback(this);
         if (XMPPClient.getInstance().checkConnection()) {
             pb.setVisibility(View.GONE);
             XMPPClient.getInstance().getRosterList();
@@ -164,7 +164,7 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
     @Override
     public void onPause() {
         super.onResume();
-        XMPPSessionStorage.getInstance().changeListener(null);
+        XMPPSessionStorage.getInstance().setCallback(null);
     }
 
     @Override

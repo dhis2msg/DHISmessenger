@@ -11,7 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iNick on 14.11.14.
+ * A singleton storage class for the XMPP session data. Currently only in memory from what I can tell..
+ *
+ *
+ * Note: Do not create new instances of this class.
+ * Use: call XMPPSessionStorage.getInstance() to get the instance.
  */
 public class XMPPSessionStorage {
     public static XMPPSessionStorage xmppSession = null;
@@ -22,11 +26,40 @@ public class XMPPSessionStorage {
     private List<RosterModel> data = null;
     private List<ConferenceModel> conferenceData = null;
 
+    /**
+     * Get the singleton instance.
+     */
     public synchronized static XMPPSessionStorage getInstance() {
-        if (xmppSession == null) {
-            xmppSession = new XMPPSessionStorage();
-        }
+        if (xmppSession == null) xmppSession = new XMPPSessionStorage();
         return xmppSession;
+    }
+
+    /*
+     *  CALLBACK AND LISTENER METHODS
+     */
+    public void callback() {
+        if (callback != null)
+            callback.notifyChanged();
+    }
+
+    public void setCallback(XMPPDataChanged callback) {
+        this.callback = callback;
+    }
+
+    public void setHomeListener(IMUpdateUnreadMessages homeListener) {
+        this.homeListener = homeListener;
+    }
+
+    /**
+     * Destroy the XmppStorage instance.
+     */
+    public void destroy() {
+        //The rationale is: if you destroy the instance all these are destroyed as well.
+        //this.data = null;
+        //this.conferenceData = null;
+        //this.callback = null;
+        //this.homeListener = null;
+        this.xmppSession = null;
     }
 
     /*
@@ -241,6 +274,7 @@ public class XMPPSessionStorage {
     public void setConferences(String id, List<IMMessageModel> messages) {
         if (getConference(id) != null) {
             getConference(id).setMessages(messages);
+            //TODO: check if this is an error. it looks wrong. No callback if id doesn't exist ?
             callback();
         }
     }
@@ -258,7 +292,6 @@ public class XMPPSessionStorage {
         getConference(mucId).getParticipants().remove(sub[1]);
         updateOccupants(mucId);
     }
-
 
     /*
      *  EXISTS METHODS
@@ -293,30 +326,5 @@ public class XMPPSessionStorage {
             }
         }
         return false;
-    }
-
-    /*
-    *  CALLBACK AND LISTENER METHODS
-    */
-    public void changeListener(XMPPDataChanged callback) {
-        this.callback = callback;
-    }
-
-    public void callback() {
-        if (callback != null) {
-            callback.notifyChanged();
-        }
-    }
-
-    public void setHomeListener(IMUpdateUnreadMessages homeListener) {
-        this.homeListener = homeListener;
-    }
-
-    public void destroy() {
-        this.data = null;
-        this.conferenceData = null;
-        this.callback = null;
-        this.homeListener = null;
-        this.xmppSession = null;
     }
 }

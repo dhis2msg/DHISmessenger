@@ -156,13 +156,13 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
     protected void onStop() {
         super.onDestroy();
         XMPPClient.getInstance().leaveMUC();
-        XMPPSessionStorage.getInstance().changeListener(null);
+        XMPPSessionStorage.getInstance().setCallback(null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        XMPPSessionStorage.getInstance().changeListener(this);
+        XMPPSessionStorage.getInstance().setCallback(this);
         XMPPSessionStorage.getInstance().setHomeListener(this);
 
         if (!XMPPClient.getInstance().onlineOnMuc(conferenceId)) {

@@ -173,7 +173,6 @@ public class InterpretationCommentActivity extends Activity implements IMUpdateU
             super.onPreExecute();
             if (listView.getAdapter() == null)
                 contentLoader.setVisibility(View.VISIBLE);
-
         }
 
         @Override
@@ -205,7 +204,6 @@ public class InterpretationCommentActivity extends Activity implements IMUpdateU
                         ChatModel model = new ChatModel(message, date, user);
                         tempList.add(model);
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return -1;

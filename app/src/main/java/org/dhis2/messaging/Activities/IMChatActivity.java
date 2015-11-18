@@ -139,13 +139,13 @@ public class IMChatActivity extends Activity implements XMPPDataChanged {
     @Override
     protected void onPause() {
         super.onPause();
-        XMPPSessionStorage.getInstance().changeListener(null);
+        XMPPSessionStorage.getInstance().setCallback(null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        XMPPSessionStorage.getInstance().changeListener(this);
+        XMPPSessionStorage.getInstance().setCallback(this);
         setListAdapter();
     }
 
