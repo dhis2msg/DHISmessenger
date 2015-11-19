@@ -12,13 +12,11 @@ import java.util.List;
 
 /**
  * A singleton storage class for the XMPP session data. Currently only in memory from what I can tell..
- *
- *
- * Note: Do not create new instances of this class.
- * Use: call XMPPSessionStorage.getInstance() to get the instance.
  */
 public class XMPPSessionStorage {
+
     public static XMPPSessionStorage xmppSession = null;
+
     public XMPPDataChanged callback = null;
     public IMUpdateUnreadMessages homeListener = null;
     public String nickname = null;
@@ -26,11 +24,16 @@ public class XMPPSessionStorage {
     private List<RosterModel> data = null;
     private List<ConferenceModel> conferenceData = null;
 
+    private XMPPSessionStorage() {
+    }
+
     /**
      * Get the singleton instance.
      */
     public synchronized static XMPPSessionStorage getInstance() {
-        if (xmppSession == null) xmppSession = new XMPPSessionStorage();
+        if (xmppSession == null) {
+            xmppSession = new XMPPSessionStorage();
+        }
         return xmppSession;
     }
 
@@ -38,8 +41,9 @@ public class XMPPSessionStorage {
      *  CALLBACK AND LISTENER METHODS
      */
     public void callback() {
-        if (callback != null)
+        if (callback != null) {
             callback.notifyChanged();
+        }
     }
 
     public void setCallback(XMPPDataChanged callback) {
@@ -327,4 +331,5 @@ public class XMPPSessionStorage {
         }
         return false;
     }
+
 }
