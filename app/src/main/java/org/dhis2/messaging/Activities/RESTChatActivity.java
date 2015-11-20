@@ -92,6 +92,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
         setContentView(R.layout.activity_rest_conversation);
         ButterKnife.bind(this);
 
+        //TODO: vladislav: storage: fetch this list from disk ?
         members = new ArrayList<NameAndIDModel>();
 
         //Getting message context
@@ -144,6 +145,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
         if (getConversation != null)
             if (getConversation.isCancelled())
                 getMessages(true);
+        // TODO : vladislav:  why xmppSessionStorage  here ?
         XMPPSessionStorage.getInstance().setHomeListener(this);
     }
 
@@ -151,6 +153,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     protected void onPause() {
         super.onPause();
         this.unregisterReceiver(messageReceiver);
+        // TODO : vladislav:  why xmppSessionStorage  here ?
         XMPPSessionStorage.getInstance().setHomeListener(null);
         removeHandler();
     }

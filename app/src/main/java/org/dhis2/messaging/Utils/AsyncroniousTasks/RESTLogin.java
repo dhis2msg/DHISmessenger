@@ -107,7 +107,6 @@ public class RESTLogin extends AsyncTask<String, String, Integer> {
             removeDialogSafly();
             if (RESTClient.noErrors(code)) {
 
-
                 Intent intent = new Intent(context, HomeActivity.class);
                 context.startActivity(intent);
                 ((LoginActivity) context).finish();

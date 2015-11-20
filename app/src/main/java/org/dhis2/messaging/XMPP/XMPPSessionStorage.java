@@ -32,6 +32,7 @@ public class XMPPSessionStorage {
      */
     public synchronized static XMPPSessionStorage getInstance() {
         if (xmppSession == null) {
+            //TODO: vladislav : Read stored values from disk here !
             xmppSession = new XMPPSessionStorage();
         }
         return xmppSession;
@@ -63,6 +64,8 @@ public class XMPPSessionStorage {
         //this.conferenceData = null;
         //this.callback = null;
         //this.homeListener = null;
+
+        //TODO: vladislav: store vars to disk before exiting from here !
         this.xmppSession = null;
     }
 
@@ -278,7 +281,7 @@ public class XMPPSessionStorage {
     public void setConferences(String id, List<IMMessageModel> messages) {
         if (getConference(id) != null) {
             getConference(id).setMessages(messages);
-            //TODO: check if this is an error. it looks wrong. No callback if id doesn't exist ?
+            //TODO: vladislav : check if this is an error. it looks wrong. No callback if id doesn't exist ?
             callback();
         }
     }

@@ -53,6 +53,7 @@ public class ProfileActivity extends Activity implements IMUpdateUnreadMessages 
         loader.setVisibility(View.VISIBLE);
         fixActionBar(intent.getStringExtra("username"));
 
+        //TODO: vladislav/netcode?: find out what this addresses relate to. Maybe create entry in settings for it.
         if (SharedPrefs.getServerURL(getApplicationContext()).contains("197.243.37.125") || SharedPrefs.getServerURL(getApplicationContext()).contains("10.10.35.207"))
             ((ImageView) findViewById(R.id.rwlogo)).setVisibility(View.VISIBLE);
     }
