@@ -49,6 +49,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A singleton class.
+ */
 public class XMPPClient {
     //Customized code system
     private final static int CONNECTED_TO_SERVER = 0;
@@ -81,6 +84,11 @@ public class XMPPClient {
 
     //Tasks
     private AsyncTask asyncTask;
+
+    /**
+     * Vladislav: Assumption: since we have getInstance, I defined the private constructor.
+     */
+    private XMPPClient() {}
 
     public synchronized static XMPPClient getInstance() {
         if (instance == null) {
@@ -138,13 +146,14 @@ public class XMPPClient {
     }
 
     public boolean checkConnection() {
-        if (connection == null)
+        if (connection == null) {
             return false;
-
+        }
         return connection.isConnected();
     }
 
     public int setConnection(Context context, String HOST, String PORT, String USERNAME, String PASSWORD) {
+        // TODO: (definition of).setConnection(...) :Get server info from storage/settings instead of using the following:
         //Midlertidig
         HOST = "172.169.1.64";
         //  PORT = "5222";
@@ -179,6 +188,10 @@ public class XMPPClient {
         } catch (Exception e) {
             return OTHER_EXCEPTION;
         } finally {
+            //This code is pretty strange. Why call XMPPClient.getInstance() when the method is non-static.
+            // And the class is a singleton.
+            // Thus the case is that the object calls the static method of the class to get reference to itself ?
+            // Which is nonsense... Or am I missing something ?
             int loggInCode = XMPPClient.getInstance().login(USERNAME, PASSWORD);
             if (noErrors(loggInCode)) {
                 data = new DataCaptureOnline();
@@ -207,7 +220,6 @@ public class XMPPClient {
                 setRosterListener();
                 setMucNickname();
             } else {
-
                 if (context instanceof HomeActivity) {
                     final Context fin = context;
                     ((HomeActivity) context).runOnUiThread(new Runnable() {
@@ -221,7 +233,6 @@ public class XMPPClient {
                 return loggInCode;
             }
         }
-
         return CONNECTED_TO_SERVER;
     }
 
@@ -282,12 +293,10 @@ public class XMPPClient {
                                 XMPPSessionStorage.getInstance().getConference(id).setDescription(description);
                             } else
                                 conferences.add(new ConferenceModel(id, name, subject, description, occupants, new ArrayList<String>(), false, null));
-
                         }
                     }
                 }
                 XMPPSessionStorage.getInstance().addConferenceList(conferences);
-
             }
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
@@ -317,12 +326,14 @@ public class XMPPClient {
                         }
 
                         if (XMPPSessionStorage.getInstance().getRosterModel(entry.getUser()) != null && lastActivity.getIdleTime() < 1) {
-                            if (!XMPPSessionStorage.getInstance().getRosterModel(entry.getUser()).getStatusMessage().equals("unavailable"))
+                            if (!XMPPSessionStorage.getInstance().getRosterModel(entry.getUser()).getStatusMessage().equals("unavailable")) {
                                 status = XMPPSessionStorage.getInstance().getRosterModel(entry.getUser()).getStatusMessage();
-                            else
+                            } else {
                                 status = "Online";
-                        } else if ((status.equals("unavailable") && lastActivity.getIdleTime() < 1) || ((status.equals("") && lastActivity.getIdleTime() < 1)))
+                            }
+                        } else if ((status.equals("unavailable") && lastActivity.getIdleTime() < 1) || ((status.equals("") && lastActivity.getIdleTime() < 1))) {
                             status = "Online";
+                        }
 
                         lastActivity.getStatusMessage();
                         list.add(new RosterModel(entry.getName(), entry.getUser(), "", status,
@@ -339,7 +350,6 @@ public class XMPPClient {
 
                 }
                 return list;
-
             }
 
             @Override
@@ -367,7 +377,6 @@ public class XMPPClient {
         packetListener = new IMPacketListener(context);
         connection.addPacketListener(packetListener, filter);
         context.startService(new Intent(context, IMPacketListener.class));
-
     }
 
     public void removePacketListener() {
@@ -383,8 +392,9 @@ public class XMPPClient {
     }
 
     public void removeRosterListener() {
-        if (rosterListener != null && connection != null)
+        if (rosterListener != null && connection != null) {
             connection.getRoster().removeRosterListener(rosterListener);
+        }
     }
 
     public boolean removeFromConference(String JID) {
@@ -443,21 +453,20 @@ public class XMPPClient {
             return SMACK_NOT_CONNECTED_EXCEPTION;
         } catch (XMPPException.XMPPErrorException e) {
             return XMPP_EXCEPTION;
-
         } catch (SmackException.NoResponseException e) {
             return SMACK_NO_RESPONSE_EXCEPTION;
-
         } catch (Exception e) {
             return OTHER_EXCEPTION;
         }
-
         return SUCCESS;
     }
 
     public boolean onlineOnMuc(String id) {
-        if (muc != null)
-            if (muc.getRoom().equals(id))
+        if (muc != null) {
+            if (muc.getRoom().equals(id)) {
                 return muc.isJoined();
+            }
+        }
         return false;
     }
 
@@ -468,16 +477,15 @@ public class XMPPClient {
         this.muc = new MultiUserChat(connection, id);
 
         try {
-            if (XMPPSessionStorage.getInstance().getNickname() != null)
+            if (XMPPSessionStorage.getInstance().getNickname() != null) {
                 this.muc.join(XMPPSessionStorage.getInstance().getNickname(), "", dh, Long.valueOf(TIMEOUT));
-            else
+            } else {
                 this.muc.join("no-nickname", "", dh, Long.valueOf(TIMEOUT));
+            }
             List<String> occupants = muc.getOccupants();
             for (String nick : occupants)
                 XMPPSessionStorage.getInstance().addMUCParticipant(id, nick);
             if (muc.isJoined()) {
-
-
                 for (Affiliate info : muc.getOwners()) {
                     if (info.getJid().equals(XMPPSessionStorage.getInstance().JID)) //info.getNick().equals(XMPPSessionStorage.getInstance().getNickname()))
                         XMPPSessionStorage.getInstance().getConference(id).setAdmin(true);
@@ -485,9 +493,9 @@ public class XMPPClient {
                 List<IMMessageModel> list = new ArrayList<IMMessageModel>();
                 while (true) {
                     Message message = muc.nextMessage(500);
-                    if (message == null)
+                    if (message == null) {
                         break;
-                    else {
+                    } else {
                         if (message.getBody() != null) {
                             DelayInformation inf;
                             String username = message.getFrom();
@@ -496,9 +504,9 @@ public class XMPPClient {
                             inf = message.getExtension("x", "jabber:x:delay");
                             if (inf != null) {
                                 list.add(new IMMessageModel(message.getBody(), nickname, new SimpleDateFormat("yyyy.MM.dd HH:mm").format(inf.getStamp())));
-                            } else
+                            } else {
                                 list.add(new IMMessageModel(message.getBody(), nickname, ""));
-
+                            }
 
                         }
                     }
@@ -508,12 +516,10 @@ public class XMPPClient {
                 mucParticipantListener = new MUCParticipantListener(id);
                 muc.addMessageListener(mucPacketListener);
                 muc.addParticipantStatusListener(mucParticipantListener);
-            } else
+            } else {
                 return UNABLE_TO_JOIN_CONFERENCE;
-
-
+            }
             return SUCCESS;
-
         } catch (XMPPException.XMPPErrorException e) {
             return XMPP_EXCEPTION;
         } catch (SmackException.NotConnectedException e) {
@@ -535,7 +541,6 @@ public class XMPPClient {
         } catch (Exception e) {
             return OTHER_EXCEPTION;
         }
-
         return MESSAGE_SENT;
     }
 
@@ -563,14 +568,12 @@ public class XMPPClient {
         } catch (Exception e) {
             return OTHER_EXCEPTION;
         }
-
         return CONFERENCE_CREATED;
     }
 
     public void leaveMUC() {
         if (muc != null) {
             try {
-
                 muc.leave();
                 muc = null;
                 mucPacketListener = null;

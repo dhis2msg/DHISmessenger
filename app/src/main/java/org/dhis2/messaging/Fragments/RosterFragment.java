@@ -361,6 +361,7 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
         loginTask = new AsyncTask<String, String, Integer>() {
             @Override
             protected Integer doInBackground(String... args) {
+                //TOOD: (useof).setConnection(...)get Server info from storage/settings
                 return XMPPClient.getInstance().setConnection(getActivity(), HOST, PORT, USERNAME, PASSWORD);
 
             }

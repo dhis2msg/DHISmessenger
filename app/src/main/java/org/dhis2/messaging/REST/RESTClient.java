@@ -26,6 +26,9 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.security.cert.X509Certificate;
 
+/**
+ * Contains only static methods.
+ */
 public class RESTClient {
     public final static int JSON_EXCEPTION = 14;
     public final static int MALFORMED_URL_EXCEPTION = 15;
@@ -35,6 +38,9 @@ public class RESTClient {
     private final static int SSL_HANDSHAKE_EXCEPTION = 13;
     private final static int SERVICE_UNAVAILABLE_EXCEPTION = 503;
 
+    /**
+     * Created by iNick (?) this way.
+     */
     private RESTClient() {
         //disableSslVerification();
     }
@@ -44,14 +50,10 @@ public class RESTClient {
             // Create a trust manager that does not validate certificate chains
             TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
                 @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-
-                }
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
 
                 @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-
-                }
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
 
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -62,8 +64,7 @@ public class RESTClient {
 
                 public void checkServerTrusted(X509Certificate[] certs, String authType) {
                 }
-            }
-            };
+            }};
 
             // Install the all-trusting trust manager
             SSLContext sc = SSLContext.getInstance("SSL");
@@ -118,8 +119,9 @@ public class RESTClient {
             try {
                 if (connection != null) {
                     code = connection.getResponseCode();
-                } else
+                } else {
                     code = IO_EXCEPTION;
+                }
             } catch (IOException two) {
                 code = IO_EXCEPTION;
             }
@@ -163,8 +165,9 @@ public class RESTClient {
             try {
                 if (connection != null) {
                     code = connection.getResponseCode();
-                } else
+                } else {
                     code = IO_EXCEPTION;
+                }
             } catch (IOException two) {
                 code = IO_EXCEPTION;
             }
