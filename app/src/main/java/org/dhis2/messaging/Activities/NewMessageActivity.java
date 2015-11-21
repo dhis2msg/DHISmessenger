@@ -24,7 +24,7 @@ import org.dhis2.messaging.REST.Response;
 import org.dhis2.messaging.Testing.SaveDataSqlLite;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
+import org.dhis2.messaging.Interfaces.UpdateUnreadMsg;
 import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Created by iNick on 27.09.14.
  */
-public class NewMessageActivity extends Activity implements IMUpdateUnreadMessages {
+public class NewMessageActivity extends Activity implements UpdateUnreadMsg, RESTUpadteUnreadMessages {
     @Bind(R.id.subject)
     EditText subject;
     @Bind(R.id.content)
@@ -68,7 +68,20 @@ public class NewMessageActivity extends Activity implements IMUpdateUnreadMessag
     @Override
     protected void onPause() {
         super.onPause();
+        //TODO: find out why this is here: It doesn't seem to serve any function at all. (see the onResume TODO)
         XMPPSessionStorage.getInstance().setHomeListener(null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //TODO: find out if this can be removed
+        //Findings: I assume that by removing it the updateUnreadMsg would stop working.
+        // IE: when a new xmpp message arrives the user will not be notified of it.
+        // Since the Xmpp session storage class calls this "home listener" which infact is
+        // just a reference to the current ui screen class, that implements the interface.
+        // Since the xmpp client is not operational as of now I will leave this here & come back to confirm my assumption
+        XMPPSessionStorage.getInstance().setHomeListener(this);
     }
 
     @Override
@@ -92,24 +105,36 @@ public class NewMessageActivity extends Activity implements IMUpdateUnreadMessag
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        XMPPSessionStorage.getInstance().setHomeListener(this);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_send, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * This notifies the user that "new chat message" has arrived. (Xmpp client message)
+     * @param restNumber
+     * @param xmppNumber
+     */
     @Override
-    public void updateIMMessages(int amount) {
+    public void updateUnreadMsg(int restNumber, int xmppNumber) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 new ToastMaster(getApplicationContext(), "New Chat Message", true);
+            }
+        });
+    }
+
+    /**
+     * This notifies the user that "new message" has arrived. (DHIS2 client message)
+     */
+    @Override
+    public void updateRESTMessages(int amount) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new ToastMaster(getApplicationContext(), "New Message", true);
             }
         });
     }
@@ -376,6 +401,8 @@ public class NewMessageActivity extends Activity implements IMUpdateUnreadMessag
             }
         }.execute();
     }
+
+
 
     private class MessageModel {
         //For JSON purposes only

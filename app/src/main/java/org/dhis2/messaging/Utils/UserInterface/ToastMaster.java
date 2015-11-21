@@ -18,6 +18,14 @@ public class ToastMaster {
     private Toast toast;
     private LayoutInflater inflater;
 
+    /**
+     * vladislav:
+     * I am guessing that this displays some sort of message to the user.
+     * Either notification or popup.
+     * @param context
+     * @param text
+     * @param message
+     */
     public ToastMaster(Context context, String text, boolean message) {
         toast = new Toast(context);
         inflater = LayoutInflater.from(context);

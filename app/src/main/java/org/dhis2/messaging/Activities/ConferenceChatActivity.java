@@ -26,7 +26,7 @@ import org.dhis2.messaging.Utils.Adapters.IMChatAdapter;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.SwipeListener;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
+import org.dhis2.messaging.Interfaces.UpdateUnreadMsg;
 import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
 import org.dhis2.messaging.XMPP.XMPPClient;
 import org.dhis2.messaging.XMPP.XMPPSessionStorage;
@@ -41,7 +41,7 @@ import butterknife.OnClick;
 /**
  * Created by iNick on 20.10.14.
  */
-public class ConferenceChatActivity extends Activity implements XMPPDataChanged, IMUpdateUnreadMessages {
+public class ConferenceChatActivity extends Activity implements XMPPDataChanged, UpdateUnreadMsg {
 
     @Bind(R.id.sendText)
     EditText text;
@@ -101,7 +101,7 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
     }
 
     @Override
-    public void updateIMMessages(int amount) {
+    public void updateUnreadMsg(int restNumber, int xmppNumber) {
         new ToastMaster(getApplicationContext(), "New chat message", true);
     }
 

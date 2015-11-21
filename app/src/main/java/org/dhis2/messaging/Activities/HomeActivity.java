@@ -23,12 +23,11 @@ import org.dhis2.messaging.Fragments.MyProfileFragment;
 import org.dhis2.messaging.Fragments.RosterFragment;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.Testing.Stats;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.UnreadMessagesCallback;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTUnreadMessages;
 import org.dhis2.messaging.Utils.Google.CloudMesaaging.RegisterDevice;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
+import org.dhis2.messaging.Interfaces.UpdateUnreadMsg;
 import org.dhis2.messaging.XMPP.XMPPClient;
 import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 
@@ -40,7 +39,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class HomeActivity extends FragmentActivity implements UnreadMessagesCallback, IMUpdateUnreadMessages {
+public class HomeActivity extends FragmentActivity implements UnreadMessagesCallback, UpdateUnreadMsg {
 
     private static final String SELECTED_FRAGMENT_POSITION = "selectedFragmentPos";
 
@@ -111,7 +110,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
     }
 
     @Override
-    public void updateIMMessages(final int amount) {
+    public void updateUnreadMsg(final int restNumber, int xmppNumber) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -121,7 +120,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
                     if (i == 0)
                         hm.put("titles", menuTitles[i] + " | " + SharedPrefs.getUnreadMessages(getApplicationContext()));
                     else if (i == 1)
-                        hm.put("titles", menuTitles[i] + " | " + amount);
+                        hm.put("titles", menuTitles[i] + " | " + restNumber);
                     else
                         hm.put("titles", menuTitles[i]);
                     hm.put("icons", Integer.toString(menuIcons[i]));
@@ -132,7 +131,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
                 drawerListView.setAdapter(new SimpleAdapter(getApplicationContext(), list, R.layout.item_drawer, key, id));
 
                 if (drawerSelection == 1) {
-                    getActionBar().setTitle(menuTitles[1] + " | " + amount);
+                    getActionBar().setTitle(menuTitles[1] + " | " + restNumber);
                     Vibrator v = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(500);
                 } else {

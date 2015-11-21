@@ -3,7 +3,7 @@ package org.dhis2.messaging.XMPP;
 import org.dhis2.messaging.Models.ConferenceModel;
 import org.dhis2.messaging.Models.IMMessageModel;
 import org.dhis2.messaging.Models.RosterModel;
-import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
+import org.dhis2.messaging.Interfaces.UpdateUnreadMsg;
 import org.dhis2.messaging.XMPP.Interfaces.XMPPDataChanged;
 import org.jivesoftware.smack.packet.Presence;
 
@@ -18,7 +18,7 @@ public class XMPPSessionStorage {
     public static XMPPSessionStorage xmppSession = null;
 
     public XMPPDataChanged callback = null;
-    public IMUpdateUnreadMessages homeListener = null;
+    public UpdateUnreadMsg homeListener = null;
     public String nickname = null;
     public String JID = null;
     private List<RosterModel> data = null;
@@ -51,7 +51,7 @@ public class XMPPSessionStorage {
         this.callback = callback;
     }
 
-    public void setHomeListener(IMUpdateUnreadMessages homeListener) {
+    public void setHomeListener(UpdateUnreadMsg homeListener) {
         this.homeListener = homeListener;
     }
 
@@ -274,7 +274,7 @@ public class XMPPSessionStorage {
 
     private void updateAmountUnreadMessages() {
         if (homeListener != null) {
-            homeListener.updateIMMessages(getUnreadMessages());
+            homeListener.updateUnreadMsg(getUnreadMessages(), 0);
         }
     }
 

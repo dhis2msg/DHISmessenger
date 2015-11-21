@@ -32,8 +32,7 @@ import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.RESTConversationCa
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTGetConversation;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTSendMessage;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
-import org.dhis2.messaging.XMPP.XMPPSessionStorage;
+import org.dhis2.messaging.Interfaces.UpdateUnreadMsg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RESTChatActivity extends Activity implements RESTConversationCallback, IMUpdateUnreadMessages {
+public class RESTChatActivity extends Activity implements RESTConversationCallback, UpdateUnreadMsg {
     @Bind(R.id.chatList)
     ListView listView;
     @Bind(R.id.answerMessage)
@@ -146,7 +145,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
             if (getConversation.isCancelled())
                 getMessages(true);
         // TODO : vladislav:  why xmppSessionStorage  here ?
-        XMPPSessionStorage.getInstance().setHomeListener(this);
+        //XMPPSessionStorage.getInstance().setHomeListener(this);
     }
 
     @Override
@@ -154,7 +153,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
         super.onPause();
         this.unregisterReceiver(messageReceiver);
         // TODO : vladislav:  why xmppSessionStorage  here ?
-        XMPPSessionStorage.getInstance().setHomeListener(null);
+        //XMPPSessionStorage.getInstance().setHomeListener(null);
         removeHandler();
     }
 
@@ -196,7 +195,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     }
 
     @Override
-    public void updateIMMessages(int amount) {
+    public void updateUnreadMsg(int restNumber, int xmppNumber) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

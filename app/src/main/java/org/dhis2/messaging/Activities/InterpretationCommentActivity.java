@@ -24,7 +24,7 @@ import org.dhis2.messaging.Utils.Adapters.ChatAdapter;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.SwipeListener;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
+import org.dhis2.messaging.Interfaces.UpdateUnreadMsg;
 import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +40,7 @@ import butterknife.OnClick;
 /**
  * Created by iNick on 14.10.14.
  */
-public class InterpretationCommentActivity extends Activity implements IMUpdateUnreadMessages {
+public class InterpretationCommentActivity extends Activity implements UpdateUnreadMsg {
 
     @Bind(R.id.chatList)
     ListView listView;
@@ -133,7 +133,7 @@ public class InterpretationCommentActivity extends Activity implements IMUpdateU
     }
 
     @Override
-    public void updateIMMessages(int amount) {
+    public void updateUnreadMsg(int restNumber, int xmppNumber) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

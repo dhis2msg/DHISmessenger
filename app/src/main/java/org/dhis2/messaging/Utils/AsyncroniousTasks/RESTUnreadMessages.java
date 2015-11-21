@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
 import org.dhis2.messaging.REST.Response;
-import org.dhis2.messaging.Utils.AsyncroniousTasks.Interfaces.UnreadMessagesCallback;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.json.JSONArray;
 import org.json.JSONException;

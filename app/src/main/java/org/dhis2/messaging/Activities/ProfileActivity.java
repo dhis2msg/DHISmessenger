@@ -21,7 +21,7 @@ import org.dhis2.messaging.REST.Response;
 import org.dhis2.messaging.Utils.Adapters.ProfileAdapter;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
-import org.dhis2.messaging.XMPP.Interfaces.IMUpdateUnreadMessages;
+import org.dhis2.messaging.Interfaces.UpdateUnreadMsg;
 import org.dhis2.messaging.XMPP.XMPPSessionStorage;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by iNick on 18.10.14.
  */
-public class ProfileActivity extends Activity implements IMUpdateUnreadMessages {
+public class ProfileActivity extends Activity implements UpdateUnreadMsg {
     @Bind(R.id.list)
     ListView list;
     @Bind(R.id.loader)
@@ -94,7 +94,7 @@ public class ProfileActivity extends Activity implements IMUpdateUnreadMessages 
     }
 
     @Override
-    public void updateIMMessages(int amount) {
+    public void updateUnreadMsg(int restNumber, int xmppNumber) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

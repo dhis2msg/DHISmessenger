@@ -1,5 +1,6 @@
 package org.dhis2.messaging.REST;
 
+import org.dhis2.messaging.Models.NameAndIDModel;
 import org.dhis2.messaging.REST.Interfaces.RESTDataChanged;
 
 /**
@@ -32,7 +33,7 @@ public class RESTSessionStorage {
         this.callback = callback;
     }
 
-    /*public void setHomeListener(IMUpdateUnreadMessages homeListener) {
+    /*public void setHomeListener(UpdateUnreadMsg homeListener) {
         this.homeListener = homeListener;
     }*/
 
@@ -44,6 +45,11 @@ public class RESTSessionStorage {
         this.restSession = null;
     }
 
+
+    //Setters & getters for : lists with:
+    // NameAndIDModel members (from RESTChatActivity).
+    //NameAndIDModel oruUits (from newMessageActivity)
+    //NameAndIDModel users
 
 
 }
