@@ -1,6 +1,7 @@
 package org.dhis2.messaging.REST;
 
 import org.dhis2.messaging.Models.NameAndIDModel;
+import org.dhis2.messaging.Models.ProfileModel;
 import org.dhis2.messaging.REST.Interfaces.RESTDataChanged;
 
 /**
@@ -13,6 +14,7 @@ public class RESTSessionStorage {
     private static RESTSessionStorage restSession = null;
     //TODO: vladislav : compare to XMPPSessionStorage. From this it is obvious that the users of the storage have to implement the interface. Find if this is the only way / the best way to do a callback to inform the client (ui) that the data has changed.
     private RESTDataChanged callback = null;
+    private ProfileModel profile = null;
 
     private RESTSessionStorage() {}
 
@@ -45,11 +47,22 @@ public class RESTSessionStorage {
         this.restSession = null;
     }
 
-
-    //Setters & getters for : lists with:
+    //__________________________Setters & getters_________________________________________
+    //Lists of:
     // NameAndIDModel members (from RESTChatActivity).
     //NameAndIDModel oruUits (from newMessageActivity)
     //NameAndIDModel users
+    // ProflieModel profile (not a list)
+
+    public ProfileModel getProfileModel() {
+        return profile;
+    }
+
+    public void setProfileModel(ProfileModel profile) {
+        this.profile = profile;
+    }
+
+
 
 
 }

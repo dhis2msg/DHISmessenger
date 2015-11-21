@@ -47,7 +47,7 @@ public class IntroActivity extends Activity {
         };
 
         if (psw != null) {
-            if (!RESTClient.isDeviceConnectedToInternett(this)) {
+            if (!RESTClient.isDeviceConnectedToInternet(this)) {
                 Intent intent = new Intent(getApplication(), LoginActivity.class);
                 startActivity(intent);
                 finish();

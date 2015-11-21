@@ -62,7 +62,7 @@ public class InterpretationCommentActivity extends Activity implements UpdateUnr
     @OnClick(R.id.btnSend)
     public void sendClicked() {
         if (newMessage.getText().toString().trim().length() > 0 && progressBar.getVisibility() != View.VISIBLE) {
-            if (RESTClient.isDeviceConnectedToInternett(getApplicationContext())) {
+            if (RESTClient.isDeviceConnectedToInternet(getApplicationContext())) {
                 sendComment = new SendInterpretationComment();
                 sendComment.execute(id);
             } else
@@ -112,7 +112,7 @@ public class InterpretationCommentActivity extends Activity implements UpdateUnr
     protected void onResume() {
         super.onResume();
         XMPPSessionStorage.getInstance().setHomeListener(this);
-        if (RESTClient.isDeviceConnectedToInternett(getApplicationContext())) {
+        if (RESTClient.isDeviceConnectedToInternet(getApplicationContext())) {
             getComments = new RESTInterpretationComments();
             getComments.execute(id);
         } else
@@ -164,6 +164,9 @@ public class InterpretationCommentActivity extends Activity implements UpdateUnr
             sendComment = null;
         }
     }
+
+
+    //______________________________Private class definitions________________________
 
     private class RESTInterpretationComments extends AsyncTask<String, Integer, Integer> {
         private List<ChatModel> tempList = new ArrayList<ChatModel>();

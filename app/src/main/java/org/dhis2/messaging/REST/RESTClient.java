@@ -27,7 +27,9 @@ import javax.net.ssl.X509TrustManager;
 import javax.security.cert.X509Certificate;
 
 /**
+ * This is the implementation of the REST api calls. GET, POST, PUT, DELETE...etc
  * Contains only static methods.
+ * Refactored by vladislav on 11/21/15.
  */
 public class RESTClient {
     public final static int JSON_EXCEPTION = 14;
@@ -300,10 +302,8 @@ public class RESTClient {
         return bitmap;
     }
 
-    private static String readInputStream(InputStream stream)
-            throws IOException {
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(stream));
+    private static String readInputStream(InputStream stream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         try {
             StringBuilder builder = new StringBuilder();
             String line;
@@ -312,7 +312,6 @@ public class RESTClient {
                 builder.append(line);
                 builder.append('\n');
             }
-
             return builder.toString();
         } finally {
             try {
@@ -323,7 +322,7 @@ public class RESTClient {
         }
     }
 
-    public static boolean isDeviceConnectedToInternett(Context context) {
+    public static boolean isDeviceConnectedToInternet(Context context) {
 /*        ConnectivityManager cManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = cManager.getActiveNetworkInfo();

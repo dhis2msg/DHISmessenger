@@ -22,6 +22,7 @@ import org.dhis2.messaging.Models.ProfileModel;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.REST.RESTSessionStorage;
 import org.dhis2.messaging.REST.Response;
 import org.dhis2.messaging.Utils.SharedPrefs;
 import org.dhis2.messaging.Utils.UserInterface.ToastMaster;
@@ -65,11 +66,12 @@ public class MyProfileFragment extends Fragment {
             }
         });
 
-        if (!RESTClient.isDeviceConnectedToInternett(getActivity())) {
+        if (!RESTClient.isDeviceConnectedToInternet(getActivity())) {
             layout.setVisibility(View.GONE);
             new ToastMaster(getActivity(), "No internet connection", false);
-        } else
+        } else {
             getProfile();
+        }
         return view;
     }
 
@@ -83,7 +85,7 @@ public class MyProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save: {
-                if (RESTClient.isDeviceConnectedToInternett(getActivity()))
+                if (RESTClient.isDeviceConnectedToInternet(getActivity()))
                     saveProfile();
                 else
                     new ToastMaster(getActivity(), "No internet connection", false);
@@ -109,6 +111,7 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void saveProfile() {
+        //TODO: update local storage of profile.
         final ProfileModel newModel = new ProfileModel();
         newModel.setId(SharedPrefs.getUserId(getActivity()));
         newModel.setFirstName(firstname.getText().toString());
@@ -158,18 +161,30 @@ public class MyProfileFragment extends Fragment {
 
     private void getProfile() {
         asyncTask = new AsyncTask<String, String, Integer>() {
-            ProfileModel model = null;
-            String auth = SharedPrefs.getCredentials(getActivity());
-            String api = SharedPrefs.getServerURL(getActivity()) + APIPath.USER_INFO;
+            //TODO: if local copy exists return it instead of asking the server !
+            ProfileModel model = RESTSessionStorage.getInstance().getProfileModel();
+            Boolean modelFromCache = true;
+            String auth = null;
+            String api = null;
 
             @Override
             protected Integer doInBackground(String... args) {
-                Response response = RESTClient.get(api, auth);
+                if (model == null) {
+                    modelFromCache = false;
+                    auth = SharedPrefs.getCredentials(getActivity());
+                    api = SharedPrefs.getServerURL(getActivity()) + APIPath.USER_INFO;
 
-                if (RESTClient.noErrors(response.getCode()))
-                    model = new Gson().fromJson(response.getBody(), ProfileModel.class);
-
-                return response.getCode();
+                    Response response = RESTClient.get(api, auth);
+                    if (RESTClient.noErrors(response.getCode())) {
+                        model = new Gson().fromJson(response.getBody(), ProfileModel.class);
+                    }
+                    return response.getCode();
+                } else {
+                    modelFromCache = true;
+                    //TODO : will this work ? (yes it should, but maybe I should just return 0)?
+                    // who receives this anyways ? (onPostExecute gets it as int argument).
+                    return null;
+                }
             }
 
             @Override
@@ -178,7 +193,7 @@ public class MyProfileFragment extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-                            if (RESTClient.noErrors(code)) {
+                            if (modelFromCache || RESTClient.noErrors(code)) {
                                 firstname.setText(model.getFirstName());
                                 surname.setText(model.getSurname());
                                 email.setText(model.getEmail());
@@ -189,9 +204,9 @@ public class MyProfileFragment extends Fragment {
                                     birthday.updateDate(Integer.parseInt(model.getBirthday().substring(0, 4)),
                                             Integer.parseInt(model.getBirthday().substring(5, 7)) - 1,
                                             Integer.parseInt(model.getBirthday().substring(8, 10)) + 1);
-                                } else
+                                } else {
                                     editText.setText("Click to set your birthday");
-
+                                }
                                 nationality.setText(model.getNationality());
                                 education.setText(model.getEducation());
                                 employer.setText(model.getEmployer());

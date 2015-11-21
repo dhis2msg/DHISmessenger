@@ -130,7 +130,7 @@ public class NewMessageActivity extends Activity implements UpdateUnreadMsg {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.send:
-                if (RESTClient.isDeviceConnectedToInternett(getApplicationContext()))
+                if (RESTClient.isDeviceConnectedToInternet(getApplicationContext()))
                     sendMessage();
                 else
                     new ToastMaster(getApplicationContext(), "No internet connection", false);
@@ -372,8 +372,6 @@ public class NewMessageActivity extends Activity implements UpdateUnreadMsg {
                         Type listType = new TypeToken<ArrayList<NameAndIDModel>>() {
                         }.getType();
                         orgUnits = new Gson().fromJson(array.toString(), listType);
-
-
                     } catch (Exception e) {
 
                     }

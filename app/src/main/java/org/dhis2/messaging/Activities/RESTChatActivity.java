@@ -78,7 +78,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     @OnClick(R.id.btnSend)
     public void clickedSend() {
         if (newMessage.getText().toString().trim().length() > 0 && sendLoader.getVisibility() != View.VISIBLE) {
-            if (RESTClient.isDeviceConnectedToInternett(getApplication()))
+            if (RESTClient.isDeviceConnectedToInternet(getApplication()))
                 sendMessage();
             else
                 new ToastMaster(getApplicationContext(), "No internet connection", false);

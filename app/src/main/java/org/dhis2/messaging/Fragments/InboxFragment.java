@@ -150,6 +150,7 @@ public class InboxFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //TODO: vladislav: cache :get the list from cache instead here ?
         list = new ArrayList<InboxModel>();
         refresh(1);
         getActivity().registerReceiver(inboxReceiver, new IntentFilter("org.dhis2.messaging.Activities.HomeActivity"));
@@ -176,7 +177,7 @@ public class InboxFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh: {
-                if (RESTClient.isDeviceConnectedToInternett(getActivity())) {
+                if (RESTClient.isDeviceConnectedToInternet(getActivity())) {
                     list = new ArrayList<InboxModel>();
                     refresh(1);
                 } else
@@ -199,15 +200,12 @@ public class InboxFragment extends Fragment {
     }
 
     public void addToInboxList(List<InboxModel> list, int page) {
-        for (InboxModel model : list) {
-            this.list.add(model);
-        }
-
+        this.list.addAll(list);
         setMoreMessagesBtn();
 
-        if (page == currentPage)
+        if (page == currentPage) {
             setAdapter();
-
+        }
         setLoader(false);
     }
 
@@ -322,4 +320,4 @@ public class InboxFragment extends Fragment {
             }
         }.execute();
     }
-}//End of class Conversation fragment
+}

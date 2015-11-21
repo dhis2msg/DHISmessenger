@@ -62,7 +62,6 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
         message = (TextView) view.findViewById(R.id.infoMessage);
         pb = (ProgressBar) view.findViewById(R.id.loader);
         refresh = (ImageView) view.findViewById(R.id.refresh);
-        ;
 
         setConferenceAdapter();
         setListAdapter(null);
@@ -100,11 +99,12 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
             public void onClick(View v) {
                 if (!XMPPClient.getInstance().checkConnection()) {
 
+                    //TODO:  get port from settings instead ?
                     loginXMPP(SharedPrefs.getXMPPHost(getActivity()), "5222",
                             SharedPrefs.getXMPPUsername(getActivity()), SharedPrefs.getXMPPPassword(getActivity()));
                     message.setVisibility(View.GONE);
 
-                } else if (!RESTClient.isDeviceConnectedToInternett(getActivity())) {
+                } else if (!RESTClient.isDeviceConnectedToInternet(getActivity())) {
 
                     message.setVisibility(View.VISIBLE);
                     refresh.setImageDrawable(getResources().getDrawable(R.drawable.offline));

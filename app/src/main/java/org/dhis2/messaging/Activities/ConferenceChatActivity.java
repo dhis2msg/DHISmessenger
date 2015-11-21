@@ -65,6 +65,7 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
                 pb.setVisibility(View.VISIBLE);
                 int response = XMPPClient.getInstance().sendMucMessage(message);
                 if (XMPPClient.noErrors(response)) {
+                    //TODO: vladislav : sql xmppClient/??
                     SaveDataSqlLite db = new SaveDataSqlLite(ConferenceChatActivity.this);
                     db.open();
                     db.updateIMConferenceSent();
