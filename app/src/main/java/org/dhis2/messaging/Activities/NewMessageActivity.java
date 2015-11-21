@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Created by iNick on 27.09.14.
  */
-public class NewMessageActivity extends Activity implements UpdateUnreadMsg, RESTUpadteUnreadMessages {
+public class NewMessageActivity extends Activity implements UpdateUnreadMsg {
     @Bind(R.id.subject)
     EditText subject;
     @Bind(R.id.content)
@@ -122,19 +122,6 @@ public class NewMessageActivity extends Activity implements UpdateUnreadMsg, RES
             @Override
             public void run() {
                 new ToastMaster(getApplicationContext(), "New Chat Message", true);
-            }
-        });
-    }
-
-    /**
-     * This notifies the user that "new message" has arrived. (DHIS2 client message)
-     */
-    @Override
-    public void updateRESTMessages(int amount) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new ToastMaster(getApplicationContext(), "New Message", true);
             }
         });
     }
