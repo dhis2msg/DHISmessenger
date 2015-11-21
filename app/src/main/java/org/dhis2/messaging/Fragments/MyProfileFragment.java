@@ -111,7 +111,7 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void saveProfile() {
-        //TODO: update local storage of profile.
+        //TODO: Vladislav: update local storage of profile. similiar to getProfile. to work with the cache.
         final ProfileModel newModel = new ProfileModel();
         newModel.setId(SharedPrefs.getUserId(getActivity()));
         newModel.setFirstName(firstname.getText().toString());
@@ -161,7 +161,7 @@ public class MyProfileFragment extends Fragment {
 
     private void getProfile() {
         asyncTask = new AsyncTask<String, String, Integer>() {
-            //TODO: if local copy exists return it instead of asking the server !
+            // Modified to check if RESTSessionStorage has the model
             ProfileModel model = RESTSessionStorage.getInstance().getProfileModel();
             Boolean modelFromCache = true;
             String auth = null;
@@ -177,11 +177,12 @@ public class MyProfileFragment extends Fragment {
                     Response response = RESTClient.get(api, auth);
                     if (RESTClient.noErrors(response.getCode())) {
                         model = new Gson().fromJson(response.getBody(), ProfileModel.class);
+                        RESTSessionStorage.getInstance().setProfileModel(model);
                     }
                     return response.getCode();
                 } else {
                     modelFromCache = true;
-                    //TODO : will this work ? (yes it should, but maybe I should just return 0)?
+                    //TODO : Vladislav: will this work ? (yes it should, but maybe I should just return 0)?
                     // who receives this anyways ? (onPostExecute gets it as int argument).
                     return null;
                 }
@@ -193,6 +194,7 @@ public class MyProfileFragment extends Fragment {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
+                            //If the model is from cache skip error checks.
                             if (modelFromCache || RESTClient.noErrors(code)) {
                                 firstname.setText(model.getFirstName());
                                 surname.setText(model.getSurname());
@@ -212,8 +214,15 @@ public class MyProfileFragment extends Fragment {
                                 employer.setText(model.getEmployer());
                                 interests.setText(model.getInterests());
                                 languages.setText(model.getLanguages());
-                            } else
+                                // Demo toast notifications :
+                                if (modelFromCache) {
+                                    new ToastMaster(getActivity(), "Debug: - model from cache!", false);
+                                } else {
+                                    new ToastMaster(getActivity(), "Debug: - did not get model from cache!", false);
+                                }
+                            } else {
                                 new ToastMaster(getActivity(), "Error - " + RESTClient.getErrorMessage(code), false);
+                            }
                             layout.setVisibility(View.VISIBLE);
                         }
                     });

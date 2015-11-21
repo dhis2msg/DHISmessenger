@@ -44,7 +44,7 @@ public class RESTSessionStorage {
      */
     public void destroy() {
         //TODO: vladislav: store vars to disk before exiting from here !
-        this.restSession = null;
+        //this.restSession = null;
     }
 
     //__________________________Setters & getters_________________________________________
