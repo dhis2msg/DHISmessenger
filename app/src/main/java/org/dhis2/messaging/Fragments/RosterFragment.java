@@ -356,14 +356,13 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
         alertDialog.show();
     }
 
-    private void loginXMPP(final String HOST, final String PORT, final String USERNAME, final String PASSWORD) {
+    private void loginXMPP(final String host, final String port, final String username, final String password) {
         pb.setVisibility(View.VISIBLE);
         loginTask = new AsyncTask<String, String, Integer>() {
             @Override
             protected Integer doInBackground(String... args) {
                 //TOOD: (useof).setConnection(...)get Server info from storage/settings
-                return XMPPClient.getInstance().setConnection(getActivity(), HOST, PORT, USERNAME, PASSWORD);
-
+                return XMPPClient.getInstance().setConnection(getActivity(), host, port, username, password);
             }
 
             @Override
@@ -371,7 +370,6 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
                 pb.setVisibility(View.GONE);
 
                 if (!XMPPClient.noErrors(code)) {
-
                     new ToastMaster(getActivity(), "Could not sign in", false);
                     message.setVisibility(View.VISIBLE);
                     refresh.setImageDrawable(getResources().getDrawable(R.drawable.offline));
