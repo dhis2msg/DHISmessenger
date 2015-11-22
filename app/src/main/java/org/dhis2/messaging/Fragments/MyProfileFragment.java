@@ -148,6 +148,8 @@ public class MyProfileFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             if (RESTClient.noErrors(code)) {
+                                // save to cache the successful model update here:
+                                RESTSessionStorage.getInstance().setProfileModel(newModel);
                                 new ToastMaster(getActivity(), "Profile Saved!", false);
                             } else {
                                 new ToastMaster(getActivity(), "Not saved!\n" + RESTClient.getErrorMessage(code), false);
@@ -163,14 +165,14 @@ public class MyProfileFragment extends Fragment {
         asyncTask = new AsyncTask<String, String, Integer>() {
             // Modified to check if RESTSessionStorage has the model
             ProfileModel model = RESTSessionStorage.getInstance().getProfileModel();
-            Boolean modelFromCache = true;
+            Boolean getModelFromCache = true;
             String auth = null;
             String api = null;
 
             @Override
             protected Integer doInBackground(String... args) {
                 if (model == null) {
-                    modelFromCache = false;
+                    getModelFromCache = false;
                     auth = SharedPrefs.getCredentials(getActivity());
                     api = SharedPrefs.getServerURL(getActivity()) + APIPath.USER_INFO;
 
@@ -181,9 +183,7 @@ public class MyProfileFragment extends Fragment {
                     }
                     return response.getCode();
                 } else {
-                    modelFromCache = true;
-                    //TODO : Vladislav: will this work ? (yes it should, but maybe I should just return 0)?
-                    // who receives this anyways ? (onPostExecute gets it as int argument).
+                    getModelFromCache = true;
                     return null;
                 }
             }
@@ -195,7 +195,7 @@ public class MyProfileFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             //If the model is from cache skip error checks.
-                            if (modelFromCache || RESTClient.noErrors(code)) {
+                            if (getModelFromCache || RESTClient.noErrors(code)) {
                                 firstname.setText(model.getFirstName());
                                 surname.setText(model.getSurname());
                                 email.setText(model.getEmail());
@@ -214,12 +214,12 @@ public class MyProfileFragment extends Fragment {
                                 employer.setText(model.getEmployer());
                                 interests.setText(model.getInterests());
                                 languages.setText(model.getLanguages());
-                                // Demo toast notifications :
-                                if (modelFromCache) {
-                                    new ToastMaster(getActivity(), "Debug: - model from cache!", false);
+                                // Demo cache use using toast notifications :
+                                /*if (getModelFromCache) {
+                                    new ToastMaster(getActivity(), "Model from cache!", false);
                                 } else {
-                                    new ToastMaster(getActivity(), "Debug: - did not get model from cache!", false);
-                                }
+                                    new ToastMaster(getActivity(), "Did not get model from cache!", false);
+                                } */
                             } else {
                                 new ToastMaster(getActivity(), "Error - " + RESTClient.getErrorMessage(code), false);
                             }
