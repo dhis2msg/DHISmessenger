@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CFCAC2"
+    android:background="#BDBDBD"
     android:orientation="vertical">
 
     <ProgressBar
@@ -38,7 +38,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/notConnected"
-        android:textColor="#1d5288"
+        android:textColor="#0D47A1"
         android:textSize="20dp"
         android:visibility="gone" />
 

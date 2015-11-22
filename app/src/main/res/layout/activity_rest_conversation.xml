@@ -34,14 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#1d5288"
+        android:background="#0D47A1"
         android:baselineAligned="true">
 
         <ImageView
             android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="0.4dp"
-            android:background="#1d5288" />
+            android:background="#0D47A1" />
 
 
         <Button
@@ -51,7 +51,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/answerMessage"
             android:layout_below="@id/line"
-            android:background="#1d5288"
+            android:background="#0D47A1"
             android:text="@string/send"
             android:textColor="#FFFFFF"
             android:textSize="12sp"

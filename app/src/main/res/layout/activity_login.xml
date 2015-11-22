@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1d5288"
+    android:background="#0D47A1"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="15dp">
@@ -78,6 +78,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/serverInput"
         android:layout_marginTop="10dp"
+        android:theme="@style/DhisTheme.Button"
         android:background="@drawable/blue_button"
         android:enabled="false"
         android:text="@string/signin"

@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="DhisTheme" parent="@android:style/Theme.Holo.Light">
+    <style name="DhisTheme" parent="@android:style/Theme.Material">
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:spinnerItemStyle">@style/TextViewSpinnerItem</item>
         <item name="android:popupMenuStyle">@style/DhisTheme.PopupMenu</item>
@@ -15,11 +15,11 @@
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
-    <style name="DhisTheme.DhisActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="DhisTheme.DhisActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
-    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBar" parent="@android:style/Widget.Material.ActionBar.Solid">
         <item name="android:background">#0D47A1</item>
     </style>
 
@@ -27,7 +27,7 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="DhisTheme.PopupMenu" parent="android:Widget.Holo.Light.ListPopupWindow">
+    <style name="DhisTheme.PopupMenu" parent="android:Widget.Material.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_dhisactionbar</item>
     </style>
 
@@ -37,5 +37,9 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_dhisactionbar</item>
     </style>
 
-    <style name="DhisTheme.Button" parent="android:Widget.Holo.Button"></style>
+    <style name="DhisTheme.Button" parent="android:Widget.Material.Button">
+        <item name="android:elevation">10dp</item>
+        <item name="android:translationZ">10dp</item>
+    </style>
+
 </resources>
