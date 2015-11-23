@@ -13,7 +13,7 @@ import org.json.JSONArray;
 
 /**
  * Created by iNick on 28.02.15.
- */
+  */
 public class RESTMarkRead extends AsyncTask<String, String, Integer> {
 
     private Context context;
@@ -44,6 +44,7 @@ public class RESTMarkRead extends AsyncTask<String, String, Integer> {
 
     protected void onPostExecute(final Integer code) {
         if (RESTClient.noErrors(code)) {
+            //Maybe cache this ?
             listener.updateDHISMessages();
         } else
             new ToastMaster(context, "Could not mark read, try again..", false);

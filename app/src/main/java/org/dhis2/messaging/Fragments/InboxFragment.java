@@ -31,6 +31,7 @@ import org.dhis2.messaging.Models.InboxModel;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.REST.RESTSessionStorage;
 import org.dhis2.messaging.REST.Response;
 import org.dhis2.messaging.Utils.Adapters.InboxAdapter;
 import org.dhis2.messaging.Utils.AsyncroniousTasks.RESTDeleteMessage;
@@ -252,6 +253,22 @@ public class InboxFragment extends Fragment {
     }
 
     private void getInboxElements(final int page) {
+        //TODO: How would the client know that the cached page is out of date vs the page on the server ?
+        // How are pages numbered ? 0,1,2,3.. or 3,2,1,0 ??
+        // Are the items per page statically bound to that page or is a "page" generated on the fly ?
+        // Would the pages match between app close/opens ?
+        // for example you cache the pages, close the app, on the server you have received a new message
+        // does that new message offset the old messages by one place ?
+        // If so is it worth spending computational power and code complexity to edit the local cache vs get all the information again ?
+        // API call to check ? The server would push if the client is connected?
+        // If you uncomment the following the app crashes.
+        //
+        //List<InboxModel> cached = RESTSessionStorage.getInstance().getInboxModelList(page);
+        /*Boolean getListFromCache;
+
+        if (cached != null) { // pageList is cached:
+            getListFromCache = true;
+        }*/
         asyncTask = new AsyncTask<Integer, String, Integer>() {
             List<InboxModel> tempList = new ArrayList<InboxModel>();
             String server = SharedPrefs.getServerURL(getActivity());
