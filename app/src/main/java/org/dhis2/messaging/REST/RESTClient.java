@@ -32,6 +32,7 @@ import javax.security.cert.X509Certificate;
  * Refactored by vladislav on 11/21/15.
  */
 public class RESTClient {
+    public final static int OK = 200; //an ok status to return when caching.
     public final static int JSON_EXCEPTION = 14;
     public final static int MALFORMED_URL_EXCEPTION = 15;
     private final static int IO_EXCEPTION = 10;
@@ -333,7 +334,14 @@ public class RESTClient {
     }
 
     public static boolean noErrors(int code) {
-        return code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED || code == HttpURLConnection.HTTP_NO_CONTENT;
+        switch (code) {
+            case HttpURLConnection.HTTP_OK:
+            case HttpURLConnection.HTTP_CREATED:
+            case HttpURLConnection.HTTP_NO_CONTENT:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static String getErrorMessage(int code) {

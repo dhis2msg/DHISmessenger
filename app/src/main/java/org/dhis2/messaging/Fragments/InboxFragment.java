@@ -46,15 +46,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+//TODO: Issue: load more msg's button dissapears after comming back to this activity. Investigate why!
 public class InboxFragment extends Fragment {
     private final String MESSAGES_PR_PAGE = "25";
-    //Memory store
-    AsyncTask asyncTask;
+
+    //gui elements:
     private ListView listView;
     private ProgressBar loader;
     private View foot;
+    //data:
     private List<InboxModel> list;
     private int currentPage, totalPages;
+
+    AsyncTask asyncTask;
+
     private BroadcastReceiver inboxReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -83,7 +88,6 @@ public class InboxFragment extends Fragment {
         currentPage = totalPages = 1;
         list = new ArrayList<InboxModel>();
         //setAdapter();
-
 
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -131,8 +135,9 @@ public class InboxFragment extends Fragment {
                         popup.dismiss();
                     }
                 });
-                if (im.getRead())
+                if (im.getRead()) {
                     markRead.setVisibility(View.GONE);
+                }
 
                 popup.setWidth(450);
                 popup.setHeight(150);
@@ -151,8 +156,8 @@ public class InboxFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //TODO: vladislav: cache :get the list from cache instead here ?
         list = new ArrayList<InboxModel>();
+        currentPage = 1;
         refresh(1);
         getActivity().registerReceiver(inboxReceiver, new IntentFilter("org.dhis2.messaging.Activities.HomeActivity"));
     }
@@ -178,12 +183,11 @@ public class InboxFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh: {
-                if (RESTClient.isDeviceConnectedToInternet(getActivity())) {
-                    list = new ArrayList<InboxModel>();
-                    refresh(1);
-                } else
+                if (!RESTClient.isDeviceConnectedToInternet(getActivity())) {
                     Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
-
+                } //since we are caching ? access to the internet to display things isn't nessesary. ?
+                list = new ArrayList<InboxModel>();
+                refresh(1);
                 return true;
             }
             case R.id.new_message: {
@@ -199,6 +203,9 @@ public class InboxFragment extends Fragment {
         }
         return true;
     }
+
+    //----------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------
 
     public void addToInboxList(List<InboxModel> list, int page) {
         this.list.addAll(list);
@@ -230,21 +237,26 @@ public class InboxFragment extends Fragment {
         if (morePages() && listView.getFooterViewsCount() < 1) {
             listView.addFooterView(foot);
         } else if (morePages() && listView.getFooterViewsCount() == 1) {
-        } else
+            //listView.addFooterView(foot); ///edit ?
+        } else {
             listView.removeFooterView(foot);
+        }
     }
 
     public void setLoader(boolean on) {
-        if (on)
+        if (on) {
             loader.setVisibility(View.VISIBLE);
-        else
+        } else {
             loader.setVisibility(View.GONE);
+        }
     }
 
     public boolean morePages() {
-        if (currentPage < totalPages)
+        if (currentPage < totalPages) {
             return true;
-        return false;
+        } else {
+            return false;
+        }
     }
 
     private void refresh(int i) {
@@ -253,23 +265,11 @@ public class InboxFragment extends Fragment {
     }
 
     private void getInboxElements(final int page) {
-        //TODO: How would the client know that the cached page is out of date vs the page on the server ?
-        // How are pages numbered ? 0,1,2,3.. or 3,2,1,0 ??
-        // Are the items per page statically bound to that page or is a "page" generated on the fly ?
-        // Would the pages match between app close/opens ?
-        // for example you cache the pages, close the app, on the server you have received a new message
-        // does that new message offset the old messages by one place ?
-        // If so is it worth spending computational power and code complexity to edit the local cache vs get all the information again ?
-        // API call to check ? The server would push if the client is connected?
-        // If you uncomment the following the app crashes.
-        //
-        //List<InboxModel> cached = RESTSessionStorage.getInstance().getInboxModelList(page);
-        /*Boolean getListFromCache;
+        //TODO: Needs to be informed by GCM ! about changes to the lists!
 
-        if (cached != null) { // pageList is cached:
-            getListFromCache = true;
-        }*/
         asyncTask = new AsyncTask<Integer, String, Integer>() {
+            Boolean gotListFromCache = false;
+            List<InboxModel> cached = null;
             List<InboxModel> tempList = new ArrayList<InboxModel>();
             String server = SharedPrefs.getServerURL(getActivity());
             String api = server + APIPath.FIRST_PAGE_MESSAGES + APIPath.INBOX_FIELDS;
@@ -288,44 +288,66 @@ public class InboxFragment extends Fragment {
                 try {
                     JSONObject json;
                     Response response;
-                    if (page == 1) {
-                        response = RESTClient.get(api + "&pageSize=" + MESSAGES_PR_PAGE, auth);
-                        list = new ArrayList<InboxModel>();
-                    } else
-                        response = RESTClient.get(api + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
-
-                    if (RESTClient.noErrors(response.getCode())) {
-                        json = new JSONObject(response.getBody());
-                        JSONObject pager = json.getJSONObject("pager");
-                        JSONArray allConversations = new JSONArray(json.getString("messageConversations"));
-                        setPages(Integer.parseInt(pager.getString("pageCount")));
-
-                        for (int i = 0; i < allConversations.length(); i++) {
-                            JSONObject row = allConversations.getJSONObject(i);
-                            String id = row.getString("id");
-                            String subject = row.getString("name");
-                            String date = row.getString("lastMessage");
-                            String lastSender = "";
-
-                            if (!row.isNull("lastSenderFirstname") || !row.isNull("lastSenderSurname"))
-                                lastSender = row.getString("lastSenderFirstname") + " " + row.getString("lastSenderSurname");
-                            boolean read = Boolean.parseBoolean(row.getString("read"));
-                            tempList.add(new InboxModel(subject, date, id, lastSender, read));
+                    /* check if we have the page in cache */
+                    cached = RESTSessionStorage.getInstance().getInboxModelList(page);
+                    //TODO: Use Google Cloud Messaging to find out that cache is outdated !
+                    if (cached != null) { // pageList is cached:
+                        gotListFromCache = true;
+                        tempList = cached;
+                        totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
+                        return RESTClient.OK;
+                    } else { //get it from the server
+                        gotListFromCache = false;
+                        if (page == 1) {
+                            response = RESTClient.get(api + "&pageSize=" + MESSAGES_PR_PAGE, auth);
+                            list = new ArrayList<>();
+                        } else {
+                            response = RESTClient.get(api + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
                         }
+                        // parse response into page (list of models):
+                        if (RESTClient.noErrors(response.getCode())) {
+                            json = new JSONObject(response.getBody());
+                            JSONObject pager = json.getJSONObject("pager");
+                            JSONArray allConversations = new JSONArray(json.getString("messageConversations"));
+                            setPages(Integer.parseInt(pager.getString("pageCount")));
 
-                        return response.getCode();
-                    } else
-                        return response.getCode();
+                            for (int i = 0; i < allConversations.length(); i++) {
+                                JSONObject row = allConversations.getJSONObject(i);
+                                String id = row.getString("id");
+                                String subject = row.getString("name");
+                                String date = row.getString("lastMessage");
+                                String lastSender = "";
+
+                                if (!row.isNull("lastSenderFirstname") || !row.isNull("lastSenderSurname"))
+                                    lastSender = row.getString("lastSenderFirstname") + " " + row.getString("lastSenderSurname");
+                                boolean read = Boolean.parseBoolean(row.getString("read"));
+                                tempList.add(new InboxModel(subject, date, id, lastSender, read));
+                            }
+                            return response.getCode();
+                        } else {
+                            return response.getCode();
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return RESTClient.JSON_EXCEPTION;
+                } catch (Exception e) {
+                //TODO: remove this after testing. catching all exceptions is not good here.
+                // As some of them might be meant for other parts of the code (?)
+                    e.printStackTrace();
+                    return RESTClient.OK; // ???
                 }
             }
 
             @Override
             protected void onPostExecute(Integer code) {
                 setLoader(false);
-                if (RESTClient.noErrors(code)) {
+                if (gotListFromCache || RESTClient.noErrors(code)) {
+                    if (!gotListFromCache) {
+                        RESTSessionStorage.getInstance().setInboxModelList(page, tempList);
+                        RESTSessionStorage.getInstance().setInboxTotalPages(totalPages);
+                    }
+                    new ToastMaster(getActivity(), "Page: " + currentPage + "/ " + totalPages, false);
                     addToInboxList(tempList, page);
                     refresh(page + 1);
                 } else if (code == RESTClient.JSON_EXCEPTION)

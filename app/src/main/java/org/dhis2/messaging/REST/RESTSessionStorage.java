@@ -1,5 +1,7 @@
 package org.dhis2.messaging.REST;
 
+import android.provider.Telephony;
+
 import org.dhis2.messaging.Models.InboxModel;
 import org.dhis2.messaging.Models.NameAndIDModel;
 import org.dhis2.messaging.Models.ProfileModel;
@@ -23,6 +25,7 @@ public class RESTSessionStorage {
     //InboxFragment list of pages(lists of InboxModels)
     //private List<ArrayList<InboxModel>> inboxModelList = new ArrayList<ArrayList<InboxModel>>();
     private int inboxPageSize = 25;
+    private int inboxTotalPages = 0;
     private List<InboxModel> inboxModelList = new ArrayList<>();
 
     private List<NameAndIDModel> list; //will work on it later...
@@ -83,30 +86,48 @@ public class RESTSessionStorage {
         return this.inboxPageSize;
     }
 
-    public void setInboxModelList(List<InboxModel> pageList, int page) {
-        //this.inboxModelList.add(page, pageList);
-        // TODO: double check if pages count from 0 or 1, if from 1, then use page -1 instead
-        // such that storing the first page would result in index 0, sliding all the other elements back.
-        int index = page * inboxPageSize;
-        this.inboxModelList.addAll(index, pageList);
-        //Duplicate entries ? ...hmm this needs more thought...
-        // maybe such:
-        // if pageList is to be added to the front:
-        // examine if it contains the first element of the cache. (iteration over 25 elements ?)
-        // then only add the new entries. (newer)
-        // if to the back:
-        // examine if it contains the last element of the list. (iteration over 25 elements ?)
-        // then only add new entries (older).
-        //I will come back to this after trying the new UI that Hans has pushed to the repo.
+
+    public void setInboxModelList(int page, List<InboxModel> pageList) {
+        //TODO: add code to resolve duplicates at start/end of list, by comparing pageList to first/last
+        // These duplicates would be result of N new messages,
+        // arriving and the messages shifting position by N with relation to the "pages"
+        int index = (page -1)* this.getInboxPageSize();
+        /*if (index == 0 ) { //I need to consider this more carefully later ...
+            InboxModel first = inboxModelList.get(0);
+            if (pageList.contains(first)) {
+
+            }
+        } else if (index == inboxModelList.size() && pageList.contains(inboxModelList.get(inboxModelList.size()))) {
+
+        }
+        for (int i = 0;  i < pageList.size(); i++) {
+            if(inboxModelList.contains(pageList.get(i))) {
+                //if inserting to the front insert all 0-i to inboxModeList
+                //else (inserting to the end) add all from not containing to end. to inboxModelList
+            }
+        }*/
+        inboxModelList.addAll(index, pageList);
+    }
+
+    public void setInboxTotalPages(int pages) {
+        this.inboxTotalPages = pages;
+    }
+    public int getInboxTotalPages() {
+        return this.inboxTotalPages;
     }
 
     public List<InboxModel> getInboxModelList(int page) {
-        //TODO: refactor to calculate paage to index interval.
-        //return this.inboxModelList.get(page);
-        return null;
+        int index = (page -1)* this.getInboxPageSize();
+
+        if (index > inboxModelList.size() || index + this.getInboxPageSize() > inboxModelList.size()) {
+            return null;
+        }
+        return inboxModelList.subList(index, index  + this.getInboxPageSize());
+        //return null;
     }
 
 
+    //.........................
 
     public void setNameAndIdModelList(List<NameAndIDModel> lst) {
 
