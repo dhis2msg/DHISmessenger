@@ -17,6 +17,7 @@ import org.dhis2.messaging.Models.ProfileModel;
 import org.dhis2.messaging.R;
 import org.dhis2.messaging.REST.APIPath;
 import org.dhis2.messaging.REST.RESTClient;
+import org.dhis2.messaging.REST.RESTSessionStorage;
 import org.dhis2.messaging.REST.Response;
 import org.dhis2.messaging.Utils.Adapters.ProfileAdapter;
 import org.dhis2.messaging.Utils.SharedPrefs;
@@ -38,8 +39,8 @@ public class ProfileActivity extends Activity implements UpdateUnreadMsg {
     @Bind(R.id.loader)
     ProgressBar loader;
 
-    //Memory store
-    private String userid;
+    // data :
+    private String userId;
     private AsyncTask profileTask;
 
     @Override
@@ -49,7 +50,7 @@ public class ProfileActivity extends Activity implements UpdateUnreadMsg {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        userid = intent.getStringExtra("userid");
+        userId = intent.getStringExtra("userId");
         loader.setVisibility(View.VISIBLE);
         fixActionBar(intent.getStringExtra("username"));
 
@@ -115,17 +116,22 @@ public class ProfileActivity extends Activity implements UpdateUnreadMsg {
 
     private void getProfile() {
         profileTask = new AsyncTask<String, String, Integer>() {
-            ProfileModel model = null;
+            ProfileModel model = RESTSessionStorage.getInstance().getProfileModel();
             String auth = SharedPrefs.getCredentials(getApplicationContext());
-            String api = SharedPrefs.getServerURL(getApplicationContext()) + APIPath.USERS + "/" + userid;
+            String api = SharedPrefs.getServerURL(getApplicationContext()) + APIPath.USERS + "/" + userId;
 
             @Override
             protected Integer doInBackground(String... args) {
-                Response response = RESTClient.get(api, auth);
-                if (RESTClient.noErrors(response.getCode()))
-                    model = new Gson().fromJson(response.getBody(), ProfileModel.class);
-
-                return response.getCode();
+                if (model == null) {
+                    Response response = RESTClient.get(api, auth);
+                    if (RESTClient.noErrors(response.getCode())) {
+                        model = new Gson().fromJson(response.getBody(), ProfileModel.class);
+                        RESTSessionStorage.getInstance().setProfileModel(model);
+                    }
+                    return response.getCode();
+                } else {
+                    return RESTClient.OK;
+                }
             }
 
             @Override
@@ -133,36 +139,46 @@ public class ProfileActivity extends Activity implements UpdateUnreadMsg {
                 loader.setVisibility(View.GONE);
                 if (RESTClient.noErrors(code)) {
                     ArrayList<String> components = new ArrayList<String>();
-                    if (model.getFirstName() != null && !model.getFirstName().isEmpty())
+                    if (model.getFirstName() != null && !model.getFirstName().isEmpty()) {
                         components.add("First name:" + model.getFirstName());
-                    if (model.getSurname() != null && !model.getSurname().isEmpty())
-                        components.add("Surname:" + model.getSurname());
-                    if (model.getBirthday() != null && !model.getBirthday().isEmpty())
-                        components.add("Birthday:" + model.getBirthday());
-                    if (model.getNationality() != null && !model.getNationality().isEmpty())
-                        components.add("Nationality:" + model.getNationality());
-                    if (model.getEmail() != null && !model.getEmail().isEmpty())
-                        components.add("Email:" + model.getEmail());
-                    if (model.getPhoneNumber() != null && !model.getPhoneNumber().isEmpty())
-                        components.add("Phone:" + model.getPhoneNumber());
-                    if (model.getEducation() != null && !model.getEducation().isEmpty())
-                        components.add("Education:" + model.getEducation());
-                    if (model.getEmployer() != null && !model.getNationality().isEmpty())
-                        components.add("Employer:" + model.getEmployer());
-                    if (model.getJobTitle() != null && !model.getJobTitle().isEmpty())
-                        components.add("Job Title:" + model.getJobTitle());
-                    if (model.getGender() != null && !model.getGender().isEmpty()) {
-
-                        if (model.getGender().equals("gender_male"))
-                            components.add("Gender:" + "Male");
-                        else
-                            components.add("Gender:" + "Female");
                     }
-                    if (model.getInterests() != null && !model.getInterests().isEmpty())
+                    if (model.getSurname() != null && !model.getSurname().isEmpty()) {
+                        components.add("Surname:" + model.getSurname());
+                    }
+                    if (model.getBirthday() != null && !model.getBirthday().isEmpty()) {
+                        components.add("Birthday:" + model.getBirthday());
+                    }
+                    if (model.getNationality() != null && !model.getNationality().isEmpty()) {
+                        components.add("Nationality:" + model.getNationality());
+                    }
+                    if (model.getEmail() != null && !model.getEmail().isEmpty()) {
+                        components.add("Email:" + model.getEmail());
+                    }
+                    if (model.getPhoneNumber() != null && !model.getPhoneNumber().isEmpty()) {
+                        components.add("Phone:" + model.getPhoneNumber());
+                    }
+                    if (model.getEducation() != null && !model.getEducation().isEmpty()) {
+                        components.add("Education:" + model.getEducation());
+                    }
+                    if (model.getEmployer() != null && !model.getNationality().isEmpty()) {
+                        components.add("Employer:" + model.getEmployer());
+                    }
+                    if (model.getJobTitle() != null && !model.getJobTitle().isEmpty()) {
+                        components.add("Job Title:" + model.getJobTitle());
+                    }
+                    if (model.getGender() != null && !model.getGender().isEmpty()) {
+                        if (model.getGender().equals("gender_male")) {
+                            components.add("Gender:" + "Male");
+                        } else {
+                            components.add("Gender:" + "Female");
+                        }
+                    }
+                    if (model.getInterests() != null && !model.getInterests().isEmpty()) {
                         components.add("Interests:" + model.getInterests());
-                    if (model.getLanguages() != null && !model.getLanguages().isEmpty())
+                    }
+                    if (model.getLanguages() != null && !model.getLanguages().isEmpty()) {
                         components.add("Languages:" + model.getLanguages());
-
+                    }
                     ProfileAdapter adapter = new ProfileAdapter(getApplicationContext(), R.layout.item_profile, components);
                     list.setAdapter(adapter);
                 } else {

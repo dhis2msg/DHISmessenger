@@ -57,9 +57,10 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     private RESTGetConversation getConversation;
     private RESTSendMessage sendMessage;
 
-    //Memory store
+    //Data:
     private String id;
     private List<NameAndIDModel> members;
+
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -170,7 +171,6 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     public void updateMessages(List<ChatModel> list) {
         receiveLoader.setVisibility(View.INVISIBLE);
         setAdapter(list);
-
     }
 
     @Override

@@ -115,7 +115,7 @@ public class LoginActivity extends Activity {
 
     private void login() {
         if (!RESTClient.isDeviceConnectedToInternet(this)) {
-            alert("No internett connection", "Try again when you have a connection..");
+            alert("No internet connection", "Try again when you have a connection..");
         } else if (!URLUtil.isValidUrl(server.getText().toString())) {
             alert("Wrong URL", "Something is wrong with your server url..");
         } else {

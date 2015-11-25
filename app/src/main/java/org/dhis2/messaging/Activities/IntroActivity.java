@@ -47,11 +47,6 @@ public class IntroActivity extends Activity {
         };
 
         if (psw != null) {
-            if (!RESTClient.isDeviceConnectedToInternet(this)) {
-                Intent intent = new Intent(getApplication(), LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
             if (!URLUtil.isValidUrl(srv.toString())) {
                 Intent intent = new Intent(getApplication(), LoginActivity.class);
                 startActivity(intent);
@@ -60,8 +55,9 @@ public class IntroActivity extends Activity {
                 text.setVisibility(View.VISIBLE);
                 new RESTLogin(this).execute(srv, usr, psw);
             }
-        } else
+        } else {
             tid.start();
+        }
     }
 
     @Override
@@ -70,4 +66,3 @@ public class IntroActivity extends Activity {
         finish();
     }
 }
-
