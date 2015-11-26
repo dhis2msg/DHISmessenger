@@ -15,7 +15,7 @@
         android:background="@drawable/dhis2_logo"
         android:contentDescription="@string/dhis" />
 
-    <org.dhis2.messaging.Utils.UserInterface.AutoCompleteCharSearch
+    <org.dhis2.messenger.gui.view.AutoCompleteCharSearch
         android:id="@+id/serverInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:textSize="23sp">
 
         <requestFocus />
-    </org.dhis2.messaging.Utils.UserInterface.AutoCompleteCharSearch>
+    </org.dhis2.messenger.gui.view.AutoCompleteCharSearch>
 
     <EditText
         android:id="@+id/usernameInput"

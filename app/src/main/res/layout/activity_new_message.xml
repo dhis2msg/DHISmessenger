@@ -22,7 +22,7 @@
                 android:text="Org. Units"
                 android:textStyle="bold" />
 
-            <org.dhis2.messaging.Utils.UserInterface.MulitAutoCompleteRecipients
+            <org.dhis2.messenger.gui.view.MulitAutoCompleteRecipients
                 android:id="@+id/orgunits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:text="@string/recipients"
                 android:textStyle="bold" />
 
-            <org.dhis2.messaging.Utils.UserInterface.MulitAutoCompleteRecipients
+            <org.dhis2.messenger.gui.view.MulitAutoCompleteRecipients
                 android:id="@+id/recipients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

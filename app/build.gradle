@@ -49,7 +49,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
     defaultConfig {
-        applicationId 'org.dhis2.messaging'
+        applicationId 'org.dhis2.messenger'
         minSdkVersion 14
         targetSdkVersion 23
     }

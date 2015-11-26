@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.dhis2.messaging"
+    package="org.dhis2.messenger"
     android:versionCode="14"
     android:versionName="1.6">
 
@@ -22,10 +22,10 @@
 
     <!-- Creates a custom permission so only this app can receive its messages. -->
     <permission
-        android:name="org.dhis2.messaging.permission.C2D_MESSAGE"
+        android:name="org.dhis2.messenger.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="org.dhis2.messaging.permission.C2D_MESSAGE" />
+    <uses-permission android:name="org.dhis2.messenger.permission.C2D_MESSAGE" />
 
 
     <application
@@ -34,7 +34,7 @@
         android:theme="@style/DhisTheme">
 
         <activity
-            android:name=".Activities.IntroActivity"
+            android:name="org.dhis2.messenger.gui.activity.IntroActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name="org.dhis2.messenger.gui.activity.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -56,67 +56,67 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.HomeActivity"
+            android:name="org.dhis2.messenger.gui.activity.HomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="org.dhis2.messaging.Home" />
+                <action android:name="org.dhis2.messenger.Home" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.RESTChatActivity"
+            android:name="org.dhis2.messenger.gui.activity.RESTChatActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="org.dhis2.messaging.RESTConversation" />
+                <action android:name="org.dhis2.messenger.RESTConversation" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.IMChatActivity"
+            android:name="org.dhis2.messenger.gui.activity.IMChatActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="org.dhis2.messaging.IMConversation" />
+                <action android:name="org.dhis2.messenger.IMConversation" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.NewMessageActivity"
+            android:name="org.dhis2.messenger.gui.activity.NewMessageActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="org.dhis2.messaging.ComposeNewMessage" />
+                <action android:name="org.dhis2.messenger.ComposeNewMessage" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.InterpretationCommentActivity"
+            android:name="org.dhis2.messenger.gui.activity.InterpretationCommentActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="org.dhis2.messaging.InterpretationComment" />
+                <action android:name="org.dhis2.messenger.InterpretationComment" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.ProfileActivity"
+            android:name="org.dhis2.messenger.gui.activity.ProfileActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="org.dhis2.messaging.Profile" />
+                <action android:name="org.dhis2.messenger.Profile" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".Activities.ConferenceChatActivity"
+            android:name="org.dhis2.messenger.gui.activity.ConferenceChatActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="org.dhis2.messaging.IMConferenceChat" />
+                <action android:name="org.dhis2.messenger.IMConferenceChat" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <receiver
-            android:name=".Utils.Google.CloudMesaaging.GcmBroadcastReceiver"
+            android:name="org.dhis2.messenger.core.gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -124,8 +124,8 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".Utils.Google.CloudMesaaging.GcmIntentService" />
-        <service android:name=".XMPP.Listeners.IMPacketListener" />
+        <service android:name="org.dhis2.messenger.core.gcm.GcmIntentService" />
+        <service android:name="org.dhis2.messenger.core.xmpp.listener.IMPacketListener" />
 
         <meta-data
             android:name="com.google.android.gms.version"
