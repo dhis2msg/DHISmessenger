@@ -320,8 +320,11 @@ public class InboxFragment extends Fragment {
 
                                 if (!row.isNull("lastSenderFirstname") || !row.isNull("lastSenderSurname"))
                                     lastSender = row.getString("lastSenderFirstname") + " " + row.getString("lastSenderSurname");
-                                boolean read = Boolean.parseBoolean(row.getString("read"));
-                                tempList.add(new InboxModel(subject, date, id, lastSender, read));
+
+                                // This right here throws a JSONExeption because "The field read is does not exist in a row"
+                                //boolean read = Boolean.parseBoolean(row.getString("read"));
+                                //tempList.add(new InboxModel(subject, date, id, lastSender, read));
+                                tempList.add(new InboxModel(subject, date, id, lastSender, false));
                             }
                             return response.getCode();
                         } else {
