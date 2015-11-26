@@ -4,39 +4,38 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
-import org.apache.harmony.javax.security.sasl.SaslException;
+import org.dhis2.messenger.SharedPrefs;
+import org.dhis2.messenger.core.SaveDataSqlLite;
+import org.dhis2.messenger.core.xmpp.listener.IMPacketListener;
+import org.dhis2.messenger.core.xmpp.listener.IMRosterListener;
+import org.dhis2.messenger.core.xmpp.listener.MUCMessageListener;
+import org.dhis2.messenger.core.xmpp.listener.MUCParticipantListener;
+import org.dhis2.messenger.gui.ToastMaster;
 import org.dhis2.messenger.gui.activity.HomeActivity;
 import org.dhis2.messenger.model.ConferenceModel;
 import org.dhis2.messenger.model.IMMessageModel;
 import org.dhis2.messenger.model.RosterModel;
-import org.dhis2.messenger.core.SaveDataSqlLite;
-import org.dhis2.messenger.SharedPrefs;
-import org.dhis2.messenger.gui.ToastMaster;
-import org.dhis2.messenger.core.xmpp.listener.IMPacketListener;
-import org.dhis2.messenger.core.xmpp.listener.IMRosterListener;
-import org.dhis2.messenger.core.xmpp.listener.MUCPacketListener;
-import org.dhis2.messenger.core.xmpp.listener.MUCParticipantListener;
-import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.SmackAndroid;
-import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
-import org.jivesoftware.smack.filter.PacketFilter;
+import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.delay.packet.DelayInformation;
 import org.jivesoftware.smackx.iqlast.LastActivityManager;
 import org.jivesoftware.smackx.iqlast.packet.LastActivity;
+import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.muc.Affiliate;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.muc.RoomInfo;
 import org.jivesoftware.smackx.xdata.Form;
 
@@ -75,20 +74,17 @@ public class XMPPClient {
     //Listeners
     private IMRosterListener rosterListener = null;
     private IMPacketListener packetListener = null;
-    private MUCPacketListener mucPacketListener = null;
+    private MUCMessageListener mucMessageListener = null;
     private MUCParticipantListener mucParticipantListener = null;
 
     //Instances
-    private XMPPConnection connection = null;
+    private XMPPTCPConnection connection = null;
     private MultiUserChat muc = null;
     private DataCaptureOnline data;
 
     //Tasks
     private AsyncTask asyncTask;
 
-    /**
-     * Vladislav: Assumption: since we have getInstance, I defined the private constructor.
-     */
     private XMPPClient() {
     }
 
@@ -162,23 +158,24 @@ public class XMPPClient {
         return connection.isConnected();
     }
 
-    public int setConnection(Context context, String host, String port, String username, String password) {
-        ConnectionConfiguration connectionConfig = new ConnectionConfiguration(host, Integer.parseInt(port), host);
-        connectionConfig.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-        connectionConfig.setRosterLoadedAtLogin(true);
-        SmackConfiguration.setDefaultPacketReplyTimeout(TIMEOUT);
-        SharedPrefs.setXMPPData(context, host, port, host, username, password);
-        connection = new XMPPTCPConnection(connectionConfig);
+    public int setConnection(Context context, String host, int port, String username, String password) {
+        XMPPTCPConnectionConfiguration configuration = XMPPTCPConnectionConfiguration.builder()
+                .setServiceName(host)
+                .setUsernameAndPassword(username, password)
+                .setHost(host)
+                .setPort(port)
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                .setConnectTimeout(TIMEOUT)
+                .build();
+        SharedPrefs.setXMPPData(context, host, String.valueOf(port), host, username, password);
+        connection = new XMPPTCPConnection(configuration);
 
         try {
-            SmackAndroid.init(context);
-            connection.connect();
+            connection.connect(); // maybe call .login();
         } catch (SocketTimeoutException e) {
             return SOCKET_TIMEOUT_EXCEPTION;
         } catch (XMPPException e) {
             return XMPP_EXCEPTION;
-        } catch (SaslException e) {
-            return SASL_EXCEPTION;
         } catch (SmackException.NotConnectedException e) {
             return SMACK_NO_RESPONSE_EXCEPTION;
         } catch (SmackException.ConnectionException e) {
@@ -194,7 +191,7 @@ public class XMPPClient {
             // And the class is a singleton.
             // Thus the case is that the object calls the static method of the class to get reference to itself ?
             // Which is nonsense... Or am I missing something ?
-            int loggInCode = XMPPClient.getInstance().login(username, password);
+            int loggInCode = login(username, password);
             if (noErrors(loggInCode)) {
                 data = new DataCaptureOnline();
 
@@ -244,9 +241,6 @@ public class XMPPClient {
         } catch (XMPPException e) {
             e.printStackTrace();
             return XMPP_EXCEPTION;
-        } catch (SaslException e) {
-            e.printStackTrace();
-            return SASL_EXCEPTION;
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
             return SMACK_NOT_CONNECTED_EXCEPTION;
@@ -279,12 +273,13 @@ public class XMPPClient {
 
     public void getAllMUCs() {
         try {
-            if (!MultiUserChat.getHostedRooms(connection, connection.getServiceName()).isEmpty()) {
+            MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+            List<HostedRoom> hostedRooms = manager.getHostedRooms(connection.getServiceName());
+            if (!hostedRooms.isEmpty()) {
                 List<ConferenceModel> conferences = new ArrayList<ConferenceModel>();
-                for (HostedRoom hr : MultiUserChat.getHostedRooms(connection, connection.getServiceName())) {
-
-                    for (HostedRoom j : MultiUserChat.getHostedRooms(connection, hr.getJid())) {
-                        RoomInfo roomInfo = MultiUserChat.getRoomInfo(connection, j.getJid());
+                for (HostedRoom hr : hostedRooms) {
+                    for (HostedRoom j : manager.getHostedRooms(hr.getJid())) {
+                        RoomInfo roomInfo = manager.getRoomInfo(j.getJid());
 
                         if (j.getJid().indexOf("@") > 0) {
                             String id = j.getJid();
@@ -320,7 +315,7 @@ public class XMPPClient {
         asyncTask = new AsyncTask<String, String, List<RosterModel>>() {
             @Override
             protected List<RosterModel> doInBackground(String... args) {
-                Roster roster = connection.getRoster();
+                Roster roster = Roster.getInstanceFor(connection);
                 Collection<RosterEntry> entries = roster.getEntries();
                 List<RosterModel> list = new ArrayList<RosterModel>();
                 LastActivityManager lastActivityManager = LastActivityManager.getInstanceFor(connection);
@@ -381,15 +376,15 @@ public class XMPPClient {
     }
 
     public void startPacketListener(Context context) {
-        PacketFilter filter = new MessageTypeFilter(Message.Type.chat);
+        StanzaFilter filter = MessageTypeFilter.CHAT;
         packetListener = new IMPacketListener(context);
-        connection.addPacketListener(packetListener, filter);
+        connection.addAsyncStanzaListener(packetListener, filter);
         context.startService(new Intent(context, IMPacketListener.class));
     }
 
     public void removePacketListener() {
         try {
-            connection.removePacketListener(packetListener);
+            connection.removeAsyncStanzaListener(packetListener);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -397,12 +392,12 @@ public class XMPPClient {
 
     public void setRosterListener() {
         rosterListener = new IMRosterListener();
-        connection.getRoster().addRosterListener(rosterListener);
+        Roster.getInstanceFor(connection).addRosterListener(rosterListener);
     }
 
     public void removeRosterListener() {
         if (rosterListener != null && connection != null) {
-            connection.getRoster().removeRosterListener(rosterListener);
+            Roster.getInstanceFor(connection).removeRosterListener(rosterListener);
         }
     }
 
@@ -425,14 +420,14 @@ public class XMPPClient {
 
     public int updateMUC(String topic, String description) {
         try {
-            muc.removeMessageListener(mucPacketListener);
+            muc.removeMessageListener(mucMessageListener);
             muc.removeParticipantStatusListener(mucParticipantListener);
             muc.changeSubject(topic);
 
             Form submitForm = muc.getConfigurationForm().createAnswerForm();
             submitForm.setAnswer("muc#roomconfig_roomdesc", description);
             muc.sendConfigurationForm(submitForm);
-            muc.addMessageListener(mucPacketListener);
+            muc.addMessageListener(mucMessageListener);
             muc.addParticipantStatusListener(mucParticipantListener);
 
             XMPPSessionStorage.getInstance().getConference(muc.getRoom()).setTopic(topic);
@@ -451,11 +446,11 @@ public class XMPPClient {
 
     public int deleteConference(String id) {
         try {
-            muc.removeMessageListener(mucPacketListener);
+            muc.removeMessageListener(mucMessageListener);
             muc.removeParticipantStatusListener(mucParticipantListener);
             muc.destroy("Deleted by user " + id, null);
             XMPPSessionStorage.getInstance().removeConference(muc.getRoom());
-            muc.addMessageListener(mucPacketListener);
+            muc.addMessageListener(mucMessageListener);
             muc.addParticipantStatusListener(mucParticipantListener);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
@@ -484,7 +479,7 @@ public class XMPPClient {
         DiscussionHistory dh = new DiscussionHistory();
         dh.setMaxStanzas(CONFERENCE_HISTORY_MESSAGES);
 
-        this.muc = new MultiUserChat(connection, id);
+        this.muc = MultiUserChatManager.getInstanceFor(connection).getMultiUserChat(id);
 
         try {
             if (XMPPSessionStorage.getInstance().getNickname() != null) {
@@ -525,9 +520,9 @@ public class XMPPClient {
                     }
                 }
                 XMPPSessionStorage.getInstance().setConferences(id, list);
-                mucPacketListener = new MUCPacketListener(id);
+                mucMessageListener = new MUCMessageListener(id);
                 mucParticipantListener = new MUCParticipantListener(id);
-                muc.addMessageListener(mucPacketListener);
+                muc.addMessageListener(mucMessageListener);
                 muc.addParticipantStatusListener(mucParticipantListener);
             } else {
                 return UNABLE_TO_JOIN_CONFERENCE;
@@ -551,9 +546,6 @@ public class XMPPClient {
     public int sendMucMessage(String message) {
         try {
             muc.sendMessage(message);
-        } catch (XMPPException e) {
-            e.printStackTrace();
-            return XMPP_EXCEPTION;
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
             return SMACK_NOT_CONNECTED_EXCEPTION;
@@ -565,7 +557,8 @@ public class XMPPClient {
     }
 
     public int createConference(String name, String subject, String description) {
-        MultiUserChat muc = new MultiUserChat(connection, name + "@conference." + connection.getServiceName());
+        MultiUserChat muc = MultiUserChatManager.getInstanceFor(connection)
+                .getMultiUserChat(name + "@conference." + connection.getServiceName());
         try {
             String[] tmp = connection.getUser().split("/");
             String jid = tmp[0];
@@ -599,7 +592,7 @@ public class XMPPClient {
             try {
                 muc.leave();
                 muc = null;
-                mucPacketListener = null;
+                mucMessageListener = null;
                 mucParticipantListener = null;
             } catch (SmackException.NotConnectedException e) {
                 e.printStackTrace();
@@ -624,17 +617,13 @@ public class XMPPClient {
         new AsyncTask<Integer, String, String>() {
             @Override
             protected String doInBackground(Integer... args) {
-                try {
-                    if (connection != null && connection.isConnected()) {
-                        removePacketListener();
-                        removeRosterListener();
-                        if (muc != null) {
-                            leaveMUC();
-                        }
-                        connection.disconnect();
+                if (connection != null && connection.isConnected()) {
+                    removePacketListener();
+                    removeRosterListener();
+                    if (muc != null) {
+                        leaveMUC();
                     }
-                } catch (SmackException.NotConnectedException e) {
-                    e.printStackTrace();
+                    connection.disconnect();
                 }
                 return "";
             }

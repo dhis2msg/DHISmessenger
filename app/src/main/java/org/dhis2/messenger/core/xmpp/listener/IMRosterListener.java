@@ -1,14 +1,11 @@
 package org.dhis2.messenger.core.xmpp.listener;
 
 import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
-import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.RosterListener;
 
 import java.util.Collection;
 
-/**
- * Created by iNick on 14.11.14.
- */
 public class IMRosterListener implements RosterListener {
 
     @Override
@@ -42,4 +39,5 @@ public class IMRosterListener implements RosterListener {
         XMPPSessionStorage.getInstance().updateAvailability(JID, presence.isAvailable());
         XMPPSessionStorage.getInstance().updateLastActivty(JID, "");
     }
+
 }

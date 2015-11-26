@@ -1,30 +1,24 @@
 package org.dhis2.messenger.core.xmpp.listener;
 
-import org.dhis2.messenger.model.IMMessageModel;
 import org.dhis2.messenger.CurrentTime;
 import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
-import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.SmackException;
+import org.dhis2.messenger.model.IMMessageModel;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
 
-/**
- * Created by iNick on 24.11.14.
- */
-public class MUCPacketListener implements PacketListener {
+public class MUCMessageListener implements MessageListener {
 
     private String id;
 
-    public MUCPacketListener(String id) {
+    public MUCMessageListener(String id) {
         this.id = id;
     }
 
     @Override
-    public void processPacket(Packet packet) throws SmackException.NotConnectedException {
+    public void processMessage(Message message) {
         IMMessageModel messageModel = null;
         String nickname = "";
 
-        Message message = (Message) packet;
         if (message.getBody() != null) {
             String username = message.getFrom();
             String sub[] = username.split("/");
@@ -33,4 +27,5 @@ public class MUCPacketListener implements PacketListener {
         }
         XMPPSessionStorage.getInstance().addConferenceMessage(id, messageModel);
     }
+
 }

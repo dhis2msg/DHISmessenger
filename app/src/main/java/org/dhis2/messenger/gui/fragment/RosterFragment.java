@@ -100,7 +100,7 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
                 if (!XMPPClient.getInstance().checkConnection()) {
 
                     //TODO:  get port from settings instead ?
-                    loginXMPP(SharedPrefs.getXMPPHost(getActivity()), "5222",
+                    loginXMPP(SharedPrefs.getXMPPHost(getActivity()), 5222,
                             SharedPrefs.getXMPPUsername(getActivity()), SharedPrefs.getXMPPPassword(getActivity()));
                     message.setVisibility(View.GONE);
 
@@ -356,7 +356,7 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
         alertDialog.show();
     }
 
-    private void loginXMPP(final String host, final String port, final String username, final String password) {
+    private void loginXMPP(final String host, final int port, final String username, final String password) {
         pb.setVisibility(View.VISIBLE);
         loginTask = new AsyncTask<String, String, Integer>() {
             @Override

@@ -3,9 +3,6 @@ package org.dhis2.messenger.core.xmpp.listener;
 import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 
-/**
- * Created by iNick on 24.11.14.
- */
 public class MUCParticipantListener implements ParticipantStatusListener {
 
     private String id;

@@ -15,15 +15,15 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
+import org.dhis2.messenger.CurrentTime;
+import org.dhis2.messenger.R;
+import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
 import org.dhis2.messenger.gui.activity.HomeActivity;
 import org.dhis2.messenger.model.IMMessageModel;
-import org.dhis2.messenger.R;
-import org.dhis2.messenger.CurrentTime;
-import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
-import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smackx.delay.packet.DelayInformation;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +32,8 @@ import java.util.List;
 /**
  * Created by iNick on 14.11.14.
  */
-public class IMPacketListener extends IntentService implements PacketListener {
+public class IMPacketListener extends IntentService implements StanzaListener {
+
     public static final int NOTIFICATION_ID = 1;
 
     private NotificationManager mNotificationManager;
@@ -62,7 +63,7 @@ public class IMPacketListener extends IntentService implements PacketListener {
     }
 
     @Override
-    public void processPacket(Packet packet) throws SmackException.NotConnectedException {
+    public void processPacket(Stanza packet) throws SmackException.NotConnectedException {
         IMMessageModel messageModel = null;
         String JID = "";
         Message message = (Message) packet;
@@ -129,4 +130,5 @@ public class IMPacketListener extends IntentService implements PacketListener {
     protected void onHandleIntent(Intent intent) {
 
     }
+
 }

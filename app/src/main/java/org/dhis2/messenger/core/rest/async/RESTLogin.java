@@ -78,10 +78,9 @@ public class RESTLogin extends AsyncTask<String, String, Integer> {
                     session.edit().putString("password", password).commit();
                 }
 
-                URL tempURL = new URL(server);
-                String domain = tempURL.getHost();
-                String port = "5222";
-
+                String domain = new URL(server).getHost();
+                int port = 5222;
+                //TODO: (useof).setConnection(...) get server info from storage/settings
                 XMPPClient.getInstance().setConnection(context, domain, port, username, password);
             } catch (JSONException e) {
                 e.printStackTrace();
