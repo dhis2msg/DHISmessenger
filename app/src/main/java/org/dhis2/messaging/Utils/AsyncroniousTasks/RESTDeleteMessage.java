@@ -28,6 +28,7 @@ public class RESTDeleteMessage extends AsyncTask<String, String, Integer> {
 
     @Override
     protected Integer doInBackground(String... args) {
+        //TODO: Vladislav : also delete from cache!
         String id = args[0];
         String url = SharedPrefs.getServerURL(context)
                 + APIPath.FIRST_PAGE_MESSAGES

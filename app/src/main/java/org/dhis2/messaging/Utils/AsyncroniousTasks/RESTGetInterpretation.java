@@ -123,7 +123,11 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
         } catch (JSONException e) {
             e.printStackTrace();
             return -1;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        //TODO: Probably not a good idea to have this return here:
+        return RESTClient.OK;
     }
 
     protected void onPostExecute(final Integer code) {
