@@ -1,5 +1,7 @@
 package org.dhis2.messenger.core.rest;
 
+import android.util.Log;
+
 import org.dhis2.messenger.model.InboxModel;
 import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.model.ProfileModel;
@@ -27,6 +29,7 @@ public class RESTSessionStorage {
 
     private List<NameAndIDModel> list; //will work on it later...
 
+    private static final String TAG = "RESTSessionStorage";
 
     private RESTSessionStorage() {}
 
@@ -104,33 +107,39 @@ public class RESTSessionStorage {
      * @param page
      * @param newPageList
      */
-    public void setInboxModelList(int page, List<InboxModel> newPageList) {
-        //TODO: add code to resolve duplicates at start/end of list, by comparing newPageList to first/last
-        // These duplicates would be result of N new messages,
-        // arriving and the messages shifting position by N with relation to the "pages"
-        if(page > inboxTotalPages) inboxTotalPages = page;
+    public synchronized void setInboxModelList(int page, List<InboxModel> newPageList) {
+        int index = (page - 1) * inboxPageSize;
 
-        int index = (page -1)* this.getInboxPageSize();
-        /*InboxModel oldFirst = inboxModelList.get(0);
+        //Note: detecting overlap on both sides is necessary,
+        // because the pages move with relation to the first item chronologically.
+        //Thus what might have been the last page in cache might become the last partial page in cache...etc
 
-        if (index == 0 && newPageList.contains(oldFirst)) {
-            int newIx = newPageList.indexOf(oldFirst);
-            if (newIx != -1){ //add all except thouse that we already have:
-                inboxModelList.addAll(index, newPageList.subList(index, newIx));
-            } else if (newIx == -1) {
-                inboxModelList.addAll(index, newPageList);
+        if(inboxModelList.isEmpty()) {
+            inboxModelList.addAll(index, newPageList);
+        } else if (page == 1) { //insert at the front:
+            int overlapIx = newPageList.indexOf(inboxModelList.get(0));
+            if (overlapIx > -1) {
+                inboxModelList.addAll(newPageList.subList(0, overlapIx));
             } else {
-                return; //nothing to do. you are trying to add the same page again.
+                inboxModelList.addAll(index, newPageList);
             }
-        } else { //assuming we add as last:
-            InboxModel oldLast = inboxModelList.get(inboxModelList.size()-1);
-
-            int oldIx = newPageList.indexOf(oldLast);
-            if (oldIx != -1 ) { //overlap exists:
-
-            } else if (oldIx == -1) { }
-        }*/
-        inboxModelList.addAll(index, newPageList);
+        } else {
+            //new page at the end
+            if (page > inboxTotalPages) {
+                inboxTotalPages = page;
+            }
+            int last = page * inboxPageSize;
+            if (last > inboxModelList.size()) {
+                last = inboxModelList.size();
+            }
+            int overlapIx = newPageList.indexOf(inboxModelList.get(last - 1));
+            if (overlapIx > -1) { // there is overlap:
+                    inboxModelList.addAll(newPageList.subList(overlapIx + 1, newPageList.size()));
+            } else {
+                    inboxModelList.addAll(index, newPageList);
+            }
+        }
+        //Log.v(TAG, "(INSERT) page = " + page + " index=" + index + " inboxModelList.size() = " + inboxModelList.size());
     }
 
     /**
@@ -141,19 +150,26 @@ public class RESTSessionStorage {
      * @param page
      * @return list of conversations
      */
-    public List<InboxModel> getInboxModelList(int page) {
-            int index = (page -1)* inboxPageSize;
-            // if cache is empty return empty list.
-            if(index < 0 || inboxTotalPages == 0 || page > inboxTotalPages) return inboxModelList.subList(0, 0); // ie empty list
+    public synchronized List<InboxModel> getInboxModelList(int page) {
+        int index = (page - 1) * inboxPageSize;
+        // if cache is empty return empty list.
+        if (index < 0 || inboxTotalPages == 0 || page > inboxTotalPages) {
+            return inboxModelList.subList(0, 0); // ie empty list
+        }
 
-            // For partial end pages:
-            if (index + inboxPageSize > inboxModelList.size()) {
-                return inboxModelList.subList(index, inboxModelList.size());
-            } else {// full page:
-                return inboxModelList.subList(index, index + inboxPageSize);
+        // For partial end pages:
+        if (index + inboxPageSize > inboxModelList.size()) {
+            //Log.v(TAG, "page = " + page + " index=" + index + " index + inboxPageSize = " + (index + inboxPageSize) + " inboxModelList.size() = " + inboxModelList.size());
+            if (index > inboxModelList.size()) {
+                return inboxModelList.subList(0,0);
             }
+            List<InboxModel> toReturn = inboxModelList.subList(index, inboxModelList.size());
+            //return inboxModelList.subList(index, inboxModelList.size());
+            return toReturn;
+        } else {// full page:
+            return inboxModelList.subList(index, index + inboxPageSize);
+        }
     }
-
 
     //.........................
 
