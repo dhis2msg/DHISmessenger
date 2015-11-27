@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-//TODO: Issue: load more msg's button dissapears after comming back to this activity. Investigate why!
 public class InboxFragment extends Fragment {
     private final String MESSAGES_PR_PAGE = "25";
 
@@ -93,6 +92,7 @@ public class InboxFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (view == foot) {
                     currentPage++;
+                    RESTSessionStorage.getInstance().setInboxCurrentPage(currentPage);
                     refresh(1);
                 } else {
                     InboxModel model = (InboxModel) listView.getAdapter().getItem(position);
@@ -157,7 +157,7 @@ public class InboxFragment extends Fragment {
     public void onResume() {
         super.onResume();
         list = new ArrayList<InboxModel>();
-        currentPage = 1;
+        currentPage = RESTSessionStorage.getInstance().getInboxCurrentPage();
         refresh(1);
         getActivity().registerReceiver(inboxReceiver, new IntentFilter("org.dhis2.messenger.gui.activity.HomeActivity"));
     }
@@ -208,6 +208,13 @@ public class InboxFragment extends Fragment {
     //----------------------------------------------------------------------------------------------
 
     public void addToInboxList(List<InboxModel> list, int page) {
+        // Vladislav: This is a workaround.
+        // The problem: addinboxList gets called twice for each page.
+        // As a consequence each page is displayed twice.
+        // I couldn't find a solution.
+        if(page == 1) {
+            this.list.clear();
+        }
         this.list.addAll(list);
         setMoreMessagesBtn();
 
@@ -291,9 +298,9 @@ public class InboxFragment extends Fragment {
                     /* check if we have the page in cache */
                     cached = RESTSessionStorage.getInstance().getInboxModelList(page);
                     //TODO: Use Google Cloud Messaging to find out that cache is outdated !
-                    if (cached != null) { // pageList is cached:
+                    if (!cached.isEmpty()) { // pageList is cached:
                         gotListFromCache = true;
-                        tempList = cached;
+                        tempList.addAll(cached);
                         totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
                         return RESTClient.OK;
                     } else { //get it from the server
@@ -334,12 +341,12 @@ public class InboxFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return RESTClient.JSON_EXCEPTION;
-                } catch (Exception e) {
+                } /*catch (Exception e) {
                 //TODO: remove this after testing. catching all exceptions is not good here.
                 // As some of them might be meant for other parts of the code (?)
                     e.printStackTrace();
                     return RESTClient.OK; // ???
-                }
+                }*/
             }
 
             @Override

@@ -20,6 +20,7 @@ public class RESTSessionStorage {
     private ProfileModel profile = null;
     //InboxFragment list of pages(lists of InboxModels)
     //private List<ArrayList<InboxModel>> inboxModelList = new ArrayList<ArrayList<InboxModel>>();
+    private int inboxCurrentPage = 1;
     private int inboxPageSize = 25;
     private int inboxTotalPages = 0;
     private List<InboxModel> inboxModelList = new ArrayList<>();
@@ -82,27 +83,12 @@ public class RESTSessionStorage {
         return this.inboxPageSize;
     }
 
+    public void setInboxCurrentPage(int p) {
+        this.inboxCurrentPage = p;
+    }
 
-    public void setInboxModelList(int page, List<InboxModel> pageList) {
-        //TODO: add code to resolve duplicates at start/end of list, by comparing pageList to first/last
-        // These duplicates would be result of N new messages,
-        // arriving and the messages shifting position by N with relation to the "pages"
-        int index = (page -1)* this.getInboxPageSize();
-        /*if (index == 0 ) { //I need to consider this more carefully later ...
-            InboxModel first = inboxModelList.get(0);
-            if (pageList.contains(first)) {
-
-            }
-        } else if (index == inboxModelList.size() && pageList.contains(inboxModelList.get(inboxModelList.size()))) {
-
-        }
-        for (int i = 0;  i < pageList.size(); i++) {
-            if(inboxModelList.contains(pageList.get(i))) {
-                //if inserting to the front insert all 0-i to inboxModeList
-                //else (inserting to the end) add all from not containing to end. to inboxModelList
-            }
-        }*/
-        inboxModelList.addAll(index, pageList);
+    public int getInboxCurrentPage() {
+        return this.inboxCurrentPage;
     }
 
     public void setInboxTotalPages(int pages) {
@@ -112,14 +98,60 @@ public class RESTSessionStorage {
         return this.inboxTotalPages;
     }
 
-    public List<InboxModel> getInboxModelList(int page) {
-        int index = (page -1)* this.getInboxPageSize();
+    /**
+     * Add a page of elements to the cache.
+     * It is expected that you only add to the front or back (page = 1 or page = total+1)
+     * @param page
+     * @param newPageList
+     */
+    public void setInboxModelList(int page, List<InboxModel> newPageList) {
+        //TODO: add code to resolve duplicates at start/end of list, by comparing newPageList to first/last
+        // These duplicates would be result of N new messages,
+        // arriving and the messages shifting position by N with relation to the "pages"
+        if(page > inboxTotalPages) inboxTotalPages = page;
 
-        if (index > inboxModelList.size() || index + this.getInboxPageSize() > inboxModelList.size()) {
-            return null;
-        }
-        return inboxModelList.subList(index, index  + this.getInboxPageSize());
-        //return null;
+        int index = (page -1)* this.getInboxPageSize();
+        /*InboxModel oldFirst = inboxModelList.get(0);
+
+        if (index == 0 && newPageList.contains(oldFirst)) {
+            int newIx = newPageList.indexOf(oldFirst);
+            if (newIx != -1){ //add all except thouse that we already have:
+                inboxModelList.addAll(index, newPageList.subList(index, newIx));
+            } else if (newIx == -1) {
+                inboxModelList.addAll(index, newPageList);
+            } else {
+                return; //nothing to do. you are trying to add the same page again.
+            }
+        } else { //assuming we add as last:
+            InboxModel oldLast = inboxModelList.get(inboxModelList.size()-1);
+
+            int oldIx = newPageList.indexOf(oldLast);
+            if (oldIx != -1 ) { //overlap exists:
+
+            } else if (oldIx == -1) { }
+        }*/
+        inboxModelList.addAll(index, newPageList);
+    }
+
+    /**
+     * Returns a list of conversations on the page.
+     * If the page is not in cache (empty) the returned list will be empty.
+     * If the page is not of page size only the available elements are returned.
+     *
+     * @param page
+     * @return list of conversations
+     */
+    public List<InboxModel> getInboxModelList(int page) {
+            int index = (page -1)* inboxPageSize;
+            // if cache is empty return empty list.
+            if(index < 0 || inboxTotalPages == 0 || page > inboxTotalPages) return inboxModelList.subList(0, 0); // ie empty list
+
+            // For partial end pages:
+            if (index + inboxPageSize > inboxModelList.size()) {
+                return inboxModelList.subList(index, inboxModelList.size());
+            } else {// full page:
+                return inboxModelList.subList(index, index + inboxPageSize);
+            }
     }
 
 
