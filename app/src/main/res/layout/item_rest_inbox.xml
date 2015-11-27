@@ -85,7 +85,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/subject"
-            android:src="@drawable/ic_action_email_black" />
+            android:src="@drawable/ic_mail_outline_black" />
 
         <TextView
             android:id="@+id/lastSender"

@@ -91,5 +91,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_action_about" />
+        android:src="@drawable/ic_info_outline_white" />
 </RelativeLayout>

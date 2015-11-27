@@ -39,7 +39,7 @@ public class ToastMaster {
         View layout = inflater.inflate(R.layout.toast_new_message, null);
         layout = inflater.inflate(R.layout.toast_new_message, (ViewGroup) layout.findViewById(R.id.toast_new_message_layout));
         ImageView image = (ImageView) layout.findViewById(R.id.img);
-        image.setImageDrawable(layout.getResources().getDrawable(R.drawable.ic_action_email));
+        image.setImageDrawable(layout.getResources().getDrawable(R.drawable.ic_mail_outline_white));
         TextView text = (TextView) layout.findViewById(R.id.toastText);
         text.setText(message);
         toast.setDuration(Toast.LENGTH_SHORT);
@@ -54,7 +54,7 @@ public class ToastMaster {
         View layout = inflater.inflate(R.layout.toast_info_message, null);
         layout = inflater.inflate(R.layout.toast_info_message, (ViewGroup) layout.findViewById(R.id.toast_info_layout));
         ImageView image = (ImageView) layout.findViewById(R.id.img);
-        image.setImageDrawable(layout.getResources().getDrawable(R.drawable.ic_action_about));
+        image.setImageDrawable(layout.getResources().getDrawable(R.drawable.ic_info_outline_white));
         TextView text = (TextView) layout.findViewById(R.id.toastText);
         text.setText(message);
         toast.setDuration(Toast.LENGTH_SHORT);

@@ -107,7 +107,7 @@
                 android:layout_height="35dp"
                 android:background="#BDBDBD"
                 android:clickable="false"
-                android:drawableTop="@drawable/ic_action_expand"
+                android:drawableTop="@drawable/ic_expand_white"
                 android:paddingTop="3dp" />
         </RelativeLayout>
 
@@ -118,17 +118,18 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="10dp"
-            android:background="#BDBDBD"
+            android:background="#E0E0E0"
             android:paddingRight="10dp">
 
             <Button
                 android:id="@+id/comment"
+                android:paddingTop="6dp"
                 android:layout_width="45dp"
                 android:layout_height="35dp"
                 android:layout_centerVertical="true"
-                android:background="#BDBDBD"
+                android:background="#E0E0E0"
                 android:clickable="false"
-                android:drawableTop="@drawable/ic_action_chat" />
+                android:drawableTop="@drawable/ic_chat_white" />
 
             <TextView
                 android:layout_width="wrap_content"

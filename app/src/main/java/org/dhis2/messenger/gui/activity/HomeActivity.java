@@ -176,8 +176,8 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
     private void initializeDrawer(Bundle savedInstanceState) {
         charSequenceTitle = getTitle();
         menuTitles = getResources().getStringArray(R.array.view_array);
-        menuIcons = new int[]{R.drawable.ic_action_email, R.drawable.ic_action_chat, R.drawable.ic_action_picture,
-                R.drawable.ic_action_person, R.drawable.ic_action_about, R.drawable.ic_action_secure};
+        menuIcons = new int[]{R.drawable.ic_mail_outline_white, R.drawable.ic_chat_white, R.drawable.ic_image_white,
+                R.drawable.ic_person_white, R.drawable.ic_info_outline_white, R.drawable.ic_lock_outline_white};
 
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
         for (int i = 0; i < menuIcons.length; i++) {
@@ -195,7 +195,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         getActionBar().setHomeButtonEnabled(true);
 
         if (drawerLayout != null) {
-            actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer,
+            actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_view_headline_white,
                     R.string.drawer_open, R.string.drawer_close) {
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);

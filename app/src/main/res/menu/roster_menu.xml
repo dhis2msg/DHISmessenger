@@ -3,18 +3,18 @@
 
     <item
         android:id="@+id/person"
-        android:icon="@drawable/ic_action_person"
+        android:icon="@drawable/ic_person_white"
         android:showAsAction="always|withText"
         android:title="Contacts" />
     <item
         android:id="@+id/conference"
-        android:icon="@drawable/ic_action_group"
+        android:icon="@drawable/ic_group_white"
         android:showAsAction="always|withText"
         android:title="Conferences" />
 
     <item
         android:id="@+id/overflow"
-        android:icon="@drawable/ic_action_settings"
+        android:icon="@drawable/ic_settings_white"
         android:showAsAction="always"
         android:title="more">
 
