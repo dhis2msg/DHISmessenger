@@ -145,7 +145,7 @@ public class LoginActivity extends Activity {
     }
 
     private void setSuggestionServers() {
-        int[] icons = new int[]{R.drawable.united_nations, R.drawable.uganda, R.drawable.malawi,
+        int[] icons = new int[]{R.drawable.united_nations, R.drawable.united_nations, R.drawable.uganda, R.drawable.malawi,
                 R.drawable.ghana, R.drawable.united_nations, R.drawable.rwanda, R.drawable.rwanda, R.drawable.burkina_faso,
                 R.drawable.liberia, R.drawable.tanzania, R.drawable.gambia, R.drawable.zambia, R.drawable.zimbabwe};
         String[] urls = getResources().getStringArray(R.array.server_array);

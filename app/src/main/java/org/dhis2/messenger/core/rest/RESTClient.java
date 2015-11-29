@@ -41,11 +41,7 @@ public class RESTClient {
     private final static int SSL_HANDSHAKE_EXCEPTION = 13;
     private final static int SERVICE_UNAVAILABLE_EXCEPTION = 503;
 
-    /**
-     * Created by iNick (?) this way.
-     */
     private RESTClient() {
-        //disableSslVerification();
     }
 
     private static void disableSslVerification() {
@@ -53,10 +49,12 @@ public class RESTClient {
             // Create a trust manager that does not validate certificate chains
             TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
                 @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                }
 
                 @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {}
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                }
 
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -71,7 +69,7 @@ public class RESTClient {
 
             // Install the all-trusting trust manager
             SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            sc.init(null, trustAllCerts, null);
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
             // Create all-trusting host name verifier
@@ -94,9 +92,9 @@ public class RESTClient {
         int code = -1;
         String body = "";
 
-        // if (api.contains("197.243.37.125") || api.contains("10.10.35.207 "))
-        //   disableSslVerification();
-        //disableSslVerification();
+        if (api.contains("88.80.187.109")) {
+            disableSslVerification();
+        }
 
         HttpURLConnection connection = null;
         try {

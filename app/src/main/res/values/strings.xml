@@ -50,6 +50,7 @@
     </string-array>
 
     <string-array name="server_array">
+        <item>https://88.80.187.109/dhis</item>
         <item>https://apps.dhis2.org/demo</item>
         <item>http://hmis2.health.go.ug</item>
         <item>http://www.hispmalawi.org.mw/dhis</item>
