@@ -27,7 +27,7 @@ public class RESTGetConversation extends AsyncTask<String, Void, Integer> {
     private RESTConversationCallback listener;
     private Context context;
     private boolean read;
-    private String id;
+    private String id; // this is the id of the conversation
 
     public RESTGetConversation(RESTConversationCallback listener, Context context, boolean read, String id) {
         this.listener = listener;

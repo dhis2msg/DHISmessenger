@@ -65,7 +65,7 @@ public class InboxFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    refresh(1);
+                    refresh(1, false);
                 }
             });
         }
@@ -93,7 +93,7 @@ public class InboxFragment extends Fragment {
                 if (view == foot) {
                     currentPage++;
                     RESTSessionStorage.getInstance().setInboxCurrentPage(currentPage);
-                    refresh(1);
+                    refresh(1, false);
                 } else {
                     InboxModel model = (InboxModel) listView.getAdapter().getItem(position);
                     Intent intent = new Intent(getActivity(), RESTChatActivity.class);
@@ -158,7 +158,7 @@ public class InboxFragment extends Fragment {
         super.onResume();
         list = new ArrayList<InboxModel>();
         currentPage = RESTSessionStorage.getInstance().getInboxCurrentPage();
-        refresh(1);
+        refresh(1, false);
         getActivity().registerReceiver(inboxReceiver, new IntentFilter("org.dhis2.messenger.gui.activity.HomeActivity"));
     }
 
@@ -187,7 +187,7 @@ public class InboxFragment extends Fragment {
                     Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
                 } //since we are caching ? access to the internet to display things isn't nessesary. ?
                 list = new ArrayList<InboxModel>();
-                refresh(1);
+                refresh(1, false);
                 return true;
             }
             case R.id.new_message: {
@@ -266,12 +266,12 @@ public class InboxFragment extends Fragment {
         }
     }
 
-    private void refresh(int i) {
+    private void refresh(int i, boolean skipCache) {
         if (i <= currentPage)
-            getInboxElements(i);
+            getInboxElements(i, false);
     }
 
-    private void getInboxElements(final int page) {
+    private void getInboxElements(final int page, final boolean skipCache) {
         //TODO: Needs to be informed by GCM ! about changes to the lists!
 
         asyncTask = new AsyncTask<Integer, String, Integer>() {
@@ -302,7 +302,7 @@ public class InboxFragment extends Fragment {
                     /* check if we have the page in cache */
                     cached = RESTSessionStorage.getInstance().getInboxModelList(page);
                     //TODO: Use Google Cloud Messaging to find out that cache is outdated !
-                    if (!cached.isEmpty()) { // pageList is cached:
+                    if (!cached.isEmpty() && !skipCache) { // pageList is cached:
                         gotListFromCache = true;
                         tempList.addAll(cached);
                         totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
@@ -365,7 +365,7 @@ public class InboxFragment extends Fragment {
                     }
                     new ToastMaster(getActivity(), "Page: " + currentPage + "/ " + totalPages, false);
                     addToInboxList(tempList, page);
-                    refresh(page + 1);
+                    refresh(page + 1, false);
                 } else if (code == RESTClient.JSON_EXCEPTION)
                     new ToastMaster(getActivity(), "Something went wrong. \nTry to refresh", false);
                     //Toast.makeText(getActivity(), "Something went wrong. \nTry to refresh", Toast.LENGTH_SHORT).show();
