@@ -279,7 +279,11 @@ public class InboxFragment extends Fragment {
             List<InboxModel> cached = null;
             List<InboxModel> tempList = new ArrayList<InboxModel>();
             String server = SharedPrefs.getServerURL(getActivity());
-            String api = server + APIPath.FIRST_PAGE_MESSAGES + APIPath.INBOX_FIELDS;
+
+            // Root path to message conversations
+            String mcAPIRootPath = server + APIPath.FIRST_PAGE_MESSAGES;
+            String mcAPIPath = mcAPIRootPath + APIPath.INBOX_FIELDS;
+
             String auth = SharedPrefs.getCredentials(getActivity());
 
             @Override
@@ -306,10 +310,10 @@ public class InboxFragment extends Fragment {
                     } else { //get it from the server
                         gotListFromCache = false;
                         if (page == 1) {
-                            response = RESTClient.get(api + "&pageSize=" + MESSAGES_PR_PAGE, auth);
+                            response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE, auth);
                             list = new ArrayList<>();
                         } else {
-                            response = RESTClient.get(api + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
+                            response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
                         }
                         // parse response into page (list of models):
                         if (RESTClient.noErrors(response.getCode())) {
@@ -328,11 +332,13 @@ public class InboxFragment extends Fragment {
                                 if (!row.isNull("lastSenderFirstname") || !row.isNull("lastSenderSurname"))
                                     lastSender = row.getString("lastSenderFirstname") + " " + row.getString("lastSenderSurname");
 
-                                // This right here throws a JSONExeption because "The field read is does not exist in a row"
-                                //boolean read = Boolean.parseBoolean(row.getString("read"));
-                                //tempList.add(new InboxModel(subject, date, id, lastSender, read));
-                                tempList.add(new InboxModel(subject, date, id, lastSender, false));
-                            }
+                                // Find out if the there are unread messages
+                                Response mcResponse = RESTClient.get(mcAPIRootPath + "/" + id + "?fields=read", auth);
+                                JSONObject messageConversation = new JSONObject(mcResponse.getBody());
+
+                                Boolean read = Boolean.parseBoolean(messageConversation.getString("read"));
+                                tempList.add(new InboxModel(subject, date, id, lastSender, read));
+                                }
                             return response.getCode();
                         } else {
                             return response.getCode();
