@@ -187,7 +187,7 @@ public class InboxFragment extends Fragment {
                     Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
                 } //since we are caching ? access to the internet to display things isn't nessesary. ?
                 list = new ArrayList<InboxModel>();
-                refresh(1, false);
+                refresh(1, true); //skip the cache and force refresh!
                 return true;
             }
             case R.id.new_message: {
@@ -268,7 +268,7 @@ public class InboxFragment extends Fragment {
 
     private void refresh(int i, boolean skipCache) {
         if (i <= currentPage)
-            getInboxElements(i, false);
+            getInboxElements(i, skipCache);
     }
 
     private void getInboxElements(final int page, final boolean skipCache) {
