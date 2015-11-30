@@ -50,7 +50,9 @@ public class RESTSessionStorage {
      * @param username The name of the currently active user.
      */
     public synchronized static RESTSessionStorage setActiveSession(String username) {
-        if (currentRestSession != null && currentRestSession.username.equals(username)) {
+        if (currentRestSession != null &&
+                currentRestSession.username != null &&
+                currentRestSession.username.equals(username)) {
             return currentRestSession;
         } else {//no session selected/other selected
             //See if it exists:
