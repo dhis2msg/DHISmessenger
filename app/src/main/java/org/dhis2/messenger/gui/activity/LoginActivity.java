@@ -20,6 +20,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.core.rest.RESTClient;
+import org.dhis2.messenger.core.rest.RESTSessionStorage;
 import org.dhis2.messenger.gui.adapter.AutoCompleteCharSearchAdapter;
 import org.dhis2.messenger.core.rest.async.RESTLogin;
 import org.dhis2.messenger.gui.ToastMaster;
@@ -70,6 +71,8 @@ public class LoginActivity extends Activity {
         String srv = pref.getString(PREF_SERVER, null);
         String usr = pref.getString(PREF_USERNAME, null);
         if (server != null && usr != null) {
+            RESTSessionStorage.loginUsername = usr;
+            RESTSessionStorage.setActiveSession(usr);
             server.setText(srv);
             username.setText(usr);
             password.requestFocus();
@@ -123,6 +126,9 @@ public class LoginActivity extends Activity {
             params[0] = server.getText().toString();
             params[1] = username.getText().toString();
             params[2] = password.getText().toString();
+
+            RESTSessionStorage.loginUsername = params[0];
+            RESTSessionStorage.setActiveSession(params[0]);
             if (autoLogin())
                 params[3] = "indicator autologin";
 

@@ -1,12 +1,14 @@
 package org.dhis2.messenger.core.rest;
 
-import android.util.Log;
+import android.content.SharedPreferences;
 
+import org.dhis2.messenger.gui.activity.LoginActivity;
 import org.dhis2.messenger.model.InboxModel;
 import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.model.ProfileModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,8 +18,13 @@ import java.util.List;
  * Thus cutting on amount of bandwidth wasted ?
  */
 public class RESTSessionStorage {
-    private static RESTSessionStorage restSession = null;
-    //TODO: vladislav : compare to XMPPSessionStorage. From this it is obvious that the users of the storage have to implement the interface. Find if this is the only way / the best way to do a callback to inform the client (ui) that the data has changed.
+    // a default username, to use for getInstance(), if no instance is active.
+    public static String loginUsername;
+    // a map of <username, cache>'s :
+    private static HashMap<String, RESTSessionStorage> restSessions = new HashMap<>();
+    private static RESTSessionStorage currentRestSession = null;
+    private String username;
+
     private RESTDataChanged callback = null;
     private ProfileModel profile = null;
     //InboxFragment list of pages(lists of InboxModels)
@@ -32,18 +39,54 @@ public class RESTSessionStorage {
     private static final String TAG = "RESTSessionStorage";
 
     private RESTSessionStorage() {}
+    private RESTSessionStorage(String username) {
+        this.username = username;
+    }
+
+    /**
+     * A method to specify which user Session will be used.
+     * Separate users use separate sessions, because they require separate caches.
+     *
+     * @param username The name of the currently active user.
+     */
+    public synchronized static RESTSessionStorage setActiveSession(String username) {
+        if (currentRestSession != null && currentRestSession.username.equals(username)) {
+            return currentRestSession;
+        } else {//no session selected/other selected
+            //See if it exists:
+            RESTSessionStorage session = restSessions.get(username);
+            if (session != null) {
+                currentRestSession = session;
+            } else { //doesn't exist: create new !
+                session = new RESTSessionStorage(username);
+                restSessions.put(username, session);
+                currentRestSession = session;
+            }
+            return  currentRestSession;
+        }
+    }
 
     /**
      * Gets the singleton instance of this class.
-     * If no instance exists it makes a new one.
+     * If no instance exists it returns/creates if it doesn't exist the default one.
+     *
      * @return RESTSession instance
      */
     public synchronized static RESTSessionStorage getInstance() {
-        if (restSession == null) {
+        if ( currentRestSession == null) {
+
             //TODO: vladislav : Read stored values from disk here !
-            restSession = new RESTSessionStorage();
+            RESTSessionStorage session = restSessions.get(loginUsername);
+            if (session != null) {
+                currentRestSession = session;
+            } else { //doesn't exist: create new !
+                session = new RESTSessionStorage( loginUsername);
+                restSessions.put(loginUsername, session);
+                currentRestSession = session;
+            }
+            return  currentRestSession;
         }
-        return restSession;
+        return currentRestSession;
     }
 
     public void setCallback(RESTDataChanged callback) {
@@ -59,7 +102,7 @@ public class RESTSessionStorage {
      */
     public void destroy() {
         //TODO: vladislav: store vars to disk before exiting from here !
-        //this.restSession = null;
+        //this.currentRestSession = null;
     }
 
     //__________________________Setters & getters_________________________________________
