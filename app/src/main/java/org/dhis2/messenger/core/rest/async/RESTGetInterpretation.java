@@ -133,7 +133,13 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
     protected void onPostExecute(final Integer code) {
 
         if (RESTClient.noErrors(code)) {
-            listener.updateList(tempList);
+            //Check whether the interpretation list should be updated or not
+            if(tempList.isEmpty()){
+                new ToastMaster(context, "No interpretion", false);
+            }
+            else {
+                listener.updateList(tempList);
+            }
         } else if (code == -1) {
             new ToastMaster(context, "JSONException converting error", false);
         } else {
