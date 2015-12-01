@@ -69,10 +69,11 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
                 }
             }
         });
-        if (list.isEmpty())
+        if (list.isEmpty()) {
             getInterpretations(currentPage);
-        else
+        }else {
             setAdapter();
+        }
         return view;
     }
 
@@ -155,8 +156,8 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     }
 
     public void getInterpretations(int page) {
-        setLoader(true);
         getInterpretations = new RESTGetInterpretation(this, getActivity(), page);
+        setLoader(getInterpretations.getTempList().isEmpty() ? false : true);
         getInterpretations.execute();
     }
 

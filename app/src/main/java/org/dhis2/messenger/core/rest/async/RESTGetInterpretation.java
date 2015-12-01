@@ -45,6 +45,10 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
         this.pages = 0;//pages
     }
 
+    public List<InterpretationModel> getTempList(){
+        return this.tempList;
+    }
+
     protected Integer doInBackground(Integer... args) {
         String api = server + APIPath.FIRST_PAGE_INTERPRETATIONS;
         try {
@@ -135,7 +139,7 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
         if (RESTClient.noErrors(code)) {
             //Check whether the interpretation list should be updated or not
             if(tempList.isEmpty()){
-                new ToastMaster(context, "No interpretion", false);
+                new ToastMaster(context, "No interpretation", false);
             }
             else {
                 listener.updateList(tempList);
