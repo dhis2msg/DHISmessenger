@@ -1,0 +1,11 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="DhisTheme" parent="@android:style/Theme.Material.Light">
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:spinnerItemStyle">@style/TextViewSpinnerItem</item>
+        <item name="android:popupMenuStyle">@style/DhisTheme.PopupMenu</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowTransitionBackgroundFadeDuration">300</item>
+    </style>
+
+</resources>

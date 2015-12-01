@@ -1,8 +1,12 @@
 package org.dhis2.messenger.gui.fragment;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +35,20 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     private List<InterpretationModel> list;
     private RESTGetInterpretation getInterpretations;
     private RESTGetPicture getPicture;
+
+    public InterpretationsFragment(){
+        super();
+        if(Build.VERSION.SDK_INT >= 21) {
+            Slide slide = new Slide();
+            slide.setDuration(500);
+            Fade fade = new Fade();
+            fade.setDuration(1000);
+            TransitionSet transitionSet = new TransitionSet();
+            transitionSet.addTransition(slide);
+            transitionSet.addTransition(fade);
+            setEnterTransition(transitionSet);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

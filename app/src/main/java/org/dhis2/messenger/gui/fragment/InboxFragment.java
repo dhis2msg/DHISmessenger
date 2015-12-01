@@ -5,8 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +66,20 @@ public class InboxFragment extends Fragment {
 
     AsyncTask asyncTask;
 
+    public InboxFragment(){
+        super();
+        if(Build.VERSION.SDK_INT >= 21) {
+            Slide slide = new Slide();
+            slide.setDuration(500);
+            Fade fade = new Fade();
+            fade.setDuration(1000);
+            TransitionSet transitionSet = new TransitionSet();
+            transitionSet.addTransition(slide);
+            transitionSet.addTransition(fade);
+            setEnterTransition(transitionSet);
+        }
+    }
+
     private BroadcastReceiver inboxReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -74,9 +95,17 @@ public class InboxFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(Build.VERSION.SDK_INT >= 21){
+            TransitionInflater infalter = TransitionInflater.from(getActivity());
+            Transition transition = infalter.inflateTransition(R.transition.transition_inbox_exit);
+            getActivity().getWindow().setExitTransition(transition);
+        }
+
         setRetainInstance(true);
         setHasOptionsMenu(true);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,11 +125,16 @@ public class InboxFragment extends Fragment {
                     refresh(1, false);
                 } else {
                     InboxModel model = (InboxModel) listView.getAdapter().getItem(position);
+                    ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),null);
                     Intent intent = new Intent(getActivity(), RESTChatActivity.class);
                     intent.putExtra("id", model.getId());
                     intent.putExtra("subject", model.getSubject());
                     intent.putExtra("read", model.getRead());
-                    getActivity().startActivity(intent);
+                    if(Build.VERSION.SDK_INT >= 16) {
+                        getActivity().startActivity(intent, compat.toBundle());
+                    }else{
+                        getActivity().startActivity(intent);
+                    }
                     getActivity().overridePendingTransition(R.anim.right_to_center, R.anim.center_to_left);
                 }
             }

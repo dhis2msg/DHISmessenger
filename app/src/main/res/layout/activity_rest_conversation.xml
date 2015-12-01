@@ -37,11 +37,11 @@
         android:background="#0D47A1"
         android:baselineAligned="true">
 
-        <ImageView
+       <!-- <ImageView
             android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="0.4dp"
-            android:background="#0D47A1" />
+            android:background="#0D47A1" />-->
 
 
         <Button
@@ -50,12 +50,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/answerMessage"
-            android:layout_below="@id/line"
-            android:background="#0D47A1"
+            android:layout_alignBottom="@id/answerMessage"
+            android:background="#2196F3"
             android:text="@string/send"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:textStyle="bold" />
+
+        <!--android:layout_below="@id/line"-->
 
         <!--RelativeLayout
             android:layout_width="wrap_content"
@@ -68,15 +70,15 @@
 
 
         <EditText
-            android:id="@+id/answerMessage"
+            android:id="@id/answerMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/line"
             android:layout_marginLeft="7dp"
             android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
             android:layout_toLeftOf="@id/btnSend"
             android:background="@drawable/edittext_rounded"
-            android:gravity="top|left"
+            android:gravity="center_vertical|left"
             android:hint="@string/message"
             android:inputType="textMultiLine"
             android:maxHeight="70dp"

@@ -67,7 +67,7 @@
             android:maxLines="2"
             android:textColor="@android:color/primary_text_light"
             android:textSize="17sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
 
         <!--ImageView

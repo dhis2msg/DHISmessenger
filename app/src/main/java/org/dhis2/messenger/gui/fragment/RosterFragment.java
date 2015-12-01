@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +55,20 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
 
     //Memory store
     private AsyncTask loginTask;
+
+    public RosterFragment(){
+        super();
+        if(Build.VERSION.SDK_INT >= 21) {
+            Slide slide = new Slide();
+            slide.setDuration(500);
+            Fade fade = new Fade();
+            fade.setDuration(1000);
+            TransitionSet transitionSet = new TransitionSet();
+            transitionSet.addTransition(slide);
+            transitionSet.addTransition(fade);
+            setEnterTransition(transitionSet);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

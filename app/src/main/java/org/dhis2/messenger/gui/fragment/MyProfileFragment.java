@@ -1,8 +1,12 @@
 package org.dhis2.messenger.gui.fragment;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +41,20 @@ public class MyProfileFragment extends Fragment {
 
     //Memory store
     private AsyncTask asyncTask, saveTask;
+
+    public MyProfileFragment(){
+        super();
+        if(Build.VERSION.SDK_INT >= 21) {
+            Slide slide = new Slide();
+            slide.setDuration(500);
+            Fade fade = new Fade();
+            fade.setDuration(500);
+            TransitionSet transitionSet = new TransitionSet();
+            transitionSet.addTransition(slide);
+            transitionSet.addTransition(fade);
+            setEnterTransition(transitionSet);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

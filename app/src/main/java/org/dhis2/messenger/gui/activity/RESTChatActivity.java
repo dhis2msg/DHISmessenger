@@ -10,8 +10,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -88,6 +92,13 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(Build.VERSION.SDK_INT >= 21){
+            Slide slide = new Slide();
+            slide.setDuration(500);
+            getWindow().setEnterTransition(slide);
+        }
+
         setContentView(R.layout.activity_rest_conversation);
         ButterKnife.bind(this);
 
