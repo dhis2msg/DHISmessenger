@@ -6,6 +6,8 @@
         <item name="android:popupMenuStyle">@style/DhisTheme.PopupMenu</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowTransitionBackgroundFadeDuration">300</item>
+        
+        <item name="android:statusBarColor">#0D47A1</item>
     </style>
 
 </resources>

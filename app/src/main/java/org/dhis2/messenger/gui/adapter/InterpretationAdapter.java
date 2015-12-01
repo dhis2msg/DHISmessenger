@@ -1,10 +1,13 @@
 package org.dhis2.messenger.gui.adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,11 +84,17 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Activity activity = (Activity) context;
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, null);
                 Intent intent = new Intent(context, InterpretationCommentActivity.class);
                 intent.putExtra("id", item.id);
                 intent.putExtra("subject", item.text);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                if(Build.VERSION.SDK_INT >= 16) {
+                    context.startActivity(intent, compat.toBundle());
+                }else{
+                    context.startActivity(intent);
+                }
             }
         });
 
@@ -99,11 +108,17 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
         holder.user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Activity activity = (Activity) context;
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, null);
                 Intent intent = new Intent(context, ProfileActivity.class);
                 intent.putExtra("userid", item.user.getId());
                 intent.putExtra("username", item.user.getName());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                if(Build.VERSION.SDK_INT >= 16) {
+                    context.startActivity(intent, compat.toBundle());
+                }else{
+                    context.startActivity(intent);
+                }
             }
         });
 

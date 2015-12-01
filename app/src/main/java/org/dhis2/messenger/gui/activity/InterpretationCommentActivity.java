@@ -4,7 +4,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,6 +76,18 @@ public class InterpretationCommentActivity extends Activity implements UpdateUnr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(Build.VERSION.SDK_INT >= 21){
+            Slide slide = new Slide();
+            slide.setDuration(300);
+            Fade fade = new Fade();
+            fade.setDuration(500);
+            TransitionSet transitionSet = new TransitionSet();
+            transitionSet.addTransition(slide);
+            transitionSet.addTransition(fade);
+            getWindow().setEnterTransition(transitionSet);
+        }
+
         setContentView(R.layout.activity_rest_conversation);
         ButterKnife.bind(this);
 
