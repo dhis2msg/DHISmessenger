@@ -30,7 +30,7 @@ public class RESTSessionStorage {
     //InboxFragment list of pages(lists of InboxModels)
     //private List<ArrayList<InboxModel>> inboxModelList = new ArrayList<ArrayList<InboxModel>>();
     private int inboxCurrentPage = 1;
-    private int inboxPageSize = 25;
+    private int inboxPageSize = 10;
     private int inboxTotalPages = 0;
     private List<InboxModel> inboxModelList = new ArrayList<>();
 

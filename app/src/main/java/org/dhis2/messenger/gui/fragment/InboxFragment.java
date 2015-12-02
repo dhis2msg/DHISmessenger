@@ -54,7 +54,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class InboxFragment extends Fragment {
-    private final String MESSAGES_PR_PAGE = "25";
+    private final int MESSAGES_PR_PAGE = 10;
 
     //gui elements:
     private ListView listView;
@@ -86,6 +86,8 @@ public class InboxFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    currentPage = RESTSessionStorage.getInstance().getInboxCurrentPage();
+                    list = new ArrayList<InboxModel>();
                     refresh(1, false);
                 }
             });
@@ -95,6 +97,8 @@ public class InboxFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        RESTSessionStorage.getInstance().setInboxPageSize(MESSAGES_PR_PAGE);
 
         if(Build.VERSION.SDK_INT >= 21){
             TransitionInflater infalter = TransitionInflater.from(getActivity());
@@ -114,6 +118,7 @@ public class InboxFragment extends Fragment {
         loader = (ProgressBar) root.findViewById(R.id.loader);
         foot = inflater.inflate(R.layout.listview_footer, null);
         currentPage = totalPages = 1;
+        totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
         list = new ArrayList<InboxModel>();
         //setAdapter();
 
@@ -122,6 +127,7 @@ public class InboxFragment extends Fragment {
                 if (view == foot) {
                     currentPage++;
                     RESTSessionStorage.getInstance().setInboxCurrentPage(currentPage);
+                    list = new ArrayList<InboxModel>();
                     refresh(1, false);
                 } else {
                     InboxModel model = (InboxModel) listView.getAdapter().getItem(position);
@@ -188,10 +194,21 @@ public class InboxFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        list = new ArrayList<InboxModel>();
+        RESTSessionStorage.getInstance().setInboxCurrentPage(currentPage);
+        RESTSessionStorage.getInstance().setInboxTotalPages(totalPages);
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         list = new ArrayList<InboxModel>();
         currentPage = RESTSessionStorage.getInstance().getInboxCurrentPage();
+        totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
+
         refresh(1, false);
         getActivity().registerReceiver(inboxReceiver, new IntentFilter("org.dhis2.messenger.gui.activity.HomeActivity"));
     }
@@ -301,8 +318,9 @@ public class InboxFragment extends Fragment {
     }
 
     private void refresh(int i, boolean skipCache) {
-        if (i <= currentPage)
+        if (i <= currentPage && i > 0) {
             getInboxElements(i, skipCache);
+        }
     }
 
     private void getInboxElements(final int page, final boolean skipCache) {
@@ -343,12 +361,12 @@ public class InboxFragment extends Fragment {
                         return RESTClient.OK;
                     } else { //get it from the server
                         gotListFromCache = false;
-                        if (page == 1) {
+                        /*if (page == 1) {//this seems unnecessary :
                             response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE, auth);
                             list = new ArrayList<>();
-                        } else {
+                        } else {*/
                             response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
-                        }
+                        //}
                         // parse response into page (list of models):
                         if (RESTClient.noErrors(response.getCode())) {
                             json = new JSONObject(response.getBody());
@@ -399,7 +417,7 @@ public class InboxFragment extends Fragment {
                     }
                     new ToastMaster(getActivity(), "Page: " + currentPage + "/ " + totalPages, false);
                     addToInboxList(tempList, page);
-                    refresh(page + 1, false);
+                    refresh(page + 1, skipCache);
                 } else if (code == RESTClient.JSON_EXCEPTION)
                     new ToastMaster(getActivity(), "Something went wrong. \nTry to refresh", false);
                     //Toast.makeText(getActivity(), "Something went wrong. \nTry to refresh", Toast.LENGTH_SHORT).show();
