@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
+import org.dhis2.messenger.core.rest.RESTSessionStorage;
 import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.core.rest.APIPath;
@@ -129,11 +131,11 @@ public class NewMessageActivity extends Activity implements UpdateUnreadMsg {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.send:
-                if (RESTClient.isDeviceConnectedToInternet(getApplicationContext()))
+                if (RESTClient.isDeviceConnectedToInternet(getApplicationContext())) {
                     sendMessage();
-                else
+                } else {
                     new ToastMaster(getApplicationContext(), "No internet connection", false);
-
+                }
                 return true;
             case android.R.id.home:
                 finish();
@@ -306,6 +308,7 @@ public class NewMessageActivity extends Activity implements UpdateUnreadMsg {
                         progressDialog.dismiss();
                         if (RESTClient.noErrors(code)) {
                             new ToastMaster(getApplicationContext(), "Message sent!", false);
+                            RESTSessionStorage.getInstance().startedNewConversation(true); //inform the cache.
                             SaveDataSqlLite db = new SaveDataSqlLite(NewMessageActivity.this);
                             db.open();
                             db.updateDHISMessageSent();

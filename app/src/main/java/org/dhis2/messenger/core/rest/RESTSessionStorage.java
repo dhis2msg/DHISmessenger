@@ -1,6 +1,7 @@
 package org.dhis2.messenger.core.rest;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.dhis2.messenger.gui.activity.LoginActivity;
 import org.dhis2.messenger.model.InboxModel;
@@ -32,9 +33,15 @@ public class RESTSessionStorage {
     private int inboxCurrentPage = 1;
     private int inboxPageSize = 10;
     private int inboxTotalPages = 0;
+    //A boolean to indicate that a new conversation was started.
+    // Thus we have to refresh the cache.
+    private boolean newConversation = false;
+    // new message of a conversation: ==> refresh the messeges. && set as not read ?
+    private boolean newMessage = false;
     private List<InboxModel> inboxModelList = new ArrayList<>();
 
     private List<NameAndIDModel> list; //will work on it later...
+
 
     private static final String TAG = "RESTSessionStorage";
 
@@ -197,6 +204,13 @@ public class RESTSessionStorage {
      */
     public synchronized List<InboxModel> getInboxModelList(int page) {
         int index = (page - 1) * inboxPageSize;
+
+        //Need to refresh the cache.
+        if(page == 1 && startedNewConversation()) {
+            startedNewConversation(false);
+            return inboxModelList.subList(0, 0); // ie empty list
+        }
+
         // if cache is empty return empty list.
         if (index < 0 || inboxTotalPages == 0 || page > inboxTotalPages) {
             return inboxModelList.subList(0, 0); // ie empty list
@@ -228,6 +242,32 @@ public class RESTSessionStorage {
         return inboxModelList.get(index);
     }
 
+    /**
+     * Removes the InboxModel from the cached ones. (conversations).
+     * @param index
+     */
+    public void removeInboxModel(int index) {
+        if(index >= 0 && index < inboxModelList.size()) {
+            inboxModelList.remove(index);
+        }
+    }
+    //setters & getters for state changes regarding booleans that keep track of new conversations/messeges:
+
+    public void startedNewConversation(boolean newConversation) {
+        this.newConversation = newConversation;
+    }
+
+    public boolean startedNewConversation() {
+        return newConversation;
+    }
+
+    public void sentNewMessage(boolean newMessage) {
+        this.newMessage = newMessage;
+    }
+
+    public boolean sentNewMessage() {
+        return newMessage;
+    }
 
     //.........................
 

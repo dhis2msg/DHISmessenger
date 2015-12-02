@@ -33,6 +33,7 @@ public class RESTGetConversation extends AsyncTask<String, Void, Integer> {
     private int inboxModelIndex;
     private InboxModel inboxModel;
     private boolean fromCache = false;
+    boolean onlyGetMessages = false;
 
     /**
      * A constructor for this task.
@@ -54,37 +55,54 @@ public class RESTGetConversation extends AsyncTask<String, Void, Integer> {
         this.inboxModelIndex = inboxModelIndex;
     }
 
+    /**
+     * Get the messages and users in the background.
+     * It either gets them from the server or the cache (if available & read).
+     * Also another improvement is the RESTSessionStorage.getInstance().sentNewMessage().
+     * It is set when a new message has just been sent, so that the messages could be refreshed.
+     * If that is the case the task only gets the messages and doesn't bother downloading the users' list, which would be identical, thus saving bandwidth.
+     * @param strings
+     * @return
+     */
     @Override
     protected Integer doInBackground(String... strings) {
+
+        onlyGetMessages = RESTSessionStorage.getInstance().sentNewMessage();
         this.inboxModel = RESTSessionStorage.getInstance().getInboxModel(inboxModelIndex);
-        if (read && !inboxModel.messages.isEmpty() && !inboxModel.members.isEmpty()) { //get from cache.
+
+        String api = SharedPrefs.getServerURL(context)
+                + APIPath.FIRST_PAGE_MESSAGES
+                + "/"
+                + id;
+        if(onlyGetMessages) {
+            api += "?fields=messages";
+        }
+
+        if (!RESTSessionStorage.getInstance().sentNewMessage()  && read && !inboxModel.messages.isEmpty() && !inboxModel.members.isEmpty()) { //get from cache.
+            fromCache = true;
             tempMembers = inboxModel.members;
             tempMessages = inboxModel.messages;
-            fromCache = true;
+
             return RESTClient.OK;
         } else {
             fromCache = false;
-            String api = SharedPrefs.getServerURL(context)
-                    + APIPath.FIRST_PAGE_MESSAGES
-                    + "/"
-                    + id;
-
             Response response = RESTClient.get(api + APIPath.REST_CONVERSATION_FIELDS, SharedPrefs.getCredentials(context));
             if (RESTClient.noErrors(response.getCode())) {
                 try {
                     JSONObject json = new JSONObject(response.getBody());
 
-                    //getting users
-                    JSONArray users = new JSONArray(json.getString("userMessages"));
-                    for (int i = 0; i < users.length(); i++) {
-                        JSONObject row = users.getJSONObject(i);
-                        JSONObject user = row.getJSONObject("user");        //All members of conversation
-                        NameAndIDModel model = new NameAndIDModel();
-                        model.setId(user.getString("id"));
-                        model.setName(user.getString("name"));
-                        tempMembers.add(model);
+                    if(!onlyGetMessages) {
+                        //getting users
+                        JSONArray users = new JSONArray(json.getString("userMessages"));
+                        for (int i = 0; i < users.length(); i++) {
+                            JSONObject row = users.getJSONObject(i);
+                            JSONObject user = row.getJSONObject("user");        //All members of conversation
+                            NameAndIDModel model = new NameAndIDModel();
+                            model.setId(user.getString("id"));
+                            model.setName(user.getString("name"));
+                            tempMembers.add(model);
+                        }
                     }
-
                     //getting messages
                     JSONArray messages = new JSONArray(json.getString("messages"));
                     for (int i = 0; i < messages.length(); i++) {
@@ -102,6 +120,7 @@ public class RESTGetConversation extends AsyncTask<String, Void, Integer> {
                         ChatModel model = new ChatModel(message, date, user);
                         tempMessages.add(model);
                     }
+
                     if (read == false) {
                         JSONArray array = new JSONArray();
                         array.put(id);
@@ -111,15 +130,14 @@ public class RESTGetConversation extends AsyncTask<String, Void, Integer> {
                                 + "/read";
 
                         Response r = RESTClient.post(url, SharedPrefs.getCredentials(context), array.toString(), "application/json");
+                        //Vladislav: I don't really understand why this is done :
                         if (RESTClient.noErrors(r.getCode())) {
                             int temp = Integer.parseInt(SharedPrefs.getUnreadMessages(context));
-                            if (temp > 0)
+                            if (temp > 0) {
                                 SharedPrefs.setUnreadMessages(context, String.valueOf(temp - 1));
-
+                            }
                         }
-
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return -1;
@@ -131,17 +149,23 @@ public class RESTGetConversation extends AsyncTask<String, Void, Integer> {
 
     protected void onPostExecute(final Integer code) {
         if (RESTClient.noErrors(code)) {
+
             if (!fromCache) {
-                inboxModel.members.clear();
-                inboxModel.members.addAll(tempMembers);
+                if(!onlyGetMessages) {
+                    inboxModel.members.clear();
+                    inboxModel.members.addAll(tempMembers);
+                    listener.updateUsers(tempMembers);
+                } else {
+                    //full refresh next time.
+                    RESTSessionStorage.getInstance().sentNewMessage(false);
+                }
                 inboxModel.messages.clear();
                 inboxModel.messages.addAll(tempMessages);
+                listener.updateMessages(tempMessages);
+            } else {
+                listener.updateMessages(tempMessages);
+                listener.updateUsers(tempMembers);
             }
-            //System.out.println("-------------Are the inbox models still the same ? " + inboxModel.equals(RESTSessionStorage.getInstance().getInboxModel(inboxModelIndex)));
-
-            listener.updateMessages(tempMessages);
-            listener.updateUsers(tempMembers);
-
         } else
             new ToastMaster(context, "Could not load messages:\n" + RESTClient.getErrorMessage(code), false);
     }

@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.dhis2.messenger.core.rest.async.RESTMarkConversationRead;
 import org.dhis2.messenger.gui.activity.HomeActivity;
 import org.dhis2.messenger.gui.activity.NewMessageActivity;
 import org.dhis2.messenger.gui.activity.RESTChatActivity;
@@ -41,8 +42,7 @@ import org.dhis2.messenger.core.rest.RESTClient;
 import org.dhis2.messenger.core.rest.RESTSessionStorage;
 import org.dhis2.messenger.core.rest.Response;
 import org.dhis2.messenger.gui.adapter.InboxAdapter;
-import org.dhis2.messenger.core.rest.async.RESTDeleteMessage;
-import org.dhis2.messenger.core.rest.async.RESTMarkRead;
+import org.dhis2.messenger.core.rest.async.RESTDeleteConversation;
 import org.dhis2.messenger.SharedPrefs;
 import org.dhis2.messenger.gui.ToastMaster;
 import org.json.JSONArray;
@@ -151,7 +151,7 @@ public class InboxFragment extends Fragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int pos, long id) {
+                                           final int pos, long id) {
                 // TODO Auto-generated method stub
                 final PopupWindow popup = new PopupWindow(getActivity());
                 final InboxModel im = (InboxModel) listView.getAdapter().getItem(pos);
@@ -166,14 +166,14 @@ public class InboxFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        new RESTMarkRead(getActivity(), (HomeActivity) getActivity()).execute(im.getId());
+                        new RESTMarkConversationRead(getActivity(), (HomeActivity) getActivity(), pos).execute(im.getId());
                         popup.dismiss();
                     }
                 });
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new RESTDeleteMessage(getActivity(), (HomeActivity) getActivity(), SharedPrefs.getUserId(getActivity())).execute(im.getId());
+                        new RESTDeleteConversation(getActivity(), (HomeActivity) getActivity(), SharedPrefs.getUserId(getActivity()), pos).execute(im.getId());
                         popup.dismiss();
                     }
                 });

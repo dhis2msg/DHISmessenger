@@ -24,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import org.dhis2.messenger.core.rest.RESTSessionStorage;
+import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
 import org.dhis2.messenger.model.ChatModel;
 import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.R;
@@ -83,6 +85,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
         if (newMessage.getText().toString().trim().length() > 0 && sendLoader.getVisibility() != View.VISIBLE) {
             if (RESTClient.isDeviceConnectedToInternet(getApplication()))
                 sendMessage();
+            //intent refresh conversation ?
             else
                 new ToastMaster(getApplicationContext(), "No internet connection", false);
         }
@@ -157,7 +160,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
             if (getConversation.isCancelled())
                 getMessages(true);
         // TODO : vladislav:  why xmppSessionStorage  here ?
-        //XMPPSessionStorage.getInstance().setHomeListener(this);
+        XMPPSessionStorage.getInstance().setHomeListener(this);
     }
 
     @Override
@@ -165,7 +168,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
         super.onPause();
         this.unregisterReceiver(messageReceiver);
         // TODO : vladislav:  why xmppSessionStorage  here ?
-        //XMPPSessionStorage.getInstance().setHomeListener(null);
+        XMPPSessionStorage.getInstance().setHomeListener(null);
         removeHandler();
     }
 
@@ -192,6 +195,8 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     @Override
     public void messageSent(boolean sent) {
         if (sent) {
+            //store in the cache that the conversation needs to be refreshed.
+            RESTSessionStorage.getInstance().sentNewMessage(true);
             newMessage.setText("");
 
             SaveDataSqlLite db = new SaveDataSqlLite(this);
@@ -199,9 +204,9 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
             db.updateDHISMessageSent();
             db.close();
             getMessages(true);
-        } else
+        } else {
             new ToastMaster(getApplicationContext(), "Could not send message!", false);
-
+        }
         sendLoader.setVisibility(View.GONE);
     }
 
@@ -217,8 +222,9 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
 
     private void removeHandler() {
         if (getConversation != null) {
-            if (!getConversation.isCancelled())
+            if (!getConversation.isCancelled()) {
                 getConversation.cancel(true);
+            }
             getConversation = null;
         }
     }
