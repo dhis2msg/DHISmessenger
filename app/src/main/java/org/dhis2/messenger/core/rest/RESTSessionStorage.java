@@ -154,7 +154,7 @@ public class RESTSessionStorage {
      */
     public synchronized void setInboxModelList(int page, List<InboxModel> newPageList) {
         int index = (page - 1) * inboxPageSize;
-
+        //TODO: Vladislav: if entries already exist and read variable is different modify the cached one!
         //Note: detecting overlap on both sides is necessary,
         // because the pages move with relation to the first item chronologically.
         //Thus what might have been the last page in cache might become the last partial page in cache...etc
@@ -215,6 +215,19 @@ public class RESTSessionStorage {
             return inboxModelList.subList(index, index + inboxPageSize);
         }
     }
+
+    // For the RESTGetConversation: functions to get inboxModel by index:
+
+    /**
+     * Returns the inbox model at that index.
+     * @param index 0 < index < size or you get an exception !
+     * @return the model
+     * Throws indexOutOfBounds if index is out of bounds
+     */
+    public InboxModel getInboxModel(int index) {
+        return inboxModelList.get(index);
+    }
+
 
     //.........................
 

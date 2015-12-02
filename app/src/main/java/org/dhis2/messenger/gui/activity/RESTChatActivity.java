@@ -14,8 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -62,6 +60,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
 
     //Data:
     private String id;
+    private int index;
     private List<NameAndIDModel> members;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
@@ -108,6 +107,8 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
         //Getting message context
         Intent i = getIntent();
         id = i.getStringExtra("id");
+        //get the index of the inboxModel from the intent :
+        index = i.getIntExtra("index", -1);
         fixActionBar(i.getStringExtra("subject"));
         getMessages(i.getBooleanExtra("read", false));
         receiveLoader.setVisibility(View.VISIBLE);
@@ -276,7 +277,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
 
     private void getMessages(boolean read) {
         removeHandler();
-        getConversation = new RESTGetConversation(this, this, read, id);
+        getConversation = new RESTGetConversation(this, this, read, id, index);
         getConversation.execute();
     }
 }

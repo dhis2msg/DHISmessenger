@@ -1,5 +1,7 @@
 package org.dhis2.messenger.model;
 
+import java.util.ArrayList;
+
 public class InboxModel implements Comparable<InboxModel> {
     private final String subject;
     private final String date;
@@ -7,6 +9,8 @@ public class InboxModel implements Comparable<InboxModel> {
     private final String lastSender;
     private String time;
     private boolean read;
+    public ArrayList<ChatModel> messages = new ArrayList<>();
+    public ArrayList<NameAndIDModel> members = new ArrayList<>();
 
     public InboxModel(String subject, String date, String id, String lastSender, boolean read) {
         this.subject = subject;

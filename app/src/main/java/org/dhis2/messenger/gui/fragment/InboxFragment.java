@@ -136,6 +136,8 @@ public class InboxFragment extends Fragment {
                     intent.putExtra("id", model.getId());
                     intent.putExtra("subject", model.getSubject());
                     intent.putExtra("read", model.getRead());
+                    // pass the index of the item:
+                    intent.putExtra("index", position);
                     if(Build.VERSION.SDK_INT >= 16) {
                         getActivity().startActivity(intent, compat.toBundle());
                     }else{
