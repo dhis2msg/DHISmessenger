@@ -19,16 +19,16 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.dhis2.messenger.model.IMMessageModel;
 import org.dhis2.messenger.R;
-import org.dhis2.messenger.core.SaveDataSqlLite;
-import org.dhis2.messenger.gui.adapter.IMChatAdapter;
 import org.dhis2.messenger.SharedPrefs;
+import org.dhis2.messenger.core.SaveDataSqlLite;
+import org.dhis2.messenger.core.xmpp.XMPPClient;
+import org.dhis2.messenger.core.xmpp.XMPPDataChanged;
+import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
 import org.dhis2.messenger.gui.SwipeListener;
 import org.dhis2.messenger.gui.ToastMaster;
-import org.dhis2.messenger.core.xmpp.XMPPDataChanged;
-import org.dhis2.messenger.core.xmpp.XMPPClient;
-import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
+import org.dhis2.messenger.gui.adapter.IMChatAdapter;
+import org.dhis2.messenger.model.IMMessageModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +44,23 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
 
     @Bind(R.id.sendText)
     EditText text;
+
     @Bind(R.id.chat_List)
     ListView list;
-    @Bind(R.id.send)
+
+    @Bind(R.id.btnSend)
     Button send;
+
     @Bind(R.id.loader)
     ProgressBar pb;
+
     @Bind(R.id.contentLoader)
     ProgressBar contentLoader;
 
     private String conferenceId;
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.send)
+    @OnClick(R.id.btnSend)
     public void sendClicked() {
         String message = text.getText().toString();
         if (message.trim().length() > 0) {
@@ -70,10 +74,12 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
                     db.updateIMConferenceSent();
                     db.close();
                     text.setText("");
-                } else
+                } else {
                     new ToastMaster(getApplicationContext(), XMPPClient.getResponseMessage(response), false);
-            } else
+                }
+            } else {
                 new ToastMaster(getApplicationContext(), "Lost connection..", false);
+            }
         }
     }
 
@@ -124,12 +130,10 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
             case R.id.delete:
                 showDeleteConference();
                 return true;
-
             case android.R.id.home:
                 finish();
                 ConferenceChatActivity.this.overridePendingTransition(R.anim.left_to_center, R.anim.center_to_right);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -154,7 +158,7 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
 
     @Override
     protected void onStop() {
-        super.onDestroy();
+        super.onStop();
         XMPPClient.getInstance().leaveMUC();
         XMPPSessionStorage.getInstance().setCallback(null);
     }
@@ -218,6 +222,7 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
         try {
             alertDialog.show();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -268,6 +273,7 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
         try {
             alertDialog.show();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -298,7 +304,8 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
         try {
             alertDialog.show();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-}
 
+}
