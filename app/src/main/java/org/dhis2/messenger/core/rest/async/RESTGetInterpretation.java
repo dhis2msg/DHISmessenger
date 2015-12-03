@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +78,9 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
 
                 for (int i = 0; i < allConversations.length() && i < 5; i++) {
 
-
                     JSONObject row = allConversations.getJSONObject(i);
                     //Dataset-reports is not auited for this application and will not be added to the view
-                    if (!row.getString("type").equals("dataSetReport")) {
+                    if (!row.getString("type").equals("DATASET_REPORT")) {
                         String id = row.getString("id");
                         String date = row.getString("lastUpdated");
                         String text = row.getString("text");
@@ -95,32 +96,31 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
                         String typeid = "";
                         Bitmap picture = null;
                         String pictureURL = server;
-                        if (type.equals("chart")) {
+
+                        if (type.equals("CHART")) {
                             JSONObject map = row.getJSONObject("chart");
                             typeid = map.getString("id");
                             pictureURL += "api/charts/" + typeid + "/data";
-                        } else if (type.equals("map")) {
+                            picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.chart);
+                        } else if (type.equals("MAP")) {
                             JSONObject chart = row.getJSONObject("map");
                             typeid = chart.getString("id");
                             pictureURL += "api/maps/" + typeid + "/data";
-                        } else if (type.equals("reportTable")) {
+                            //trying to use the original pic instead
+                            //ImageView iv = new ImageView();
+                            //URL url = new URL(pictureURL);
+                            //InputStream content = (InputStream)url.getContent();
+                            //Drawable d = Drawable.createFromStream(content, "src");
+                            picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.wordmap);
+                        } else if (type.equals("REPORT_TABLE")) {
                             JSONObject reportTable = row.getJSONObject("reportTable");
                             typeid = reportTable.getString("id");
                             pictureURL += "api/reportTables/" + typeid + "/data.html";
-                            //picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.dhis2_logo);
                             picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.table);
-
                         }
-                                /*else if (type.equals("dataSetReport")) {
-                                JSONObject dataSet = row.getJSONObject("dataSet");
-                                typeid = dataSet.getString("id");
-                                }*/
-
                         tempList.add(new InterpretationModel(id, text, date, user, type, pictureURL, picture, comments));
-
                     }
                 }
-
                 return response.getCode();
             } else
                 return response.getCode();
