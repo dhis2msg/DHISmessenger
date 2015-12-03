@@ -292,8 +292,9 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
                     ConferenceChatActivity.this.overridePendingTransition(R.anim.left_to_center, R.anim.center_to_right);
                 }
             });
-        } else
+        } else {
             builder.setTitle("You need to be admin to delete");
+        }
 
         builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {

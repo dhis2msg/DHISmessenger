@@ -16,17 +16,17 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
-import org.dhis2.messenger.model.IMMessageModel;
-import org.dhis2.messenger.model.RosterModel;
+import org.dhis2.messenger.CurrentTime;
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.core.SaveDataSqlLite;
-import org.dhis2.messenger.gui.adapter.IMChatAdapter;
-import org.dhis2.messenger.CurrentTime;
+import org.dhis2.messenger.core.xmpp.XMPPClient;
+import org.dhis2.messenger.core.xmpp.XMPPDataChanged;
+import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
 import org.dhis2.messenger.gui.SwipeListener;
 import org.dhis2.messenger.gui.ToastMaster;
-import org.dhis2.messenger.core.xmpp.XMPPDataChanged;
-import org.dhis2.messenger.core.xmpp.XMPPClient;
-import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
+import org.dhis2.messenger.gui.adapter.IMChatAdapter;
+import org.dhis2.messenger.model.IMMessageModel;
+import org.dhis2.messenger.model.RosterModel;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.packet.Message;
 
@@ -41,12 +41,16 @@ import butterknife.OnClick;
 
 
 public class IMChatActivity extends Activity implements XMPPDataChanged {
+
     @Bind(R.id.sendText)
     EditText text;
+
     @Bind(R.id.chat_List)
     ListView listView;
+
     @Bind(R.id.btnSend)
     Button send;
+
     @Bind(R.id.loader)
     ProgressBar pb;
 
@@ -54,7 +58,7 @@ public class IMChatActivity extends Activity implements XMPPDataChanged {
     private String receiver;
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.send)
+    @OnClick(R.id.btnSend)
     public void sendClicked() {
         String message = text.getText().toString();
         if (message.trim().length() > 0) {
@@ -201,4 +205,5 @@ public class IMChatActivity extends Activity implements XMPPDataChanged {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
 }
