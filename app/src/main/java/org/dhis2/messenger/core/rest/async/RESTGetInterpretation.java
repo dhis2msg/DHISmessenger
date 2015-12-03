@@ -139,7 +139,7 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
         if (RESTClient.noErrors(code)) {
             //Check whether the interpretation list should be updated or not
             if(tempList.isEmpty()){
-                new ToastMaster(context, "No interpretation", false);
+                new ToastMaster(context, "No interpretations available.", false);
             }
             else {
                 listener.updateList(tempList);

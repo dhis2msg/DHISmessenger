@@ -214,7 +214,7 @@ public class InboxFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        list = new ArrayList<InboxModel>();
+        //list = new ArrayList<InboxModel>();
         RESTSessionStorage.getInstance().setInboxCurrentPage(currentPage);
         RESTSessionStorage.getInstance().setInboxTotalPages(totalPages);
 

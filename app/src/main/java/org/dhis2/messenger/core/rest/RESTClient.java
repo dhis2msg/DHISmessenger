@@ -271,6 +271,8 @@ public class RESTClient {
     }
 
     public static Bitmap getPicture(String api, String userCredentials) {
+        //never gets called.
+        Log.v("RESTClient.getPicture", "api=" + api + " userCredentials=" + userCredentials);
         Bitmap bitmap = null;
 
         HttpURLConnection connection = null;

@@ -1,9 +1,5 @@
 package org.dhis2.messenger.core.rest;
 
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import org.dhis2.messenger.gui.activity.LoginActivity;
 import org.dhis2.messenger.model.InboxModel;
 import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.model.ProfileModel;
@@ -38,9 +34,9 @@ public class RESTSessionStorage {
     private boolean newConversation = false;
     // new message of a conversation: ==> refresh the messeges. && set as not read ?
     private boolean newMessage = false;
-    private List<InboxModel> inboxModelList = new ArrayList<>();
+    private ArrayList<InboxModel> inboxModelList = new ArrayList<>();
 
-    private List<NameAndIDModel> list; //will work on it later...
+    private ArrayList<NameAndIDModel> list; //will work on it later...
 
 
     private static final String TAG = "RESTSessionStorage";
@@ -161,17 +157,28 @@ public class RESTSessionStorage {
      */
     public synchronized void setInboxModelList(int page, List<InboxModel> newPageList) {
         int index = (page - 1) * inboxPageSize;
-        //TODO: Vladislav: if entries already exist and read variable is different modify the cached one!
-        //Note: detecting overlap on both sides is necessary,
-        // because the pages move with relation to the first item chronologically.
-        //Thus what might have been the last page in cache might become the last partial page in cache...etc
 
         if(inboxModelList.isEmpty()) {
             inboxModelList.addAll(index, newPageList);
         } else if (page == 1) { //insert at the front:
-            int overlapIx = newPageList.indexOf(inboxModelList.get(0));
-            if (overlapIx > -1) {
-                inboxModelList.addAll(newPageList.subList(0, overlapIx));
+            //InboxModel oldEl  = inboxModelList.get(0);
+            //InboxModel newEl = newPageList.get(0);
+            //boolean conained = newPageList.contains(oldEl);
+            //boolean equal = oldEl.equals(newEl);
+
+            int newOverlapIx = newPageList.indexOf(inboxModelList.get(0));
+
+            if (newOverlapIx > -1) {
+                //modify the old entries:
+                //from overlapIx to end of page update read flag, mod date...+other fields.
+                int oldIx = 0;
+
+                for(int newIx = newOverlapIx; newIx < newPageList.size(); newIx++) {
+                    inboxModelList.get(oldIx).setAttributesFrom(newPageList.get(newIx));
+                    oldIx++;
+                }
+                // add the new entries:
+                inboxModelList.addAll(index, newPageList.subList(0, newOverlapIx));
             } else {
                 inboxModelList.addAll(index, newPageList);
             }
@@ -184,11 +191,20 @@ public class RESTSessionStorage {
             if (last > inboxModelList.size()) {
                 last = inboxModelList.size();
             }
-            int overlapIx = newPageList.indexOf(inboxModelList.get(last - 1));
-            if (overlapIx > -1) { // there is overlap:
-                    inboxModelList.addAll(newPageList.subList(overlapIx + 1, newPageList.size()));
+            int newOverlapIx = newPageList.indexOf(inboxModelList.get(last - 1));
+
+            if (newOverlapIx > -1) { // there is overlap:
+                //Update the old ones:
+                // From oldIx to end of inboxModelList :update read flag, mod date...+other fields.
+                int oldIx = (inboxModelList.size() -1) - newOverlapIx;
+                for(int newIx = 0; newIx <= newOverlapIx; newIx++) {
+                    inboxModelList.get(oldIx).setAttributesFrom(newPageList.get(newIx));
+                    oldIx++;
+                }
+                //add the new ones:
+                inboxModelList.addAll(newPageList.subList(newOverlapIx + 1, newPageList.size()));
             } else {
-                    inboxModelList.addAll(index, newPageList);
+                inboxModelList.addAll(newPageList);
             }
         }
         //Log.v(TAG, "(INSERT) page = " + page + " index=" + index + " inboxModelList.size() = " + inboxModelList.size());

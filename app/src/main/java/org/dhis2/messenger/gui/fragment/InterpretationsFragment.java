@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,6 +106,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     public void updateBitmap(Bitmap picture, String id) {
         InterpretationModel model = null;
         int position = -1;
+        //TODO: position as argument ?
         for (InterpretationModel m : list) {
             if (m.id.equals(id)) {
                 model = m;
@@ -119,6 +121,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         }
         if (position < (list.size() - 1)) {
             InterpretationModel nextModel = list.get(position + 1);
+            //TODO: cache ?
             getPicture = new RESTGetPicture(this, getActivity(), nextModel);
             getPicture.execute();
         }
@@ -156,6 +159,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     }
 
     public void getInterpretations(int page) {
+        Log.v("InterpretationFragment", "getInterpretations page=" + page);
         getInterpretations = new RESTGetInterpretation(this, getActivity(), page);
         setLoader(getInterpretations.getTempList().isEmpty() ? false : true);
         getInterpretations.execute();

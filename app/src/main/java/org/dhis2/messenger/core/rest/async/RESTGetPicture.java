@@ -34,6 +34,7 @@ public class RESTGetPicture extends AsyncTask<Integer, String, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap picture) {
+        //TODO: pass the position
         listener.updateBitmap(picture, model.id);
     }
 }

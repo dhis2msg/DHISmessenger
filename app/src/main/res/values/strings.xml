@@ -52,11 +52,12 @@
     <string-array name="server_array">
         <item>https://88.80.187.109/dhis</item>
         <item>http://10.0.0.14:8082/</item>
+        <item>http://inf5750-chat.uio.no/</item>
+        <item>https://play.dhis2.org/demo/</item>
         <item>https://apps.dhis2.org/demo</item>
         <item>http://hmis2.health.go.ug</item>
         <item>http://www.hispmalawi.org.mw/dhis</item>
         <item>https://www.ghsdhims.org/dhims</item>
-        <item>http://inf5750-chat.uio.no</item>
         <item>https://hmis.moh.gov.rw/hmis</item>
         <item>https://197.243.37.125/hmis</item>
         <item>http://burkina.dhis2.org/dhis</item>
