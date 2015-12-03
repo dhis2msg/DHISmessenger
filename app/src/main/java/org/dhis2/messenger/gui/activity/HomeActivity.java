@@ -17,18 +17,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import org.dhis2.messenger.R;
+import org.dhis2.messenger.SharedPrefs;
+import org.dhis2.messenger.core.gcm.RegisterDevice;
+import org.dhis2.messenger.core.rest.callback.UnreadMessagesCallback;
+import org.dhis2.messenger.core.xmpp.XMPPClient;
+import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
+import org.dhis2.messenger.gui.Section;
+import org.dhis2.messenger.gui.ToastMaster;
 import org.dhis2.messenger.gui.fragment.InboxFragment;
 import org.dhis2.messenger.gui.fragment.InterpretationsFragment;
 import org.dhis2.messenger.gui.fragment.MyProfileFragment;
 import org.dhis2.messenger.gui.fragment.RosterFragment;
-import org.dhis2.messenger.R;
 import org.dhis2.messenger.gui.fragment.Stats;
-import org.dhis2.messenger.core.rest.callback.UnreadMessagesCallback;
-import org.dhis2.messenger.core.gcm.RegisterDevice;
-import org.dhis2.messenger.SharedPrefs;
-import org.dhis2.messenger.gui.ToastMaster;
-import org.dhis2.messenger.core.xmpp.XMPPClient;
-import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,13 +38,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
 public class HomeActivity extends FragmentActivity implements UnreadMessagesCallback, UpdateUnreadMsg {
 
-    private static final String SELECTED_FRAGMENT_POSITION = "selectedFragmentPos";
+    private static final String SHOWN_SECTION_KEY = "shownSection";
 
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+
     @Bind(R.id.left_drawer)
     ListView drawerListView;
 
@@ -51,8 +52,9 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
     private CharSequence charSequenceTitle;
     private String[] menuTitles;
     private int[] menuIcons;
-    private int drawerSelection;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+
+    private Section shownSection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         ButterKnife.bind(this);
 
         initializeDrawer(savedInstanceState);
-        attachFragment(drawerSelection);
+        attachFragment(shownSection);
         checkGCM();
     }
 
@@ -91,19 +93,23 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(SELECTED_FRAGMENT_POSITION, drawerSelection);
+        outState.putSerializable(SHOWN_SECTION_KEY, shownSection);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void setTitle(CharSequence title) {
         charSequenceTitle = title;
-        if (drawerSelection == 0)
-            getActionBar().setTitle(charSequenceTitle + " | " + SharedPrefs.getUnreadMessages(this));
-        else if (drawerSelection == 1)
-            getActionBar().setTitle(charSequenceTitle + " | " + XMPPSessionStorage.getInstance().getUnreadMessages());
-        else
-            getActionBar().setTitle(charSequenceTitle);
+        switch (shownSection) {
+            case MESSAGES:
+                getActionBar().setTitle(charSequenceTitle + " | " + SharedPrefs.getUnreadMessages(this));
+                break;
+            case CHAT:
+                getActionBar().setTitle(charSequenceTitle + " | " + XMPPSessionStorage.getInstance().getUnreadMessages());
+                break;
+            default:
+                getActionBar().setTitle(charSequenceTitle);
+        }
     }
 
     public void updateTitle() {
@@ -131,7 +137,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
                 int[] id = {R.id.listIcon, R.id.listTitle};
                 drawerListView.setAdapter(new SimpleAdapter(getApplicationContext(), list, R.layout.item_drawer, key, id));
 
-                if (drawerSelection == 1) {
+                if (shownSection == Section.CHAT) {
                     getActionBar().setTitle(menuTitles[1] + " | " + restNumber);
                     Vibrator v = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(150);
@@ -216,11 +222,11 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
             drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         }
 
-        if (savedInstanceState == null)
-            drawerSelection = 0;
-
-        else
-            drawerSelection = savedInstanceState.getInt(SELECTED_FRAGMENT_POSITION);
+        if (shownSection == null) {
+            shownSection = Section.MESSAGES;
+        } else {
+            shownSection = (Section) savedInstanceState.get(SHOWN_SECTION_KEY);
+        }
     }
 
     public void updateDHISMessages() {
@@ -240,7 +246,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         int[] id = {R.id.listIcon, R.id.listTitle};
         drawerListView.setAdapter(new SimpleAdapter(this, list, R.layout.item_drawer, key, id));
 
-        if (drawerSelection == 0) {
+        if (shownSection == Section.MESSAGES) {
             getActionBar().setTitle(menuTitles[0] + " | " + SharedPrefs.getUnreadMessages(this));
 
             // Uhhm, removed this due to eternal loop
@@ -269,55 +275,69 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
                 int[] id = {R.id.listIcon, R.id.listTitle};
                 drawerListView.setAdapter(new SimpleAdapter(getApplicationContext(), list, R.layout.item_drawer, key, id));
 
-                if (drawerSelection == 1)
+                if (shownSection == Section.CHAT) {
                     getActionBar().setTitle(menuTitles[1] + " | " + amount);
-
+                }
             }
         });
     }
 
-    private void attachFragment(int position) {
+    private void attachFragment(Section section) {
+        shownSection = section;
+
         Fragment fragment;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (position == 0) {
-            InboxFragment f = (InboxFragment) getSupportFragmentManager().findFragmentByTag("inbox");
-            if (f == null)
-                f = new InboxFragment();
 
-            transaction.replace(R.id.content_frame, f, "inbox");
-            transaction.addToBackStack(null);
-            transaction.commit();
-            drawerSelection = 0;
-        } else if (position == 1) {
-            fragment = new RosterFragment();
-            transaction.replace(R.id.content_frame, fragment);
-            transaction.commit();
-            drawerSelection = 1;
-        } else if (position == 2) {
-            InterpretationsFragment f = (InterpretationsFragment) getSupportFragmentManager().findFragmentByTag("interpretations");
-            if (f == null)
-                f = new InterpretationsFragment();
+        switch (section) {
+            case MESSAGES:
+                fragment = getSupportFragmentManager().findFragmentByTag("inbox");
+                if (fragment == null) {
+                    fragment = new InboxFragment();
+                }
 
-            transaction.replace(R.id.content_frame, f, "interpretations");
-            transaction.addToBackStack(null);
-            transaction.commit();
-            drawerSelection = 2;
-        } else if (position == 3) {
-            fragment = new MyProfileFragment();
-            transaction.replace(R.id.content_frame, fragment);
-            transaction.commit();
-            drawerSelection = 3;
-        } else if (position == 4) {
-            fragment = new Stats();
-            transaction.replace(R.id.content_frame, fragment);
-            transaction.commit();
-            drawerSelection = 4;
-        } else {
-            logout();
+                transaction.replace(R.id.content_frame, fragment, "inbox");
+                transaction.addToBackStack(null);
+                transaction.commit();
 
+                break;
+            case CHAT:
+                fragment = new RosterFragment();
+                transaction.replace(R.id.content_frame, fragment);
+                transaction.commit();
+
+                break;
+            case INTERPRETATIONS:
+                fragment = getSupportFragmentManager().findFragmentByTag("interpretations");
+                if (fragment == null) {
+                    fragment = new InterpretationsFragment();
+                }
+
+                transaction.replace(R.id.content_frame, fragment, "interpretations");
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                break;
+            case PROFILE:
+                fragment = new MyProfileFragment();
+                transaction.replace(R.id.content_frame, fragment);
+                transaction.commit();
+
+                break;
+            case STATS:
+                fragment = new Stats();
+                transaction.replace(R.id.content_frame, fragment);
+                transaction.commit();
+
+                break;
+            case SIGN_OUT:
+                logout();
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported section");
         }
-        setTitle(menuTitles[position]);
-        drawerListView.setItemChecked(position, true);
+
+        setTitle(menuTitles[shownSection.ordinal()]);
+        drawerListView.setItemChecked(shownSection.ordinal(), true);
         drawerLayout.closeDrawer(drawerListView);
     }
 
@@ -345,7 +365,8 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            attachFragment(position);
+            attachFragment(Section.values()[position]);
         }
     }
-}//End of class Home
+
+}
