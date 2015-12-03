@@ -131,13 +131,29 @@ public class InboxFragment extends Fragment {
                     refresh(1, false);
                 } else {
                     InboxModel model = (InboxModel) listView.getAdapter().getItem(position);
-                    ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),null);
+
+                    // Update the read field if the conversation was unread
+                    if(!model.getRead()) {
+                        Context context = getActivity();
+                        int unreadMessages = Integer.parseInt(SharedPrefs.getUnreadMessages(context));
+                        unreadMessages--;
+                        SharedPrefs.setUnreadMessages(context, Integer.toString(unreadMessages));
+                    }
+
+                    model.setRead(true);
+
+                    // Creating the RESTChatActivity
                     Intent intent = new Intent(getActivity(), RESTChatActivity.class);
                     intent.putExtra("id", model.getId());
                     intent.putExtra("subject", model.getSubject());
                     intent.putExtra("read", model.getRead());
                     // pass the index of the item:
                     intent.putExtra("index", position);
+
+
+                    // Transition animation
+                    ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),null);
+
                     if(Build.VERSION.SDK_INT >= 16) {
                         getActivity().startActivity(intent, compat.toBundle());
                     }else{
@@ -351,8 +367,11 @@ public class InboxFragment extends Fragment {
             @Override
             protected Integer doInBackground(Integer... args) {
                 try {
+                    int responseCode;
                     JSONObject json;
                     Response response;
+                    int unreadMessages = 0;
+
                     /* check if we have the page in cache */
                     cached = RESTSessionStorage.getInstance().getInboxModelList(page);
                     //TODO: Use Google Cloud Messaging to find out that cache is outdated !
@@ -360,14 +379,17 @@ public class InboxFragment extends Fragment {
                         gotListFromCache = true;
                         tempList.addAll(cached);
                         totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
-                        return RESTClient.OK;
+                        responseCode = RESTClient.OK;
                     } else { //get it from the server
                         gotListFromCache = false;
                         /*if (page == 1) {//this seems unnecessary :
                             response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE, auth);
                             list = new ArrayList<>();
                         } else {*/
+
                             response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
+                        responseCode = response.getCode();
+
                         //}
                         // parse response into page (list of models):
                         if (RESTClient.noErrors(response.getCode())) {
@@ -386,18 +408,26 @@ public class InboxFragment extends Fragment {
                                 if (!row.isNull("lastSenderFirstname") || !row.isNull("lastSenderSurname"))
                                     lastSender = row.getString("lastSenderFirstname") + " " + row.getString("lastSenderSurname");
 
-                                // Find out if the there are unread messages
+                                // Find out if the conversation is unread
                                 Response mcResponse = RESTClient.get(mcAPIRootPath + "/" + id + "?fields=read", auth);
                                 JSONObject messageConversation = new JSONObject(mcResponse.getBody());
 
                                 Boolean read = Boolean.parseBoolean(messageConversation.getString("read"));
                                 tempList.add(new InboxModel(subject, date, id, lastSender, read));
-                                }
-                            return response.getCode();
-                        } else {
-                            return response.getCode();
+
+                                // Count the number of read messages
+                                if (!read)
+                                    unreadMessages++;
+                            }
+
+                            // Save the number of unread messages
+                            Context context = getActivity();
+                            SharedPrefs.setUnreadMessages(context, Integer.toString(unreadMessages));
                         }
                     }
+
+                    return responseCode;
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return RESTClient.JSON_EXCEPTION;
@@ -417,6 +447,11 @@ public class InboxFragment extends Fragment {
                         RESTSessionStorage.getInstance().setInboxModelList(page, tempList);
                         RESTSessionStorage.getInstance().setInboxTotalPages(totalPages);
                     }
+
+                    // Update the number of unread messages
+                    ((HomeActivity) getActivity()).updateTitle();
+                    ((HomeActivity) getActivity()).updateDHISMessages();
+
                     new ToastMaster(getActivity(), "Page: " + currentPage + "/ " + totalPages, false);
                     addToInboxList(tempList, page);
                     refresh(page + 1, skipCache);

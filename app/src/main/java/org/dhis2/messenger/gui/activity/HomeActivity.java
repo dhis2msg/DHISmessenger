@@ -24,7 +24,6 @@ import org.dhis2.messenger.gui.fragment.RosterFragment;
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.gui.fragment.Stats;
 import org.dhis2.messenger.core.rest.callback.UnreadMessagesCallback;
-import org.dhis2.messenger.core.rest.async.RESTUnreadMessages;
 import org.dhis2.messenger.core.gcm.RegisterDevice;
 import org.dhis2.messenger.SharedPrefs;
 import org.dhis2.messenger.gui.ToastMaster;
@@ -47,8 +46,6 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
     DrawerLayout drawerLayout;
     @Bind(R.id.left_drawer)
     ListView drawerListView;
-
-    private RESTUnreadMessages unreadMessagesHandler;
 
     //Drawer variables (Future development should use MaterialDialog library or something..)
     private CharSequence charSequenceTitle;
@@ -109,6 +106,10 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
             getActionBar().setTitle(charSequenceTitle);
     }
 
+    public void updateTitle() {
+        getActionBar().setTitle(menuTitles[0] + " | " + SharedPrefs.getUnreadMessages(this));
+    }
+
     @Override
     public void updateUnreadMsg(final int restNumber, int xmppNumber) {
         runOnUiThread(new Runnable() {
@@ -133,7 +134,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
                 if (drawerSelection == 1) {
                     getActionBar().setTitle(menuTitles[1] + " | " + restNumber);
                     Vibrator v = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
-                    v.vibrate(500);
+                    v.vibrate(150);
                 } else {
                     new ToastMaster(getApplicationContext(), "New chat message", true);
                 }
@@ -152,8 +153,10 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         super.onResume();
         if (SharedPrefs.isUserLoggedIn(this)) {
             XMPPSessionStorage.getInstance().setHomeListener(this);
-            unreadMessagesHandler = new RESTUnreadMessages(this, this);
-            unreadMessagesHandler.execute();
+            // unreadMessagesHandler = new RESTUnreadMessages(this, this);
+            // unreadMessagesHandler.execute();
+            updateDHISMessages();
+
             if (XMPPClient.getInstance().checkConnection())
                 manualUpdate(XMPPSessionStorage.getInstance().getUnreadMessages());
         } else
@@ -239,8 +242,10 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
 
         if (drawerSelection == 0) {
             getActionBar().setTitle(menuTitles[0] + " | " + SharedPrefs.getUnreadMessages(this));
-            if (getSupportFragmentManager().findFragmentByTag("inbox") != null)
-                getSupportFragmentManager().findFragmentByTag("inbox").onResume();
+
+            // Uhhm, removed this due to eternal loop
+            //if (getSupportFragmentManager().findFragmentByTag("inbox") != null)
+            //    getSupportFragmentManager().findFragmentByTag("inbox").onResume();
         }
     }
 
