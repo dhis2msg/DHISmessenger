@@ -23,7 +23,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,23 +113,24 @@ public class RESTGetInterpretations extends AsyncTask<Integer, String, Integer> 
                                 JSONObject map = row.getJSONObject("chart");
                                 typeid = map.getString("id");
                                 pictureURL += "api/charts/" + typeid + "/data";
-                                picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.chart);
+                                //picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.chart);
                             } else if (type.equals("MAP")) {
                                 JSONObject chart = row.getJSONObject("map");
                                 typeid = chart.getString("id");
                                 pictureURL += "api/maps/" + typeid + "/data";
-                                //trying to use the original pic instead
-                                //ImageView iv = new ImageView();
-                                //URL url = new URL(pictureURL);
-                                //InputStream content = (InputStream)url.getContent();
-                                //Drawable d = Drawable.createFromStream(content, "src");
-                                picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.wordmap);
+                                //picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.wordmap);
                             } else if (type.equals("REPORT_TABLE")) {
                                 JSONObject reportTable = row.getJSONObject("reportTable");
                                 typeid = reportTable.getString("id");
                                 pictureURL += "api/reportTables/" + typeid + "/data.html";
-                                picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.table);
+                                //picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.table);
                             }
+
+                            //Get the original data from dhis2 server
+                            //And show it on the interpretations fragment
+                            URL url = new URL(pictureURL);
+                            InputStream content = (InputStream)url.getContent();
+                            picture = BitmapFactory.decodeStream(content);
                             tempList.add(new InterpretationModel(id, text, date, user, type, pictureURL, picture, comments));
                         }
                     }

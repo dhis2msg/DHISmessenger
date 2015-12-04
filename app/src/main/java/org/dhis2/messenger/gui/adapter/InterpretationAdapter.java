@@ -39,7 +39,7 @@ import java.util.List;
 
 public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
     private Context context;
-
+    private InterpretationHolder holder;
     public InterpretationAdapter(Context context, int textViewResourceId, List<InterpretationModel> interpretations) {
         super(context, textViewResourceId, interpretations);
         this.context = context;
@@ -48,7 +48,7 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
     @Override
     public View getView(final int position, final View convertView, ViewGroup parent) {
         View row = convertView;
-        InterpretationHolder holder;
+
         if (row == null) {
             holder = new InterpretationHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -78,8 +78,22 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
         holder.date.setText(item.date);
         holder.user.setText(item.user.name);
         holder.spinner.setVisibility(item.picture != null ? View.GONE : View.VISIBLE);
-        holder.image.setImageBitmap(item.picture);
 
+        //Make a new thread to disable the loader if there is no data to show
+        Thread t = new Thread(){
+            public void run() {
+                try {
+                    long startTime = System.nanoTime();
+                    //Waiting for 10 seconds before disable the loader
+                    while ((System.nanoTime() - startTime) / Math.pow(10, 9) < 10);
+                    holder.spinner.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    return;
+                }
+            }
+        };
+        t.start();
+        holder.image.setImageBitmap(item.picture);
 
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
