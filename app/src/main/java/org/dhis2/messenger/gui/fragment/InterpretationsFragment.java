@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import org.dhis2.messenger.core.rest.RESTSessionStorage;
 import org.dhis2.messenger.model.InterpretationModel;
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.gui.adapter.InterpretationAdapter;
@@ -50,6 +51,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
             transitionSet.addTransition(fade);
             setEnterTransition(transitionSet);
         }
+        RESTSessionStorage.getInstance().setInterpretationsPageSize(pageSize);
     }
 
     @Override
@@ -62,6 +64,8 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         currentPage = totalPages = 1;
         list = new ArrayList<>();
 
+        //TODO: The morePages button is never shown.
+        //TODO: Add a refresh button.
         moreInterpretations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,12 +96,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         setLoader(false);
         setMoreInterpretationsBtn();
 
-        /*for (int i = 0; i < list.size(); i++){
-            if (list.get(i) != null) {
-                getPicture = new RESTGetPicture(this, getActivity(), list.get(i), i);
-                getPicture.execute();
-            }
-        }*/
+        // the following do not seem to have any effect atm:
         /*if (currentPage == 1) {
             if (list.get(index) != null) {
                 getPicture = new RESTGetPicture(this, getActivity(), list.get(index), index);
@@ -112,6 +111,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     @Override
     public void updatePages(int totalPages) {
         this.totalPages = totalPages;
+        RESTSessionStorage.getInstance().setInterpretationsTotalPages(totalPages);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         }
         if (index < (list.size() - 1)) {
             InterpretationModel nextModel = list.get(index + 1);
-            //TODO: cache ?
+            //TODO: Get picture from cache instead of the server ? model.picture == null ? skipCache == true ?
             getPicture = new RESTGetPicture(this, getActivity(), nextModel, index + 1);
             getPicture.execute();
         }
@@ -175,7 +175,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     public void getInterpretations(int page) {
         Log.v("InterpretationFragment", "getInterpretations page=" + page);
 
-        getInterpretations = new RESTGetInterpretations(this, getActivity(), page, false);
+        getInterpretations = new RESTGetInterpretations(this, getActivity(), page, true); //skip the cache for now.
         setLoader(!getInterpretations.getTempList().isEmpty());
         getInterpretations.execute();
     }

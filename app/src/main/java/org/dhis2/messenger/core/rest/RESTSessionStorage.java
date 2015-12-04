@@ -30,7 +30,6 @@ public class RESTSessionStorage {
 
     private ProfileModel profile = null;
     private CacheList<InboxModel> inboxModelList = new CacheList<>();
-    private CacheList<InterpretationModel> interpretationModelList = new CacheList<>();
 
     //InboxFragment list of pages(lists of InboxModels)
     //private List<ArrayList<InboxModel>> inboxModelList = new ArrayList<ArrayList<InboxModel>>();
@@ -41,6 +40,7 @@ public class RESTSessionStorage {
     private boolean newConversation = false; //To indicate that a new conversation was started.
     private boolean newMessage = false; // new message of a conversation: ==> refresh the messeges. && set as not read ?
 
+    private CacheList<InterpretationModel> interpretationModelList = new CacheList<>();
     private int interpretationsCurrentPage = 1;
     private int interpretationsPageSize = 5;
     private int interpretationsTotalPages = 0;
@@ -237,15 +237,24 @@ public class RESTSessionStorage {
         }
     }
 
-    //.........................other stuff....
-
-    public void setNameAndIdModelList(List<NameAndIDModel> lst) {
-
+    //----------- the following are what the wrappers for the interpretations should roughly look like:
+    public InterpretationModel getInterpretationModel(int index) {
+        return interpretationModelList.getElement(index);
     }
 
-    public List<NameAndIDModel> getNameAndIdModelList() {
-        return null;
+    public void removeInterpretationModel(int index) {
+        interpretationModelList.removeElement(index);
     }
+
+    public synchronized List<InterpretationModel> getInterpretationModelList(int page) {
+        return interpretationModelList.getListPage(page);
+    }
+
+
+    public synchronized void setInterpretatoinModelList( int page, List<InterpretationModel> list) {
+        interpretationModelList.setListPage(page, list);
+    }
+
 
 
 }

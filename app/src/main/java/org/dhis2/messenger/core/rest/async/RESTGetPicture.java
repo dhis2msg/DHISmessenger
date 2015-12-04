@@ -18,6 +18,7 @@ public class RESTGetPicture extends AsyncTask<Integer, String, Bitmap> {
     private String auth;
     private int position;
 
+    //TODO: before making an instance of this check if  model.picture exists, if it does should you get it from the cache instead ?
     public RESTGetPicture(InterpretationCallback listener, Context context, InterpretationModel model, int position) {
         this.auth = SharedPrefs.getCredentials(context);
         this.model = model;
@@ -27,6 +28,8 @@ public class RESTGetPicture extends AsyncTask<Integer, String, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Integer... args) {
+
+
         Bitmap picture = null;
         if (model.type.equals("chart") || model.type.equals("map")) {
             picture = RESTClient.getPicture(model.pictureUrl + ".png", auth);

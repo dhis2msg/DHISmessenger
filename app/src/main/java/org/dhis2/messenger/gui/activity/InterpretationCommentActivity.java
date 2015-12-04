@@ -128,6 +128,7 @@ public class InterpretationCommentActivity extends Activity implements UpdateUnr
     protected void onResume() {
         super.onResume();
         XMPPSessionStorage.getInstance().setHomeListener(this);
+        //TODO : try to get from cache. if not then get the comments from server. Or if Interpretation.read is set to false
         if (RESTClient.isDeviceConnectedToInternet(getApplicationContext())) {
             getComments = new RESTInterpretationComments();
             getComments.execute(id);
