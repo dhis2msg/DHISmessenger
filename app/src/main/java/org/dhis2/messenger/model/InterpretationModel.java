@@ -57,4 +57,20 @@ public class InterpretationModel implements CopyAttributes<InterpretationModel>{
         d = d.replaceAll("\\D+", ".");
         return d;
     }
+
+    /**
+     * In order for the Array list to detect duplicates.
+     * Each InterpretationModel has a unique id given by the server.
+     * @param other
+     * @return
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof InterpretationModel)) {
+            return false;
+        }
+        return this.id.equals(((InterpretationModel) other).id);
+    }
 }
