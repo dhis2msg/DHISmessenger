@@ -16,11 +16,13 @@ public class RESTGetPicture extends AsyncTask<Integer, String, Bitmap> {
     private InterpretationCallback listener;
     private InterpretationModel model;
     private String auth;
+    private int position;
 
-    public RESTGetPicture(InterpretationCallback listener, Context context, InterpretationModel model) {
+    public RESTGetPicture(InterpretationCallback listener, Context context, InterpretationModel model, int position) {
         this.auth = SharedPrefs.getCredentials(context);
         this.model = model;
         this.listener = listener;
+        this.position = position;
     }
 
     @Override
@@ -34,7 +36,6 @@ public class RESTGetPicture extends AsyncTask<Integer, String, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap picture) {
-        //TODO: pass the position
-        listener.updateBitmap(picture, model.id);
+        listener.updateBitmap(picture, model.id, position);
     }
 }

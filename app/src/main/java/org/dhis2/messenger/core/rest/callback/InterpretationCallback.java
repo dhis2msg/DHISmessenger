@@ -10,9 +10,9 @@ import java.util.List;
  * Created by iNick on 20.10.14.
  */
 public interface InterpretationCallback {
-    void updateList(List<InterpretationModel> list);
+    void updateList(List<InterpretationModel> list, int page);
 
     void updatePages(int pages);
 
-    void updateBitmap(Bitmap picture, String id);
+    void updateBitmap(Bitmap picture, String id, int index);
 }

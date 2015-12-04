@@ -19,7 +19,7 @@ import org.dhis2.messenger.model.InterpretationModel;
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.gui.adapter.InterpretationAdapter;
 import org.dhis2.messenger.core.rest.callback.InterpretationCallback;
-import org.dhis2.messenger.core.rest.async.RESTGetInterpretation;
+import org.dhis2.messenger.core.rest.async.RESTGetInterpretations;
 import org.dhis2.messenger.core.rest.async.RESTGetPicture;
 
 import java.util.ArrayList;
@@ -33,8 +33,9 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
 
     //Memory store
     private int currentPage, totalPages;
+    private int pageSize = 5;
     private List<InterpretationModel> list;
-    private RESTGetInterpretation getInterpretations;
+    private RESTGetInterpretations getInterpretations;
     private RESTGetPicture getPicture;
 
     public InterpretationsFragment(){
@@ -59,7 +60,7 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         foot = inflater.inflate(R.layout.listview_footer, null);
         moreInterpretations = (ImageView) foot.findViewById(R.id.moreMessages);
         currentPage = totalPages = 1;
-        list = new ArrayList<InterpretationModel>();
+        list = new ArrayList<>();
 
         moreInterpretations.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,23 +79,34 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         return view;
     }
 
+    /**
+     * Replaces the this class list with the provided and gets the images to display:
+     * @param list
+     * @param page
+     */
     @Override
-    public void updateList(List<InterpretationModel> list) {
-        this.list = list;
+    public void updateList(List<InterpretationModel> list, int page) {
+        //int index = (currentPage - 1) * pageSize;
+        this.list.addAll(list);
         setAdapter();
         setLoader(false);
         setMoreInterpretationsBtn();
 
-        if (currentPage == 1) {
-            if (list.get(0) != null) {
-                getPicture = new RESTGetPicture(this, getActivity(), list.get(0));
+        /*for (int i = 0; i < list.size(); i++){
+            if (list.get(i) != null) {
+                getPicture = new RESTGetPicture(this, getActivity(), list.get(i), i);
                 getPicture.execute();
             }
-
-        } else if (list.get((currentPage - 1) * 5) != null) {
-            getPicture = new RESTGetPicture(this, getActivity(), list.get((currentPage - 1) * 5));
+        }*/
+        /*if (currentPage == 1) {
+            if (list.get(index) != null) {
+                getPicture = new RESTGetPicture(this, getActivity(), list.get(index), index);
+                getPicture.execute();
+            }
+        } else if (list.get(index) != null) {
+            getPicture = new RESTGetPicture(this, getActivity(), list.get(index), index);
             getPicture.execute();
-        }
+        }*/
     }
 
     @Override
@@ -103,26 +115,28 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
     }
 
     @Override
-    public void updateBitmap(Bitmap picture, String id) {
+    public void updateBitmap(Bitmap picture, String id, int index) {
         InterpretationModel model = null;
-        int position = -1;
-        //TODO: position as argument ?
-        for (InterpretationModel m : list) {
-            if (m.id.equals(id)) {
-                model = m;
-                position = ((InterpretationAdapter) listView.getAdapter()).getPosition(model);
-                break;
+        Log.v("updateBitmap:", "index= " + index);
+        if (!(index > -1) || index > list.size()) {// invalid index:
+            for (InterpretationModel m : list) {
+                if (m.id.equals(id)) {
+                    model = m;
+                    index = ((InterpretationAdapter) listView.getAdapter()).getPosition(model);
+                    break;
+                }
             }
         }
         if (picture != null) {
             model.picture = picture;
-            updateListItem(model, position);
-            updateListView(model, position);
+            //updateListItem(model, index);
+            list.set(index, model);
+            updateListView(model, index);
         }
-        if (position < (list.size() - 1)) {
-            InterpretationModel nextModel = list.get(position + 1);
+        if (index < (list.size() - 1)) {
+            InterpretationModel nextModel = list.get(index + 1);
             //TODO: cache ?
-            getPicture = new RESTGetPicture(this, getActivity(), nextModel);
+            getPicture = new RESTGetPicture(this, getActivity(), nextModel, index + 1);
             getPicture.execute();
         }
     }
@@ -160,8 +174,9 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
 
     public void getInterpretations(int page) {
         Log.v("InterpretationFragment", "getInterpretations page=" + page);
-        getInterpretations = new RESTGetInterpretation(this, getActivity(), page);
-        setLoader(getInterpretations.getTempList().isEmpty() ? false : true);
+
+        getInterpretations = new RESTGetInterpretations(this, getActivity(), page, false);
+        setLoader(!getInterpretations.getTempList().isEmpty());
         getInterpretations.execute();
     }
 
@@ -175,13 +190,10 @@ public class InterpretationsFragment extends Fragment implements InterpretationC
         listView.setSelectionFromTop(index, top);
     }
 
-    public void updateListItem(InterpretationModel model, int i) {
-        list.set(i, model);
-    }
-
     public boolean morePages() {
-        if ((currentPage + 1) < totalPages)
+        if ((currentPage + 1) < totalPages) {
             return true;
+        }
         return false;
     }
 

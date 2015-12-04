@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +29,23 @@ import java.util.List;
 /**
  * Created by iNick on 20.10.14.
  */
-public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
+public class RESTGetInterpretations extends AsyncTask<Integer, String, Integer> {
     private static InterpretationCallback listener;
     String server, auth;
     Context context;
-    int pages;
-    private List<InterpretationModel> tempList;
 
-    public RESTGetInterpretation(InterpretationCallback listener, Context context, int pages) {
+    private List<InterpretationModel> tempList;
+    int page; //which page to get.
+    //TODO: getInterpretationsPageSize from RESTSessionStorage
+    static int pageSize = 5; // what size for the pages to request.
+
+    public RESTGetInterpretations(InterpretationCallback listener, Context context, int page, boolean skipCache) {
         tempList = new ArrayList<InterpretationModel>();
         this.listener = listener;
         this.server = SharedPrefs.getServerURL(context);
         this.auth = SharedPrefs.getCredentials(context);
         this.context = context;
-        this.pages = 0;//pages
+        this.page = page; //0
     }
 
     public List<InterpretationModel> getTempList(){
@@ -56,16 +57,16 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
         try {
             JSONObject json;
             Response response;
-            if (pages == 1) {
-                response = RESTClient.get(api + APIPath.INTERPRETATIONS_FIELDS + "&pageSize=5", auth);
+            if (page == 1) {
+                response = RESTClient.get(api + APIPath.INTERPRETATIONS_FIELDS + "&pageSize="+ pageSize, auth);
             } else {
-                response = RESTClient.get(api + APIPath.INTERPRETATIONS_FIELDS + "&pageSize=5&page=" + pages, auth);
+                response = RESTClient.get(api + APIPath.INTERPRETATIONS_FIELDS + "&pageSize=" + pageSize + "&page=" + page, auth);
             }
 
             if (RESTClient.noErrors(response.getCode())) {
                 json = new JSONObject(response.getBody());
                 JSONObject pager = json.getJSONObject("pager");
-                pages = Integer.parseInt(pager.getString("pageCount"));
+                page = Integer.parseInt(pager.getString("pageCount"));
 
                 JSONArray allConversations = new JSONArray(json.getString("interpretations"));
 
@@ -142,14 +143,15 @@ public class RESTGetInterpretation extends AsyncTask<Integer, String, Integer> {
                 new ToastMaster(context, "No interpretations available.", false);
             }
             else {
-                listener.updateList(tempList);
+                //TODO: cache the page here.
+                listener.updateList(tempList, page);
             }
         } else if (code == -1) {
             new ToastMaster(context, "JSONException converting error", false);
         } else {
             new ToastMaster(context, RESTClient.getErrorMessage(code), false);
         }
-        listener.updatePages(pages);
+        listener.updatePages(page);
     }
 }
 

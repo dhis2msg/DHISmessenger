@@ -41,6 +41,10 @@ public class RESTSessionStorage {
     private boolean newConversation = false; //To indicate that a new conversation was started.
     private boolean newMessage = false; // new message of a conversation: ==> refresh the messeges. && set as not read ?
 
+    private int interpretationsCurrentPage = 1;
+    private int interpretationsPageSize = 5;
+    private int interpretationsTotalPages = 0;
+
     //constructors for a singleton-like class:
     private RESTSessionStorage() {}
     private RESTSessionStorage(String username) {
@@ -144,6 +148,27 @@ public class RESTSessionStorage {
         return this.inboxTotalPages;
     }
 
+    public int getInterpretationsCurrentPage() {
+        return interpretationsCurrentPage;
+    }
+    public void setInterpretationsCurrentPage(int interpretationsCurrentPage) {
+        this.interpretationsCurrentPage = interpretationsCurrentPage;
+    }
+
+    public int getInterpretationsPageSize() {
+        return interpretationsPageSize;
+    }
+
+    public void setInterpretationsPageSize(int interpretationsPageSize) {
+        this.interpretationsPageSize = interpretationsPageSize;
+    }
+
+    public int getInterpretationsTotalPages() {
+        return interpretationsTotalPages;
+    }
+    public void setInterpretationsTotalPages(int interpretationsTotalPages) {
+        this.interpretationsTotalPages = interpretationsTotalPages;
+    }
     //--------------NewConversation/SentNewMessage setters/getters: ------------------------
 
     public void startedNewConversation(boolean newConversation) {
