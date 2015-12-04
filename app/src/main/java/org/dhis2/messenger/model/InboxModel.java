@@ -2,7 +2,7 @@ package org.dhis2.messenger.model;
 
 import java.util.ArrayList;
 
-public class InboxModel implements Comparable<InboxModel> {
+public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxModel> {
     private String subject;
     private String date;
     private String id;
@@ -29,7 +29,7 @@ public class InboxModel implements Comparable<InboxModel> {
      * Thus update the other fields instead. :) + it's shorter than replacing the old one in the arrayList.
      * @param other
      */
-    public void setAttributesFrom(InboxModel other) {
+    public void copyAttributesFrom(InboxModel other) {
         this.subject = other.subject;
         this.date = other.date;
         this.read = other.read;

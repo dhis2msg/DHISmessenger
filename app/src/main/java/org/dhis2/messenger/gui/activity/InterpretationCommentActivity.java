@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import org.dhis2.messenger.model.ChatModel;
+import org.dhis2.messenger.model.CopyAttributes;
 import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.core.rest.APIPath;
