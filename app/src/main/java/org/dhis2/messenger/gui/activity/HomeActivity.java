@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -112,33 +113,46 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         }
     }
 
-    public void updateTitle() {
-        getActionBar().setTitle(menuTitles[0] + " | " + SharedPrefs.getUnreadMessages(this));
+    private void updateUnreadMessages(int restMessages, int xmppMessages) {
+        List<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
+        for (int i = 0; i < menuIcons.length; i++) {
+            String titleTail = "";
+            switch (Section.values()[i]) {
+                case MESSAGES:
+                    titleTail = " | " + restMessages;
+                    break;
+                case CHAT:
+                    titleTail = " | " + xmppMessages;
+            }
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put("titles", menuTitles[i] + titleTail);
+            hm.put("icons", Integer.toString(menuIcons[i]));
+            data.add(hm);
+        }
+        String[] key = {"icons", "titles"};
+        int[] id = {R.id.listIcon, R.id.listTitle};
+
+        ListAdapter adapter = new SimpleAdapter(this, data, R.layout.item_drawer, key, id);
+        drawerListView.setAdapter(adapter);
+
+        switch (shownSection) {
+            case MESSAGES:
+                getActionBar().setTitle(menuTitles[0] + " | " + restMessages);
+                break;
+            case CHAT:
+                getActionBar().setTitle(menuTitles[1] + " | " + xmppMessages);
+        }
     }
 
     @Override
-    public void updateUnreadMsg(final int restNumber, int xmppNumber) {
+    public void updateUnreadMsg(final int restNumber, final int xmppNumber) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-                for (int i = 0; i < menuIcons.length; i++) {
-                    HashMap<String, String> hm = new HashMap<String, String>();
-                    if (i == 0)
-                        hm.put("titles", menuTitles[i] + " | " + SharedPrefs.getUnreadMessages(getApplicationContext()));
-                    else if (i == 1)
-                        hm.put("titles", menuTitles[i] + " | " + restNumber);
-                    else
-                        hm.put("titles", menuTitles[i]);
-                    hm.put("icons", Integer.toString(menuIcons[i]));
-                    list.add(hm);
-                }
-                String[] key = {"icons", "titles"};
-                int[] id = {R.id.listIcon, R.id.listTitle};
-                drawerListView.setAdapter(new SimpleAdapter(getApplicationContext(), list, R.layout.item_drawer, key, id));
+                updateUnreadMessages(restNumber, xmppNumber);
 
+                // TODO: this if statement is crazy, please look at it
                 if (shownSection == Section.CHAT) {
-                    getActionBar().setTitle(menuTitles[1] + " | " + restNumber);
                     Vibrator v = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(150);
                 } else {
@@ -146,6 +160,14 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
                 }
             }
         });
+    }
+
+    @Override
+    public void updateDHISMessages() {
+        int restMessages = Integer.valueOf(SharedPrefs.getUnreadMessages(this));
+        int xmppMessages = XMPPSessionStorage.getInstance().getUnreadMessages();
+
+        updateUnreadMessages(restMessages, xmppMessages);
     }
 
     @Override
@@ -159,14 +181,10 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         super.onResume();
         if (SharedPrefs.isUserLoggedIn(this)) {
             XMPPSessionStorage.getInstance().setHomeListener(this);
-            // unreadMessagesHandler = new RESTUnreadMessages(this, this);
-            // unreadMessagesHandler.execute();
             updateDHISMessages();
-
-            if (XMPPClient.getInstance().checkConnection())
-                manualUpdate(XMPPSessionStorage.getInstance().getUnreadMessages());
-        } else
+        } else {
             logout();
+        }
     }
 
     @Override
@@ -229,59 +247,6 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
         }
     }
 
-    public void updateDHISMessages() {
-        List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-        for (int i = 0; i < menuIcons.length; i++) {
-            HashMap<String, String> hm = new HashMap<String, String>();
-            if (i == 0)
-                hm.put("titles", menuTitles[i] + " | " + SharedPrefs.getUnreadMessages(this));
-            else if (i == 1)
-                hm.put("titles", menuTitles[i] + " | " + XMPPSessionStorage.getInstance().getUnreadMessages());
-            else
-                hm.put("titles", menuTitles[i]);
-            hm.put("icons", Integer.toString(menuIcons[i]));
-            list.add(hm);
-        }
-        String[] key = {"icons", "titles"};
-        int[] id = {R.id.listIcon, R.id.listTitle};
-        drawerListView.setAdapter(new SimpleAdapter(this, list, R.layout.item_drawer, key, id));
-
-        if (shownSection == Section.MESSAGES) {
-            getActionBar().setTitle(menuTitles[0] + " | " + SharedPrefs.getUnreadMessages(this));
-
-            // Uhhm, removed this due to eternal loop
-            //if (getSupportFragmentManager().findFragmentByTag("inbox") != null)
-            //    getSupportFragmentManager().findFragmentByTag("inbox").onResume();
-        }
-    }
-
-    private void manualUpdate(final int amount) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-                for (int i = 0; i < menuIcons.length; i++) {
-                    HashMap<String, String> hm = new HashMap<String, String>();
-                    if (i == 0)
-                        hm.put("titles", menuTitles[i] + " | " + SharedPrefs.getUnreadMessages(getApplicationContext()));
-                    else if (i == 1)
-                        hm.put("titles", menuTitles[i] + " | " + amount);
-                    else
-                        hm.put("titles", menuTitles[i]);
-                    hm.put("icons", Integer.toString(menuIcons[i]));
-                    list.add(hm);
-                }
-                String[] key = {"icons", "titles"};
-                int[] id = {R.id.listIcon, R.id.listTitle};
-                drawerListView.setAdapter(new SimpleAdapter(getApplicationContext(), list, R.layout.item_drawer, key, id));
-
-                if (shownSection == Section.CHAT) {
-                    getActionBar().setTitle(menuTitles[1] + " | " + amount);
-                }
-            }
-        });
-    }
-
     private void attachFragment(Section section) {
         shownSection = section;
 
@@ -342,7 +307,8 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
     }
 
     private void logout() {
-        getApplication().getSharedPreferences(LoginActivity.PREFS_NAME, getApplication().MODE_PRIVATE).edit().remove("password").commit();
+        getApplication().getSharedPreferences(LoginActivity.PREFS_NAME, getApplication().MODE_PRIVATE).edit()
+                .remove("password").commit();
         RegisterDevice rd = new RegisterDevice(this);
         rd.removeGcmId();
         SharedPrefs.eraseData(this);

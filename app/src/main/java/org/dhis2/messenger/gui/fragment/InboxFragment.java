@@ -449,7 +449,6 @@ public class InboxFragment extends Fragment {
                     }
 
                     // Update the number of unread messages
-                    ((HomeActivity) getActivity()).updateTitle();
                     ((HomeActivity) getActivity()).updateDHISMessages();
 
                     new ToastMaster(getActivity(), "Page: " + currentPage + "/ " + totalPages, false);
