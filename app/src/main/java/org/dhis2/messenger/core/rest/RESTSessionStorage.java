@@ -1,5 +1,9 @@
 package org.dhis2.messenger.core.rest;
 
+import android.content.Context;
+import android.util.Log;
+
+import org.dhis2.messenger.SharedPrefs;
 import org.dhis2.messenger.model.InboxModel;
 import org.dhis2.messenger.model.InterpretationModel;
 import org.dhis2.messenger.model.NameAndIDModel;
@@ -27,6 +31,8 @@ public class RESTSessionStorage {
     private static HashMap<String, RESTSessionStorage> restSessions = new HashMap<>();
 
     private String username; //this instance's username
+
+    private int inboxUnread = 0; //gets reset after commit to settings
 
     private ProfileModel profile = null;
     private CacheList<InboxModel> inboxModelList = new CacheList<>();
@@ -107,6 +113,22 @@ public class RESTSessionStorage {
     public void destroy() {
         //TODO: vladislav: store vars to disk before exiting from here !
         //this.currentRestSession = null;
+    }
+
+    //----------------------Unread messages calls-------------------------------------
+    public void incInboxUnread() {
+        this.inboxUnread++;
+        //Log.d("RESTSessionStorage", "INC-Number of new unread: " + inboxUnread);
+    }
+
+    public void setInboxUnread(int unread) {
+        this.inboxUnread = unread;
+        //Log.d("RESTSessionStorage", "SET-Number of new unread: " + inboxUnread);
+    }
+
+    public int getInboxUnread() {
+        //Log.d("RESTSessionStorage", "GET-Number of new unread: " + inboxUnread);
+        return inboxUnread;
     }
 
     //------------------------Profile model setters/getters:-----------------------------

@@ -159,6 +159,8 @@ public class RESTGetConversation extends AsyncTask<String, Void, Integer> {
                     //full refresh next time.
                     RESTSessionStorage.getInstance().sentNewMessage(false);
                 }
+                //it was just seen thus read.
+                inboxModel.setRead(true);
                 inboxModel.messages.clear();
                 inboxModel.messages.addAll(tempMessages);
                 listener.updateMessages(tempMessages);

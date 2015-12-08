@@ -1,6 +1,12 @@
 package org.dhis2.messenger.model;
 
+import android.util.Log;
+
+import org.dhis2.messenger.core.rest.RESTSessionStorage;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxModel> {
     private String subject;
@@ -9,8 +15,11 @@ public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxM
     private String lastSender;
     private String time;
     private boolean read;
+    private Date dateObj;
     public ArrayList<ChatModel> messages = new ArrayList<>();
     public ArrayList<NameAndIDModel> members = new ArrayList<>();
+
+    public static SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 
     public InboxModel(String subject, String date, String id, String lastSender, boolean read) {
@@ -20,6 +29,14 @@ public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxM
         this.read = read;
         this.lastSender = lastSender;
         this.time = convertTime(date);
+
+        //example of the argument date: "2015-12-06T21:59:27.687+0000" currently named "lastUpdated" in the api
+        try {
+            this.dateObj = InboxModel.formater.parse(date);
+        } catch (java.text.ParseException e) {
+            Log.e("InboxModel-date", "Got an exception while trying to parse the date string to a date object.");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -31,8 +48,13 @@ public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxM
      */
     public void copyAttributesFrom(InboxModel other) {
         this.subject = other.subject;
+
+        //only set unread if it was updated. & notify about
+        if (this.read && this.dateObj.before(other.dateObj)) {
+            RESTSessionStorage.getInstance().incInboxUnread();
+            this.read = false;
+        }
         this.date = other.date;
-        this.read = other.read;
         this.lastSender = other.lastSender;
         this.time = other.time;
     }

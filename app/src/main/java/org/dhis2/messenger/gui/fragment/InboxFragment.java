@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -347,7 +348,6 @@ public class InboxFragment extends Fragment {
 
     private void getInboxElements(final int page, final boolean skipCache) {
         //TODO: Needs to be informed by GCM ! about changes to the lists!
-
         asyncTask = new AsyncTask<Integer, String, Integer>() {
             Boolean gotListFromCache = false;
             List<InboxModel> cached = null;
@@ -388,52 +388,33 @@ public class InboxFragment extends Fragment {
                     } else { //get it from the server
                         gotListFromCache = false;
                         //Log.v("InboxFragment", "NOT FROM CACHE! cached is empty? " + cached.isEmpty() + " skipCache? " + skipCache + " page= " + page);
-                        /*if (page == 1) {//this seems unnecessary :
-                            response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE, auth);
-                            list = new ArrayList<>();
-                        } else {*/
-
-                            response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
+                        response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
                         responseCode = response.getCode();
 
-                        //}
                         // parse response into page (list of models):
                         if (RESTClient.noErrors(response.getCode())) {
                             json = new JSONObject(response.getBody());
                             JSONObject pager = json.getJSONObject("pager");
                             JSONArray allConversations = new JSONArray(json.getString("messageConversations"));
+                            Log.v("Json conversations", allConversations.toString());
                             setPages(Integer.parseInt(pager.getString("pageCount")));
 
                             for (int i = 0; i < allConversations.length(); i++) {
                                 JSONObject row = allConversations.getJSONObject(i);
                                 String id = row.getString("id");
                                 String subject = row.getString("name");
-                                String date = row.getString("lastMessage");
+                                //String date = row.getString("lastMessage");
+                                String date = row.getString("lastUpdated");
                                 String lastSender = "";
 
                                 if (!row.isNull("lastSenderFirstname") || !row.isNull("lastSenderSurname"))
                                     lastSender = row.getString("lastSenderFirstname") + " " + row.getString("lastSenderSurname");
 
-                                // Find out if the conversation is unread
-                                Response mcResponse = RESTClient.get(mcAPIRootPath + "/" + id + "?fields=read", auth);
-                                JSONObject messageConversation = new JSONObject(mcResponse.getBody());
-
-                                Boolean read = Boolean.parseBoolean(messageConversation.getString("read"));
-                                tempList.add(new InboxModel(subject, date, id, lastSender, read));
-
-                                // Count the number of read messages
-                                if (!read)
-                                    unreadMessages++;
+                                tempList.add(new InboxModel(subject, date, id, lastSender, false));
                             }
-
-                            // Save the number of unread messages
-                            Context context = getActivity();
-                            SharedPrefs.setUnreadMessages(context, Integer.toString(unreadMessages));
                         }
                     }
-
                     return responseCode;
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return RESTClient.JSON_EXCEPTION;
@@ -452,11 +433,19 @@ public class InboxFragment extends Fragment {
                     if (!gotListFromCache) {
                         RESTSessionStorage.getInstance().setInboxModelList(page, tempList);
                         RESTSessionStorage.getInstance().setInboxTotalPages(totalPages);
+                        // Update the uread messages from the inboxModel's results:
+                        Context context = getActivity();
+                        int oldUnread = Integer.parseInt(SharedPrefs.getUnreadMessages(context));
+                        oldUnread += RESTSessionStorage.getInstance().getInboxUnread();
+                        SharedPrefs.setUnreadMessages(context, Integer.toString(Math.abs(oldUnread)));
+                        RESTSessionStorage.getInstance().setInboxUnread(0);//reset the value of the new unread.
+                        //to overwrite the read/not status :
+                        if (skipCache) {
+                            tempList = RESTSessionStorage.getInstance().getInboxModelList(page);
+                        }
                     }
-
                     // Update the number of unread messages
                     ((HomeActivity) getActivity()).updateDHISMessages();
-
                     new ToastMaster(getActivity(), "Page: " + currentPage + "/ " + totalPages, false);
                     addToInboxList(tempList, page);
                     refresh(page + 1, skipCache);

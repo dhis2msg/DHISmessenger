@@ -18,6 +18,7 @@ public class CacheList<T extends CopyAttributes<T>> {
     private int currentPage = 1;
     private int pageSize = 10;
     private int totalPages = 0;
+    private int unread = 0; //count of new entries.
 
     private ArrayList<T> cacheList = new ArrayList<>();
 
