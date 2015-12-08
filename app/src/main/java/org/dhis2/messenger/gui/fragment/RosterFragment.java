@@ -58,6 +58,7 @@ public class RosterFragment extends Fragment implements XMPPDataChanged {
 
     public RosterFragment(){
         super();
+        //Makes a phone with api 21 and higher use Slide and fade transitions
         if(Build.VERSION.SDK_INT >= 21) {
             Slide slide = new Slide();
             slide.setDuration(500);

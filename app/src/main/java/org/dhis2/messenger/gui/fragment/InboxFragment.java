@@ -69,6 +69,7 @@ public class InboxFragment extends Fragment {
 
     public InboxFragment(){
         super();
+        //Makes a phone with api 21 and higher use Slide and fade transitions
         if(Build.VERSION.SDK_INT >= 21) {
             Slide slide = new Slide();
             slide.setDuration(500);
@@ -152,9 +153,11 @@ public class InboxFragment extends Fragment {
                     intent.putExtra("index", position);
 
 
-                    // Transition animation
+                    //Makes a transition animation
                     ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),null);
 
+                    //Api 16 or higher is required to send with a compat.toBundle() when you start an
+                    //activity.
                     if(Build.VERSION.SDK_INT >= 16) {
                         getActivity().startActivity(intent, compat.toBundle());
                     }else{

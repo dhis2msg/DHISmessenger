@@ -95,6 +95,7 @@ public class RESTChatActivity extends Activity implements RESTConversationCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Makes a phone with api 21 and higher use Slide transitions
         if(Build.VERSION.SDK_INT >= 21){
             Slide slide = new Slide();
             slide.setDuration(500);

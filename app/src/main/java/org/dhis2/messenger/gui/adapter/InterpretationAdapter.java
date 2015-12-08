@@ -98,12 +98,16 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Adds a transition when the object is been clicked. Needed to cast to context
+                //to an acticity to be able to use the method.
                 Activity activity = (Activity) context;
                 ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, null);
                 Intent intent = new Intent(context, InterpretationCommentActivity.class);
                 intent.putExtra("id", item.id);
                 intent.putExtra("subject", item.text);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //Api 16 or higher is required to send with a compat.toBundle() when you start an
+                //activity.
                 if(Build.VERSION.SDK_INT >= 16) {
                     context.startActivity(intent, compat.toBundle());
                 }else{
@@ -122,12 +126,16 @@ public class InterpretationAdapter extends ArrayAdapter<InterpretationModel> {
         holder.user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Makes a transition animation when the object is been clicked. Needed to cast to context
+                //to an acticity to be able to use the method.
                 Activity activity = (Activity) context;
                 ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, null);
                 Intent intent = new Intent(context, ProfileActivity.class);
                 intent.putExtra("userid", item.user.getId());
                 intent.putExtra("username", item.user.getName());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //Api 16 or higher is required to send with a compat.toBundle() when you start an
+                //activity.
                 if(Build.VERSION.SDK_INT >= 16) {
                     context.startActivity(intent, compat.toBundle());
                 }else{
