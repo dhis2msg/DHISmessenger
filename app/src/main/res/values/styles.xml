@@ -36,5 +36,4 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_dhisactionbar</item>
     </style>
 
-    <style name="DhisTheme.Button" parent="android:Widget.Holo.Button"></style>
 </resources>
