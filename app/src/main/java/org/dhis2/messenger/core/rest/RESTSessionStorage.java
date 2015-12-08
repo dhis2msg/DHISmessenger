@@ -31,19 +31,13 @@ public class RESTSessionStorage {
     private ProfileModel profile = null;
     private CacheList<InboxModel> inboxModelList = new CacheList<>();
 
-    //InboxFragment list of pages(lists of InboxModels)
-    //private List<ArrayList<InboxModel>> inboxModelList = new ArrayList<ArrayList<InboxModel>>();
-    private int inboxCurrentPage = 1;
-    private int inboxPageSize = 10;
-    private int inboxTotalPages = 0;
-
     private boolean newConversation = false; //To indicate that a new conversation was started.
     private boolean newMessage = false; // new message of a conversation: ==> refresh the messeges. && set as not read ?
 
     private CacheList<InterpretationModel> interpretationModelList = new CacheList<>();
-    private int interpretationsCurrentPage = 1;
-    private int interpretationsPageSize = 5;
-    private int interpretationsTotalPages = 0;
+    //private int interpretationsCurrentPage = 1;
+    //private int interpretationsPageSize = 5;
+    //private int interpretationsTotalPages = 0;
 
     //constructors for a singleton-like class:
     private RESTSessionStorage() {}
@@ -126,48 +120,48 @@ public class RESTSessionStorage {
 
     //-----------------Page size, current, total set/get--------------------------------
     public void setInboxPageSize(int size) {
-        this.inboxPageSize = size;
+        inboxModelList.setPageSize(size);
     }
 
     public int getInboxPageSize() {
-        return this.inboxPageSize;
+        return inboxModelList.getPageSize();
     }
 
     public void setInboxCurrentPage(int p) {
-        this.inboxCurrentPage = p;
+        inboxModelList.setCurrentPage(p);
     }
 
     public int getInboxCurrentPage() {
-        return this.inboxCurrentPage;
+        return inboxModelList.getCurrentPage();
     }
 
     public void setInboxTotalPages(int pages) {
-        this.inboxTotalPages = pages;
+        inboxModelList.setTotalPages(pages);
     }
     public int getInboxTotalPages() {
-        return this.inboxTotalPages;
+       return inboxModelList.getTotalPages();
     }
 
     public int getInterpretationsCurrentPage() {
-        return interpretationsCurrentPage;
+        return interpretationModelList.getCurrentPage();
     }
-    public void setInterpretationsCurrentPage(int interpretationsCurrentPage) {
-        this.interpretationsCurrentPage = interpretationsCurrentPage;
+    public void setInterpretationsCurrentPage(int page) {
+        interpretationModelList.setCurrentPage(page);
     }
 
     public int getInterpretationsPageSize() {
-        return interpretationsPageSize;
+        return interpretationModelList.getPageSize();
     }
 
-    public void setInterpretationsPageSize(int interpretationsPageSize) {
-        this.interpretationsPageSize = interpretationsPageSize;
+    public void setInterpretationsPageSize(int pageSize) {
+        interpretationModelList.setPageSize(pageSize);
     }
 
     public int getInterpretationsTotalPages() {
-        return interpretationsTotalPages;
+        return interpretationModelList.getTotalPages();
     }
-    public void setInterpretationsTotalPages(int interpretationsTotalPages) {
-        this.interpretationsTotalPages = interpretationsTotalPages;
+    public void setInterpretationsTotalPages(int pages) {
+        interpretationModelList.setTotalPages(pages);
     }
     //--------------NewConversation/SentNewMessage setters/getters: ------------------------
 
@@ -226,7 +220,7 @@ public class RESTSessionStorage {
      * @return list of conversations
      */
     public synchronized List<InboxModel> getInboxModelList(int page) {
-        int index = (page - 1) * inboxPageSize;
+        int index = (page - 1) * inboxModelList.getPageSize();
 
         //Need to refresh the cache if we started a new conversation.
         if(page == 1 && startedNewConversation()) {

@@ -14,6 +14,7 @@ import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -379,9 +380,11 @@ public class InboxFragment extends Fragment {
                         gotListFromCache = true;
                         tempList.addAll(cached);
                         totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
+                        //Log.v("InboxFragment", "from cache");
                         responseCode = RESTClient.OK;
                     } else { //get it from the server
                         gotListFromCache = false;
+                        //Log.v("InboxFragment", "NOT FROM CACHE! cached is empty? " + cached.isEmpty() + " skipCache? " + skipCache + " page= " + page);
                         /*if (page == 1) {//this seems unnecessary :
                             response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE, auth);
                             list = new ArrayList<>();
