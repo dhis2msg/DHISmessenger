@@ -437,7 +437,7 @@ public class InboxFragment extends Fragment {
                         Context context = getActivity();
                         int oldUnread = Integer.parseInt(SharedPrefs.getUnreadMessages(context));
                         oldUnread += RESTSessionStorage.getInstance().getInboxUnread();
-                        SharedPrefs.setUnreadMessages(context, Integer.toString(Math.abs(oldUnread)));
+                        SharedPrefs.setUnreadMessages(context, Integer.toString(oldUnread));
                         RESTSessionStorage.getInstance().setInboxUnread(0);//reset the value of the new unread.
                         //to overwrite the read/not status :
                         if (skipCache) {
