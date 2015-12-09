@@ -141,14 +141,7 @@ public class InterpretationCommentActivity extends Activity implements UpdateUnr
         super.onStop();
         removeHandlers();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_send, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
+    
     @Override
     public void updateUnreadMsg(int restNumber, int xmppNumber) {
         runOnUiThread(new Runnable() {
