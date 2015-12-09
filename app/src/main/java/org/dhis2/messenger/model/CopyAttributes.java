@@ -7,5 +7,9 @@ package org.dhis2.messenger.model;
  */
 public interface CopyAttributes<T> {
 
-    void copyAttributesFrom(T other);
+    /**
+     * @param other
+     * @return true if changed false if other was the same as this.
+     */
+    boolean copyAttributesFrom(T other);
 }

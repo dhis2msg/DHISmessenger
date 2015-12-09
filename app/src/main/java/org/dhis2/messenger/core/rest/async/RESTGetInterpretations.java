@@ -12,7 +12,6 @@ import org.dhis2.messenger.core.rest.RESTSessionStorage;
 import org.dhis2.messenger.model.ChatModel;
 import org.dhis2.messenger.model.InterpretationModel;
 import org.dhis2.messenger.model.NameAndIDModel;
-import org.dhis2.messenger.R;
 import org.dhis2.messenger.core.rest.APIPath;
 import org.dhis2.messenger.core.rest.RESTClient;
 import org.dhis2.messenger.core.rest.Response;
@@ -131,7 +130,7 @@ public class RESTGetInterpretations extends AsyncTask<Integer, String, Integer> 
                             URL url = new URL(pictureURL);
                             InputStream content = (InputStream)url.getContent();
                             picture = BitmapFactory.decodeStream(content);
-                            tempList.add(new InterpretationModel(id, text, date, user, type, pictureURL, picture, comments));
+                            tempList.add(new InterpretationModel(id, text, date, user, type, pictureURL, picture, comments, false));
                         }
                     }
                     return response.getCode();

@@ -73,9 +73,11 @@ public class CacheList<T extends CopyAttributes<T>> {
      * It is expected that you only add to the front or back (page = 1 or page = total+1)
      * @param page
      * @param newPageList
+     * @return Number of new entries added.
      */
-    public synchronized void setListPage(int page, List<T> newPageList) {
+    public synchronized int setListPage(int page, List<T> newPageList) {
         int index = (page - 1) * pageSize;
+        int nrNew = 0;
 
         if(cacheList.isEmpty()) {
             cacheList.addAll(index, newPageList);
@@ -88,15 +90,18 @@ public class CacheList<T extends CopyAttributes<T>> {
                 //from overlapIx to end of page update read flag, mod date...+other fields.
                 int oldIx = 0;
                 for(int newIx = newOverlapIx; newIx < newPageList.size(); newIx++) {
-                    cacheList.get(oldIx).copyAttributesFrom(newPageList.get(newIx));
+                    if (cacheList.get(oldIx).copyAttributesFrom(newPageList.get(newIx))) {
+                        nrNew++;
+                    }
                     oldIx++;
                 }
                 // add the new entries:
                 cacheList.addAll(index, newPageList.subList(0, newOverlapIx));
+                nrNew += (newOverlapIx -1);
             } else {
                 cacheList.addAll(index, newPageList);
+                nrNew += newPageList.size();
             }
-
         } else {
             //new page at the end
             if (page > totalPages) {
@@ -113,15 +118,20 @@ public class CacheList<T extends CopyAttributes<T>> {
                 // From oldIx to end of cacheList :update read flag, mod date...+other fields.
                 int oldIx = (cacheList.size() -1) - newOverlapIx;
                 for(int newIx = 0; newIx <= newOverlapIx; newIx++) {
-                    cacheList.get(oldIx).copyAttributesFrom(newPageList.get(newIx));
+                    if (cacheList.get(oldIx).copyAttributesFrom(newPageList.get(newIx))) {
+                        nrNew++;
+                    }
                     oldIx++;
                 }
                 //add the new ones:
                 cacheList.addAll(newPageList.subList(newOverlapIx + 1, newPageList.size()));
+                nrNew += newPageList.size() - (newOverlapIx+1);
             } else {
                 cacheList.addAll(newPageList);
+                nrNew += newPageList.size();
             }
         }
+        return nrNew;
         //Log.v(TAG, "(INSERT) page = " + page + " index=" + index + " cacheList.size() = " + cacheList.size());
     }
 

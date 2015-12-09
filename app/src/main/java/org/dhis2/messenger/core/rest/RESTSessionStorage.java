@@ -1,12 +1,7 @@
 package org.dhis2.messenger.core.rest;
 
-import android.content.Context;
-import android.util.Log;
-
-import org.dhis2.messenger.SharedPrefs;
 import org.dhis2.messenger.model.InboxModel;
 import org.dhis2.messenger.model.InterpretationModel;
-import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.model.ProfileModel;
 
 import java.util.ArrayList;
@@ -32,7 +27,7 @@ public class RESTSessionStorage {
 
     private String username; //this instance's username
 
-    private int inboxUnread = 0; //gets reset after commit to settings
+    private int nrUnreadLastCall = 0; //gets reset after commit to settings
 
     private ProfileModel profile = null;
     private CacheList<InboxModel> inboxModelList = new CacheList<>();
@@ -116,19 +111,10 @@ public class RESTSessionStorage {
     }
 
     //----------------------Unread messages calls-------------------------------------
-    public void incInboxUnread() {
-        this.inboxUnread++;
-        //Log.d("RESTSessionStorage", "INC-Number of new unread: " + inboxUnread);
-    }
 
-    public void setInboxUnread(int unread) {
-        this.inboxUnread = unread;
-        //Log.d("RESTSessionStorage", "SET-Number of new unread: " + inboxUnread);
-    }
-
-    public int getInboxUnread() {
-        //Log.d("RESTSessionStorage", "GET-Number of new unread: " + inboxUnread);
-        return inboxUnread;
+    public int getNrUnreadLastCall() {
+        //Log.d("RESTSessionStorage", "GET-Number of new unread: " + nrUnreadLastCall);
+        return nrUnreadLastCall;
     }
 
     //------------------------Profile model setters/getters:-----------------------------
@@ -228,9 +214,11 @@ public class RESTSessionStorage {
      * It is expected that you only add to the front or back (page = 1 or page = total+1)
      * @param page
      * @param newPageList
+     * @return the number of new entries added to the list.
      */
-    public synchronized void setInboxModelList(int page, List<InboxModel> newPageList) {
-        inboxModelList.setListPage(page, newPageList);
+    public synchronized int setInboxModelList(int page, List<InboxModel> newPageList) {
+        nrUnreadLastCall = inboxModelList.setListPage(page, newPageList);
+        return nrUnreadLastCall;
     }
 
     /**

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -431,14 +430,13 @@ public class InboxFragment extends Fragment {
                 setLoader(false);
                 if (gotListFromCache || RESTClient.noErrors(code)) {
                     if (!gotListFromCache) {
-                        RESTSessionStorage.getInstance().setInboxModelList(page, tempList);
+                        int nrNew = RESTSessionStorage.getInstance().setInboxModelList(page, tempList);
                         RESTSessionStorage.getInstance().setInboxTotalPages(totalPages);
                         // Update the uread messages from the inboxModel's results:
                         Context context = getActivity();
                         int oldUnread = Integer.parseInt(SharedPrefs.getUnreadMessages(context));
-                        oldUnread += RESTSessionStorage.getInstance().getInboxUnread();
+                        oldUnread += nrNew;
                         SharedPrefs.setUnreadMessages(context, Integer.toString(oldUnread));
-                        RESTSessionStorage.getInstance().setInboxUnread(0);//reset the value of the new unread.
                         //to overwrite the read/not status :
                         if (skipCache) {
                             tempList = RESTSessionStorage.getInstance().getInboxModelList(page);

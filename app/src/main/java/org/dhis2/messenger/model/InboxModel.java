@@ -2,8 +2,6 @@ package org.dhis2.messenger.model;
 
 import android.util.Log;
 
-import org.dhis2.messenger.core.rest.RESTSessionStorage;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,18 +43,20 @@ public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxM
      * Messages and Members are the caches for the chat conversations and must be preserved.
      * Thus update the other fields instead. :) + it's shorter than replacing the old one in the arrayList.
      * @param other
+     * @return true if changed
      */
-    public void copyAttributesFrom(InboxModel other) {
+    public boolean copyAttributesFrom(InboxModel other) {
+        boolean changed = false;
         this.subject = other.subject;
-
         //only set unread if it was updated. & notify about
         if (this.read && this.dateObj.before(other.dateObj)) {
-            RESTSessionStorage.getInstance().incInboxUnread();
+            changed = true;
             this.read = false;
         }
         this.date = other.date;
         this.lastSender = other.lastSender;
         this.time = other.time;
+        return changed;
     }
 
     public String getSubject() {
