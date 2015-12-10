@@ -1,5 +1,6 @@
 package org.dhis2.messenger.core.rest;
 
+import org.dhis2.messenger.core.DiskStorage;
 import org.dhis2.messenger.model.InboxModel;
 import org.dhis2.messenger.model.InterpretationModel;
 import org.dhis2.messenger.model.ProfileModel;
@@ -53,6 +54,8 @@ public class RESTSessionStorage {
      * @param username The name of the currently active user.
      */
     public synchronized static RESTSessionStorage setActiveSession(String username) {
+        DiskStorage.test();
+
         if (currentRestSession != null &&
                 currentRestSession.username != null &&
                 currentRestSession.username.equals(username)) {

@@ -27,12 +27,18 @@ dependencies {
 
     compile "org.igniterealtime.smack:smack-android-extensions:4.1.5"
     compile "org.igniterealtime.smack:smack-tcp:4.1.5"
+
+    //Again for couchbase, from the couchbase wiki:
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile 'com.android.support:appcompat-v7:21.0.3' //this one causes an issue with some wallet theme, seems to work without it
+    compile 'com.couchbase.lite:couchbase-lite-android:1.1.0'
 }
 
 repositories {
     jcenter()
     maven { url "https://jitpack.io" }
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "http://files.couchbase.com/maven2/" }
 }
 
 allprojects {
@@ -82,6 +88,15 @@ android {
     }
 
     productFlavors {
+    }
+    // Couchbase NoSql library causes some issue with duplicate files & this is the recommended workaround:
+    // (from the wiki)
+    // workaround for "duplicate files during packaging of APK" issue
+    // see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 }
 
