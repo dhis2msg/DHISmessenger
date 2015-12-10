@@ -425,23 +425,33 @@ public class InboxFragment extends Fragment {
                 }*/
             }
 
+
+            /**
+             * Adds the list of message conversations (called inbox models) to the cache
+             * if they were downloaded. Displays current page in a ToastMaster notification.
+             */
             @Override
             protected void onPostExecute(Integer code) {
                 setLoader(false);
+
                 if (gotListFromCache || RESTClient.noErrors(code)) {
                     if (!gotListFromCache) {
                         int nrNew = RESTSessionStorage.getInstance().setInboxModelList(page, tempList);
                         RESTSessionStorage.getInstance().setInboxTotalPages(totalPages);
-                        // Update the uread messages from the inboxModel's results:
+
+                        // Update the unread messages from the inboxModel's results:
                         Context context = getActivity();
+
                         int oldUnread = Integer.parseInt(SharedPrefs.getUnreadMessages(context));
                         oldUnread += nrNew;
                         SharedPrefs.setUnreadMessages(context, Integer.toString(oldUnread));
-                        //to overwrite the read/not status :
+
+                        // To overwrite the read/unread status :
                         if (skipCache) {
                             tempList = RESTSessionStorage.getInstance().getInboxModelList(page);
                         }
                     }
+
                     // Update the number of unread messages
                     ((HomeActivity) getActivity()).updateDHISMessages();
                     new ToastMaster(getActivity(), "Page: " + currentPage + "/ " + totalPages, false);

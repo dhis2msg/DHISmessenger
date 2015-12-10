@@ -79,31 +79,37 @@ public class CacheList<T extends CopyAttributes<T>> {
         int index = (page - 1) * pageSize;
         int nrNew = 0;
 
-        if(cacheList.isEmpty()) {
+        if (cacheList.isEmpty()) {
             cacheList.addAll(index, newPageList);
 
-        } else if (page == 1) { //insert at the front:
+        } else if (page == 1) { // Insert at the front:
+
+            // Find the index in the new list where the cached conversations end.
+            // Only this part is new and needs to be added to the cache
             int newOverlapIx = newPageList.indexOf(cacheList.get(0));
 
             if (newOverlapIx > -1) {
-                //modify the old entries:
-                //from overlapIx to end of page update read flag, mod date...+other fields.
+
+                // Modify the old entries:
+                // From overlapIx to end of page update read flag, mod date...+other fields.
                 int oldIx = 0;
-                for(int newIx = newOverlapIx; newIx < newPageList.size(); newIx++) {
+                for (int newIx = newOverlapIx; newIx < newPageList.size(); newIx++) {
                     if (cacheList.get(oldIx).copyAttributesFrom(newPageList.get(newIx))) {
                         nrNew++;
                     }
                     oldIx++;
                 }
-                // add the new entries:
+
+                // Add the new entries:
                 cacheList.addAll(index, newPageList.subList(0, newOverlapIx));
-                nrNew += (newOverlapIx -1);
+                nrNew += (newOverlapIx - 1);
             } else {
                 cacheList.addAll(index, newPageList);
                 nrNew += newPageList.size();
             }
         } else {
-            //new page at the end
+
+            // New page at the end
             if (page > totalPages) {
                 totalPages = page;
             }
@@ -114,7 +120,8 @@ public class CacheList<T extends CopyAttributes<T>> {
             int newOverlapIx = newPageList.indexOf(cacheList.get(last - 1));
 
             if (newOverlapIx > -1) { // there is overlap:
-                //Update the old ones:
+
+                // Update the old ones:
                 // From oldIx to end of cacheList :update read flag, mod date...+other fields.
                 int oldIx = (cacheList.size() -1) - newOverlapIx;
                 for(int newIx = 0; newIx <= newOverlapIx; newIx++) {
@@ -123,7 +130,8 @@ public class CacheList<T extends CopyAttributes<T>> {
                     }
                     oldIx++;
                 }
-                //add the new ones:
+
+                // Add the new ones:
                 cacheList.addAll(newPageList.subList(newOverlapIx + 1, newPageList.size()));
                 nrNew += newPageList.size() - (newOverlapIx+1);
             } else {
@@ -131,6 +139,8 @@ public class CacheList<T extends CopyAttributes<T>> {
                 nrNew += newPageList.size();
             }
         }
+
+        System.out.println("New cached messages: " + nrNew);
         return nrNew;
         //Log.v(TAG, "(INSERT) page = " + page + " index=" + index + " cacheList.size() = " + cacheList.size());
     }
@@ -153,7 +163,7 @@ public class CacheList<T extends CopyAttributes<T>> {
             return cacheList.subList(0, 0); // ie empty list
         }*/
 
-        // if cache is empty return empty list.
+        // If cache is empty return empty list.
         if (index < 0 || totalPages == 0 || page > totalPages) {
             return cacheList.subList(0, 0); // ie empty list
         }
@@ -167,7 +177,7 @@ public class CacheList<T extends CopyAttributes<T>> {
             List<T> toReturn = cacheList.subList(index, cacheList.size());
             //return cacheList.subList(index, cacheList.size());
             return toReturn;
-        } else {// full page:
+        } else {// Full page:
             return cacheList.subList(index, index + pageSize);
         }
     }
