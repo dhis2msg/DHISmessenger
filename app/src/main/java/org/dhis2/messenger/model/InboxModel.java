@@ -48,11 +48,11 @@ public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxM
     public boolean copyAttributesFrom(InboxModel other) {
         boolean changed = false;
         this.subject = other.subject;
-        //only set unread if it was updated. & notify about
-        if (this.read && this.dateObj.before(other.dateObj)) {
+        if (this.dateObj.before(other.dateObj)) {
             changed = true;
             this.read = false;
         }
+        this.dateObj = other.dateObj;
         this.date = other.date;
         this.lastSender = other.lastSender;
         this.time = other.time;

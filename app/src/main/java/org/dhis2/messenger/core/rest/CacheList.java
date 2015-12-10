@@ -1,5 +1,7 @@
 package org.dhis2.messenger.core.rest;
 
+import android.util.Log;
+
 import org.dhis2.messenger.model.CopyAttributes;
 
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class CacheList<T extends CopyAttributes<T>> {
     //-------------------------------Set/Get page--------------------------------------
     /**
      * Add a page of elements to the cache.
-     * It is expected that you only add to the front or back (page = 1 or page = total+1)
+     * Merges the changes to the existing cache list.
      * @param page
      * @param newPageList
      * @return Number of new entries added.
@@ -81,6 +83,7 @@ public class CacheList<T extends CopyAttributes<T>> {
 
         if (cacheList.isEmpty()) {
             cacheList.addAll(index, newPageList);
+            nrNew += newPageList.size();
 
         } else if (page == 1) { // Insert at the front:
 
@@ -99,17 +102,15 @@ public class CacheList<T extends CopyAttributes<T>> {
                     }
                     oldIx++;
                 }
-
-                // Add the new entries:
-                cacheList.addAll(index, newPageList.subList(0, newOverlapIx));
-                nrNew += (newOverlapIx - 1);
-            } else {
+                // add the new entries:
+                List<T> newElements = newPageList.subList(0, newOverlapIx);
+                cacheList.addAll(index, newElements);
+                nrNew += newElements.size();
+            } else { //all new:
                 cacheList.addAll(index, newPageList);
                 nrNew += newPageList.size();
             }
         } else {
-
-            // New page at the end
             if (page > totalPages) {
                 totalPages = page;
             }
@@ -130,17 +131,16 @@ public class CacheList<T extends CopyAttributes<T>> {
                     }
                     oldIx++;
                 }
-
-                // Add the new ones:
-                cacheList.addAll(newPageList.subList(newOverlapIx + 1, newPageList.size()));
-                nrNew += newPageList.size() - (newOverlapIx+1);
-            } else {
+                //add the new ones:
+                List<T> newElements = newPageList.subList(newOverlapIx + 1, newPageList.size());
+                cacheList.addAll(newElements);
+                nrNew += newElements.size();
+            } else {//all new:
                 cacheList.addAll(newPageList);
                 nrNew += newPageList.size();
             }
         }
-
-        System.out.println("New cached messages: " + nrNew);
+        //Log.v("CacheList", "nrNew=" + nrNew);
         return nrNew;
         //Log.v(TAG, "(INSERT) page = " + page + " index=" + index + " cacheList.size() = " + cacheList.size());
     }

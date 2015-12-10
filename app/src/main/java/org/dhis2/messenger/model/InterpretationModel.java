@@ -54,8 +54,7 @@ public class InterpretationModel implements CopyAttributes<InterpretationModel>{
      */
     public boolean copyAttributesFrom(InterpretationModel other) {
         boolean changed = false;
-        //only set unread if it was updated. & notify about
-        if (this.read && this.dateObj.before(other.dateObj)) {
+        if (this.dateObj.before(other.dateObj)) {
             changed = true;
             this.read = false;
         }

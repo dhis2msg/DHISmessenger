@@ -395,7 +395,7 @@ public class InboxFragment extends Fragment {
                             json = new JSONObject(response.getBody());
                             JSONObject pager = json.getJSONObject("pager");
                             JSONArray allConversations = new JSONArray(json.getString("messageConversations"));
-                            Log.v("Json conversations", allConversations.toString());
+                            //Log.v("Json conversations", allConversations.toString());
                             setPages(Integer.parseInt(pager.getString("pageCount")));
 
                             for (int i = 0; i < allConversations.length(); i++) {
