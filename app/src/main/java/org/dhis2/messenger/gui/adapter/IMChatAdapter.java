@@ -38,7 +38,6 @@ public class IMChatAdapter extends ArrayAdapter<IMMessageModel> {
         View row = convertView;
         ChatHolder holder = new ChatHolder();
         if (row == null) {
-
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.item_rest_conversation, parent, false);
             RelativeLayout wrapper = (RelativeLayout) row.findViewById(R.id.wrapper);
@@ -53,8 +52,9 @@ public class IMChatAdapter extends ArrayAdapter<IMMessageModel> {
             holder.left = left;
             holder.right = right;
             row.setTag(holder);
-        } else
+        } else {
             holder = (ChatHolder) row.getTag();
+        }
 
         IMMessageModel model = getItem(position);
 

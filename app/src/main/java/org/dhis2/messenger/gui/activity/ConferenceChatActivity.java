@@ -193,12 +193,19 @@ public class ConferenceChatActivity extends Activity implements XMPPDataChanged,
 
     private void setListAdapter() {
         List<IMMessageModel> messages = XMPPSessionStorage.getInstance().getConferenceChat(conferenceId);
-        if (messages == null)
-            messages = new ArrayList<IMMessageModel>();
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
 
-        IMChatAdapter adapter = new IMChatAdapter(this, R.layout.item_rest_conversation, messages);
+        IMChatAdapter adapter = (IMChatAdapter) list.getAdapter();
+        if (adapter == null) {
+            adapter = new IMChatAdapter(getApplicationContext(), R.layout.item_rest_conversation, messages);
+            list.setAdapter(adapter);
+        } else {
+            adapter.addAll(messages);
+            adapter.notifyDataSetChanged();
+        }
         contentLoader.setVisibility(View.GONE);
-        list.setAdapter(adapter);
     }
 
     private void showAllUsersDialog() {
