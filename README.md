@@ -1,33 +1,15 @@
-# DHISmessenger
-Android Messenger App for DHIS 2
+# DHIS messenger application for Android
 
-I suggest that the next developer look at these solutions:
+Follow these instructions in order to run the application.
 
-```
-1. The library (asmack.jar) im using is depricated and not available as a maven dependency any more.
-You should use the libirary below instead, but needs to update/change the XMPP connection code.
-https://github.com/igniterealtime/Smack/wiki/Smack-4.1-Readme-and-Upgrade-Guide
-```
-
-```
-2. Use Observables with reactiveX for REST calls, or other libraries to search the API and convert JSON to models (such as GSON).
-https://github.com/ReactiveX/RxAndroid
-```
-
-```
-3. Use butterknife more 
-http://jakewharton.github.io/butterknife/
-```
-
-```
-4. Create a better solution for storing XMPP info on device - instead of the solution in "XMPPSessionStorage"
-```
-
-Im sorry for the very badly formatted code and struckture. I did not asume that anyone would continue working on this app. Anyone continuing on this app should start formatting the code.
-
-- Btw, messages from the DEMO DHIS2 api is not working at the moment, likely because there has been some changes in the api.
-
-```
-Google Play:
-https://play.google.com/store/apps/details?id=org.dhis2.messaging
-```
+1. Run DHIS server
+  * for easy local setup you can download [DHIS 2 Live](https://www.dhis2.org/download/live/dhis2-live.zip)
+2. Run Openfire server
+  * follow the instructions in [Openfire-DHISAuthentication](https://github.com/dhis2msg/Openfire-DHISAuthentication) repository
+3. Run the application
+  * open this project in [Android Studio](http://developer.android.com/tools/studio/index.html)
+  * build and run the application (either using [Android Emulator](http://developer.android.com/tools/help/emulator.html) or your [Android smartphone](http://developer.android.com/tools/device.html))
+  * in the application enter your DHIS server address
+    * in case you have DHIS server running locally enter your computer's external IP address
+    * make sure your phone is connected to the Internet
+  * log in using DHIS credentials (username ***admin*** and password ***district*** by default)
