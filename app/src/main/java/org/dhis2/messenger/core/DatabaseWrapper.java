@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class DatabaseWrapper {
 
-    private Database database;
+    public Database database;
     private Context context;
     private Manager manager;
     // keep a reference to a running replication to avoid GC
@@ -56,13 +56,14 @@ public class DatabaseWrapper {
         // Only the following characters are valid:
         // abcdefghijklmnopqrstuvwxyz0123456789_$()+-/
         if (!Manager.isValidDatabaseName(dbname)) {
-            Log.e("DatabaseWrapper", "Invalid database name.");
+            Log.e("DatabaseWrapper", "Invalid database name: '" + dbname +"'");
             return;
         }
         // get existing db with that name
         // or create a new one if it doesn't exist
         try {
             database = manager.getDatabase(dbname);
+
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
             return;
@@ -151,14 +152,16 @@ public class DatabaseWrapper {
      * @param docContent
      * @return docId
      */
-    public String create(Map<String, Object> docContent) {
+    public String create(Map<String, Object> docContent, String docId) {
 
         if (database == null) {
             Log.e("DatabaseWrapper", "database is null : DatabaseWrapper.create(" + ")");
             return "";
         }
         // create an empty document
-        Document doc = database.createDocument();
+        Document doc = database.getDocument(docId);
+        //.createDocument();
+
         // add content to document and write the document to the database
         try {
             doc.putProperties(docContent);
@@ -176,15 +179,21 @@ public class DatabaseWrapper {
      * @return Doc content
      */
     public Map<String, Object> retrieve(String docId) {
+        Map<String, Object> map = new HashMap<String, Object>();
 
         if (database == null) {
-            return new HashMap<String, Object>();//empty
+            return map;
         }
         // retrieve the document from the database
-        Document doc = database.getDocument(docId);
-        // display the retrieved document
-        return doc.getProperties();
+        Document doc = database.getExistingDocument(docId);
+        if (doc != null) {
+            // display the retrieved document
+            map = doc.getProperties();
+        }
+        return map;
     }
+
+
 
     /**
      * cr-U-d
@@ -243,11 +252,19 @@ public class DatabaseWrapper {
         Document doc = null;
         // delete the document
         try {
-            doc = database.getDocument(docId);
-            doc.delete();
+            if (!database.isOpen()) {
+                database.open();
+            }
+            doc = database.getExistingDocument(docId);
+            if (doc != null) {
+                doc.delete();
+            }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
-        return doc.isDeleted();
+        if(doc != null) {
+            return doc.isDeleted();
+        }
+        return false;
     }
 }

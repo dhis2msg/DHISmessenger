@@ -9,6 +9,7 @@ import android.webkit.URLUtil;
 import android.widget.TextView;
 
 import org.dhis2.messenger.R;
+import org.dhis2.messenger.core.rest.RESTSessionStorage;
 import org.dhis2.messenger.core.rest.async.RESTLogin;
 
 /**
@@ -52,6 +53,8 @@ public class IntroActivity extends Activity {
                 finish();
             } else {
                 text.setVisibility(View.VISIBLE);
+                RESTSessionStorage.loginUsername = usr;
+                RESTSessionStorage.setActiveSession(this.getApplicationContext(), usr);
                 new RESTLogin(this).execute(srv, usr, psw);
             }
         } else {

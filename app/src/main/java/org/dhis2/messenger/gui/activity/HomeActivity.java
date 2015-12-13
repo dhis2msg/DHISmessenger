@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +21,9 @@ import android.widget.SimpleAdapter;
 
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.SharedPrefs;
+import org.dhis2.messenger.core.DiskStorage;
 import org.dhis2.messenger.core.gcm.RegisterDevice;
+import org.dhis2.messenger.core.rest.RESTSessionStorage;
 import org.dhis2.messenger.core.rest.callback.UnreadMessagesCallback;
 import org.dhis2.messenger.core.xmpp.XMPPClient;
 import org.dhis2.messenger.core.xmpp.XMPPSessionStorage;
@@ -172,6 +175,7 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
 
     @Override
     protected void onPause() {
+        Log.v("HomeActivity", "onPause()");
         super.onPause();
         XMPPSessionStorage.getInstance().setHomeListener(null);
     }
@@ -189,15 +193,23 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
 
     @Override
     public void onBackPressed() {
-        XMPPSessionStorage.getInstance().destroy();
-        XMPPClient.getInstance().destroy(this);
-        this.finish();
+        Log.v("HomeActivity", "onBackPressed()");
+        this.logout();
     }
 
     @Override
     protected void onDestroy() {
+        Log.v("HomeActivity", "onDestroy()");
         super.onDestroy();
         XMPPClient.getInstance().destroy(this);
+        RESTSessionStorage.getInstance().destroy();
+        DiskStorage.getInstance().destroy();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.v("HomeActivity", "onStop()");
+        super.onStop();
     }
 
     private void initializeDrawer(Bundle savedInstanceState) {
@@ -307,13 +319,13 @@ public class HomeActivity extends FragmentActivity implements UnreadMessagesCall
     }
 
     private void logout() {
-        getApplication().getSharedPreferences(LoginActivity.PREFS_NAME, getApplication().MODE_PRIVATE).edit()
-                .remove("password").commit();
+        getApplication().getSharedPreferences(LoginActivity.PREFS_NAME, getApplication().MODE_PRIVATE).edit().remove("password").commit();
         RegisterDevice rd = new RegisterDevice(this);
         rd.removeGcmId();
         SharedPrefs.eraseData(this);
         XMPPClient.getInstance().destroy(this);
         XMPPSessionStorage.getInstance().destroy();
+        RESTSessionStorage.getInstance().destroy();
 
         Intent intent = new Intent(this, LoginActivity.class);
         this.startActivity(intent);

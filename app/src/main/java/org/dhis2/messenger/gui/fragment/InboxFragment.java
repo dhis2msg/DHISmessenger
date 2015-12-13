@@ -382,11 +382,11 @@ public class InboxFragment extends Fragment {
                         gotListFromCache = true;
                         tempList.addAll(cached);
                         totalPages = RESTSessionStorage.getInstance().getInboxTotalPages();
-                        //Log.v("InboxFragment", "from cache");
+                        Log.v("InboxFragment", "from cache");
                         responseCode = RESTClient.OK;
                     } else { //get it from the server
                         gotListFromCache = false;
-                        //Log.v("InboxFragment", "NOT FROM CACHE! cached is empty? " + cached.isEmpty() + " skipCache? " + skipCache + " page= " + page);
+                        Log.v("InboxFragment", "NOT FROM CACHE! cached is empty? " + cached.isEmpty() + " skipCache? " + skipCache + " page= " + page);
                         response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
                         responseCode = response.getCode();
 

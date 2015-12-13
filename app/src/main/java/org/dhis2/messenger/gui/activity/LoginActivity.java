@@ -72,7 +72,7 @@ public class LoginActivity extends Activity {
         String usr = pref.getString(PREF_USERNAME, null);
         if (server != null && usr != null) {
             RESTSessionStorage.loginUsername = usr;
-            RESTSessionStorage.setActiveSession(usr);
+            RESTSessionStorage.setActiveSession(this.getApplicationContext(), usr);
             server.setText(srv);
             username.setText(usr);
             password.requestFocus();
@@ -127,8 +127,9 @@ public class LoginActivity extends Activity {
             params[1] = username.getText().toString();
             params[2] = password.getText().toString();
 
-            RESTSessionStorage.loginUsername = params[0];
-            RESTSessionStorage.setActiveSession(params[0]);
+            RESTSessionStorage.loginUsername = params[1];
+            RESTSessionStorage.setActiveSession(this.getApplicationContext(), params[1]);
+
             if (autoLogin())
                 params[3] = "indicator autologin";
 

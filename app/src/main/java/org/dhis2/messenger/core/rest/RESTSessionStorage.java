@@ -1,5 +1,7 @@
 package org.dhis2.messenger.core.rest;
 
+import android.content.Context;
+
 import org.dhis2.messenger.core.DiskStorage;
 import org.dhis2.messenger.model.InboxModel;
 import org.dhis2.messenger.model.InterpretationModel;
@@ -41,6 +43,8 @@ public class RESTSessionStorage {
     //private int interpretationsPageSize = 5;
     //private int interpretationsTotalPages = 0;
 
+    private static Context appContext;
+
     //constructors for a singleton-like class:
     private RESTSessionStorage() {}
     private RESTSessionStorage(String username) {
@@ -51,16 +55,20 @@ public class RESTSessionStorage {
      * A method to specify which user Session will be used.
      * Separate users use separate sessions, because they require separate caches.
      *
+     * @param context
      * @param username The name of the currently active user.
      */
-    public synchronized static RESTSessionStorage setActiveSession(String username) {
-        DiskStorage.test();
+    public synchronized static RESTSessionStorage setActiveSession(Context context, String username) {
+        appContext = context;
+        //DiskStorage.test(context);
+        DiskStorage.setContext(context);
 
         if (currentRestSession != null &&
                 currentRestSession.username != null &&
                 currentRestSession.username.equals(username)) {
             return currentRestSession;
         } else {//no session selected/other selected
+            /* pre-storage (NoSql) code using the hash map of sessions:
             //See if it exists:
             RESTSessionStorage session = restSessions.get(username);
             if (session != null) {
@@ -69,6 +77,16 @@ public class RESTSessionStorage {
                 session = new RESTSessionStorage(username);
                 restSessions.put(username, session);
                 currentRestSession = session;
+            }
+            */
+            //post-storage (NoSql) code, using DiskStorage to get instance or creates new one.
+            RESTSessionStorage session = DiskStorage.getInstance().retrieveRESTSession(username);
+            if (session != null) {
+                currentRestSession = session;
+            } else { //doesn't exist: create new !
+                session = new RESTSessionStorage(username);
+                currentRestSession = session;
+                DiskStorage.getInstance().saveRESTSession(username, currentRestSession);
             }
             return  currentRestSession;
         }
@@ -81,9 +99,8 @@ public class RESTSessionStorage {
      * @return RESTSession instance
      */
     public synchronized static RESTSessionStorage getInstance() {
+        /*  pre-disk storage:
         if ( currentRestSession == null) {
-
-            //TODO: vladislav : Read stored values from disk here !
             RESTSessionStorage session = restSessions.get(loginUsername);
             if (session != null) {
                 currentRestSession = session;
@@ -91,26 +108,37 @@ public class RESTSessionStorage {
                 session = new RESTSessionStorage( loginUsername);
                 restSessions.put(loginUsername, session);
                 currentRestSession = session;
+
             }
             return  currentRestSession;
         }
+       }*/
+
+        //post disk storage:
+        if (currentRestSession != null) {
+            return currentRestSession;
+        } else if (loginUsername != null && appContext != null){
+            return setActiveSession(appContext, loginUsername);
+
+        }
+        //if all else fails null (?) [probably won't happen...]
         return currentRestSession;
     }
 
-    public void setCallback(RESTDataChanged callback) {
+    /*public void setCallback(RESTDataChanged callback) {
         this.callback = callback;
     }
 
-    /*public void setHomeListener(UpdateUnreadMsg homeListener) {
+    public void setHomeListener(UpdateUnreadMsg homeListener) {
         this.homeListener = homeListener;
     }*/
 
     /**
-     * Destroy the XmppStorage instance.
+     * Destroy the RESTStorage instance.
      */
     public void destroy() {
-        //TODO: vladislav: store vars to disk before exiting from here !
         //this.currentRestSession = null;
+        DiskStorage.getInstance().saveRESTSession(username, currentRestSession);
     }
 
     //----------------------Unread messages calls-------------------------------------
