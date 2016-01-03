@@ -45,6 +45,11 @@ public class InterpretationModel implements CopyAttributes<InterpretationModel>{
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String getId() {
+        return this.id;
+    }
     /**
      * Updates this InterpretationModel's fields to another model's fields.
      * This is currently used by RESTSessionStorage, when the cache has received the same page.

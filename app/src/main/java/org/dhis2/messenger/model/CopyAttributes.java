@@ -12,4 +12,6 @@ public interface CopyAttributes<T> {
      * @return true if changed false if other was the same as this.
      */
     boolean copyAttributesFrom(T other);
+
+    String getId();
 }

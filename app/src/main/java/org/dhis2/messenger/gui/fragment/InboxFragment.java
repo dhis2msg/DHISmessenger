@@ -386,7 +386,11 @@ public class InboxFragment extends Fragment {
                         responseCode = RESTClient.OK;
                     } else { //get it from the server
                         gotListFromCache = false;
-                        Log.v("InboxFragment", "NOT FROM CACHE! cached is empty? " + cached.isEmpty() + " skipCache? " + skipCache + " page= " + page);
+                        // refresh the cache of conversations:
+                        if (skipCache && page == 1) {
+                            RESTSessionStorage.getInstance().refreshInboxModelList();
+                        }
+                        //Log.v("InboxFragment", "NOT FROM CACHE! cached is empty? " + cached.isEmpty() + " skipCache? " + skipCache + " page= " + page);
                         response = RESTClient.get(mcAPIPath + "&pageSize=" + MESSAGES_PR_PAGE + "&page=" + page, auth);
                         responseCode = response.getCode();
 
@@ -441,15 +445,20 @@ public class InboxFragment extends Fragment {
 
                         // Update the unread messages from the inboxModel's results:
                         Context context = getActivity();
-
                         int oldUnread = Integer.parseInt(SharedPrefs.getUnreadMessages(context));
-                        oldUnread += nrNew;
-                        SharedPrefs.setUnreadMessages(context, Integer.toString(oldUnread));
 
                         // To overwrite the read/unread status :
                         if (skipCache) {
                             tempList = RESTSessionStorage.getInstance().getInboxModelList(page);
+                            if (page == 1) {
+                                oldUnread = 0;
+                            }
                         }
+
+                        oldUnread += nrNew;
+                        SharedPrefs.setUnreadMessages(context, Integer.toString(oldUnread));
+
+
                     }
 
                     // Update the number of unread messages

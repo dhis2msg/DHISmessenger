@@ -240,6 +240,14 @@ public class RESTSessionStorage {
     }
 
     //---------InboxModel----------set page / get page ---------------------------------------
+
+    /**
+     * Called upon a refresh (skipCache == true).
+     * It saves the old cache & merges it with the new one.
+     */
+    public synchronized void refreshInboxModelList() {
+        inboxModelList.refresh();
+    }
     /**
      * Add a page of elements to the cache.
      * It is expected that you only add to the front or back (page = 1 or page = total+1)

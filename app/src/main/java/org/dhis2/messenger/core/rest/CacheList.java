@@ -5,6 +5,7 @@ import android.util.Log;
 import org.dhis2.messenger.model.CopyAttributes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class CacheList<T extends CopyAttributes<T>> {
     private int unread = 0; //count of new entries.
 
     private ArrayList<T> cacheList = new ArrayList<>();
+    private HashMap<String, T> oldCacheList = new HashMap<>();
 
     //-------------------------Page set/get...etc --------------------
     public void setPageSize(int size) {
@@ -46,6 +48,17 @@ public class CacheList<T extends CopyAttributes<T>> {
     }
     public int getTotalPages() {
         return this.totalPages;
+    }
+
+    /**
+     * Signals the cache that it will be updated.
+     */
+    public synchronized  void refresh() {
+        oldCacheList = new HashMap<>(); //dump the old old cache if it exists.
+        for (T el : cacheList) {
+            oldCacheList.put(el.getId(), el);
+        }
+        cacheList.clear();
     }
 
     //---------------------Get/Remove element by index ----------------
@@ -82,6 +95,7 @@ public class CacheList<T extends CopyAttributes<T>> {
         int nrNew = 0;
 
         if (cacheList.isEmpty()) {
+            //if (oldCacheList.isEmpty()) {
             cacheList.addAll(index, newPageList);
             nrNew += newPageList.size();
 
