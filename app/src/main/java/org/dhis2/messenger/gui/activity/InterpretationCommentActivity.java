@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +17,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import org.dhis2.messenger.model.ChatModel;
-import org.dhis2.messenger.model.CopyAttributes;
 import org.dhis2.messenger.model.NameAndIDModel;
 import org.dhis2.messenger.R;
 import org.dhis2.messenger.core.rest.APIPath;

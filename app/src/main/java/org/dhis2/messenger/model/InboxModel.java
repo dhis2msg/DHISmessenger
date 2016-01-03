@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class InboxModel implements Comparable<InboxModel>, CopyAttributes<InboxModel> {
+public class InboxModel implements Comparable<InboxModel>, CacheListElement<InboxModel> {
     private String subject;
     private String date;
     private String id;

@@ -1,8 +1,6 @@
 package org.dhis2.messenger.core.rest;
 
-import android.util.Log;
-
-import org.dhis2.messenger.model.CopyAttributes;
+import org.dhis2.messenger.model.CacheListElement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +10,9 @@ import java.util.List;
  * Created by Vladislav on 12/4/15.
  * This is a cache list.
  * It holds cached elements in a list and works with pages.
- * The type must implement the CopyAttributes interface.
+ * The type must implement the CacheListElement interface.
  */
-public class CacheList<T extends CopyAttributes<T>> {
+public class CacheList<T extends CacheListElement<T>> {
 
     //InboxFragment list of pages(lists of InboxModels)
     //private List<ArrayList<InboxModel>> cacheList = new ArrayList<ArrayList<InboxModel>>();
@@ -83,6 +81,42 @@ public class CacheList<T extends CopyAttributes<T>> {
     }
 
     //-------------------------------Set/Get page--------------------------------------
+
+    /**
+     * A helper function to recover the usefull information (read/unread, messages list, users list...etc)
+     * from the old cache and merge them to the new one, before inserting into the cache list.
+     * @param page the current page.
+     * @param newPageList list of elements in the page to cache
+     * @return number of updated objects.
+     */
+    private int mergePageList(int page, List<T> newPageList) {
+        int nrUnread = 0;
+        //Abstract this as a function, say private void mergePageList(page, newPageList);
+        if (!oldCacheList.isEmpty()) {
+            for(int i = 0; i < newPageList.size(); i++) {
+                T newEl = newPageList.get(i);
+                T oldEl = oldCacheList.get(newEl.getId());
+                if (oldEl != null) {
+                    // update the new object with the old obj data ?
+                    //instead: just update the old object and replace the new one.
+                    oldEl.copyAttributesFrom(newEl);
+                    newPageList.remove(i);
+                    newPageList.add(i, oldEl);
+                    oldCacheList.remove(oldEl.getId());
+                    if(!oldEl.getRead()) {
+                        nrUnread++;
+                    }
+                } else {
+                    nrUnread++;
+                }
+            }
+            if (page == getTotalPages()) {
+                oldCacheList.clear();
+            }
+        }
+        return nrUnread;
+    }
+
     /**
      * Add a page of elements to the cache.
      * Merges the changes to the existing cache list.
@@ -93,9 +127,12 @@ public class CacheList<T extends CopyAttributes<T>> {
     public synchronized int setListPage(int page, List<T> newPageList) {
         int index = (page - 1) * pageSize;
         int nrNew = 0;
+        int nrUnread = 0;
+
+        //first update the entries if necessary:
+        nrUnread = this.mergePageList(page, newPageList);
 
         if (cacheList.isEmpty()) {
-            //if (oldCacheList.isEmpty()) {
             cacheList.addAll(index, newPageList);
             nrNew += newPageList.size();
 
@@ -155,6 +192,7 @@ public class CacheList<T extends CopyAttributes<T>> {
             }
         }
         //Log.v("CacheList", "nrNew=" + nrNew);
+        if(nrUnread > 0) return nrUnread;
         return nrNew;
         //Log.v(TAG, "(INSERT) page = " + page + " index=" + index + " cacheList.size() = " + cacheList.size());
     }

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class InterpretationModel implements CopyAttributes<InterpretationModel>{
+public class InterpretationModel implements CacheListElement<InterpretationModel> {
     @SerializedName("id")
     public String id;
     @SerializedName("text")
@@ -50,6 +50,12 @@ public class InterpretationModel implements CopyAttributes<InterpretationModel>{
     public String getId() {
         return this.id;
     }
+
+    @Override
+    public boolean getRead() {
+        return read;
+    }
+
     /**
      * Updates this InterpretationModel's fields to another model's fields.
      * This is currently used by RESTSessionStorage, when the cache has received the same page.

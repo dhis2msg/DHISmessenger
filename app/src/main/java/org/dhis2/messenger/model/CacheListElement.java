@@ -5,7 +5,7 @@ package org.dhis2.messenger.model;
  * An interface to copy all necessary attributes from one object to another of the same type.
  * Without changing the object's id (equals).
  */
-public interface CopyAttributes<T> {
+public interface CacheListElement<T> {
 
     /**
      * @param other
@@ -14,4 +14,6 @@ public interface CopyAttributes<T> {
     boolean copyAttributesFrom(T other);
 
     String getId();
+    boolean getRead();
+
 }
